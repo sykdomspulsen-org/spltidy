@@ -1,0 +1,19 @@
+---
+title: "Data Formats and Validation"
+author: "Richard Aubrey White"
+date: "2021-01-19"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data Formats and Validation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
