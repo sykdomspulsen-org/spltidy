@@ -1,10 +1,10 @@
 ---
-title: "Data Formats and Validation"
+title: "Data formats and validation"
 author: "Richard Aubrey White"
-date: "2021-01-19"
+date: "2022-01-19"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data Formats and Validation}
+  %\VignetteIndexEntry{Data formats and validation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
