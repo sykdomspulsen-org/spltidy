@@ -16,8 +16,6 @@ authors:
   Folkehelseinstituttet:
     href: "https://www.fhi.no"
     html: "<img src='man/figures/fhi.png' width=72>"
-
-authors:
   footer:
     roles: [cre]
     text: "Crafted by"
