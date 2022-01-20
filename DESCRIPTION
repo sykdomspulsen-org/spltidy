@@ -1,11 +1,11 @@
 Package: spltidy
-Title: Organising Projects
+Title: Helpful functions for cleaning data
 Version: 2020.5.25
 Authors@R: c(
   person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6747-1726")),
   person(given = "Folkehelseinstituttet", role = c("cph"))
   )
-Description: A system to help you organize projects. Most analyses have three (or more) main sections: code, results, and data, each with different requirements (version control/sharing/encryption). You provide folder locations and 'org' helps you take care of the details.
+Description: Helpful functions for cleaning data.
 Depends: R (>= 3.3.0)
 License: MIT + file LICENSE
 URL: https://docs.sykdomspulsen.no/spltidy, https://github.com/sykdomspulsen-org/spltidy

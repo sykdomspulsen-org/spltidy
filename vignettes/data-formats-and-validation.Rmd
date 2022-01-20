@@ -16,4 +16,139 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Overview
+```{r echo=FALSE, include=FALSE}
+library(data.table)
+```
+
+## General rules
+
+### Language
+
+English is the primary language for our code.
+
+Names that are abbreviations or in Norwegian are kept as they are: data sources such as `msis, dar, sysvak, normomo`.
+
+### Ordering of variables
+
+Sometimes variables need to be ordered. Variables should be ordered as follows:
+
+- time
+- location
+- age
+- sex
+
+e.g. A database table could be called `msis_by_time_location_age_sex` or a filename could be called `2020_oslo_05-10_male.xlsx`
+
+### Ages
+
+Ages should always contain 3 digits and are joined by a hyphen (e.g. `005-010`). 
+
+Use `085p` instead of `>=085`. 
+
+These tips will help your data be easily sorted and kept in the right order.
+
+### Capital letters
+
+Capital letters are to be avoided whenever possible. This is also the case in filenames (e.g. `data.rds` is preferred to `data.RDS`)
+
+### snake_case or camelCase?
+
+Use snake_case.
+
+## File names
+
+### `location_code` or `location_name`?
+
+- Data files: use `location_code`
+
+When saving data files, `location_code` (e.g. `county03`) should be used, such as `2020_county03_05-10_male.rds`.
+
+- Results: use `location_name`
+
+This applies to figures, tables in excel sheets, documents. Use the actual location name because they will be read by people outside the Sykdomspulsen team.
+
+Use `location_name_nb_utf` for the Norwegian Bokmål language and UTF-8 encoding. For instance `2020_Oslo_fylke_05-10_male.xlsx`.
+
+You can get `location_name_nb_utf` from the function `spldata::norway_locations_names()`
+
+### When is the file created
+
+In results (e.g. reports), an indicator of time when the files are created are necessary. It allows us to find which one is the most recent version of files with the same names, and it allows easy tracking of an Airflow error. 
+
+e.g. `Epidemiologisk_situasjonsrapport_2021-05-31_0659.docx` for a report generated on May 31, 2021 06:59 AM. 
+
+## Dat variables: unified variables
+
+All accessible DB tables will contain these 16 variables.
+
+Time conversion functions can be found in package [fhiplot](https://folkehelseinstituttet.github.io/fhiplot/articles/time_conversion.html). 
+
+```{r echo=FALSE, results='asis'}
+d <- data.frame(
+  x1 = "granularity_time",
+  x2 = "isoyear"
+)
+
+gt::gt(d)
+```
+
+## DB table variables: task-specific variables 
+
+Task-specific variables are commonly referred to as Tags. A `tag` is a descriptor of the row. That is, an identifier of data that is in long format. For example: `tag_outcome, tag_exposure`.
+
+Variable names that contain values should be in one the following forms:
+
+- `descriptive_format`
+- `descriptive_format_functiontime`
+
+```{r echo=FALSE, results='asis'}
+d <- data.frame(
+  x1 = "granularity_time",
+  x2 = "isoyear"
+)
+
+gt::gt(d)
+```
+
+#### Tag descriptive
+
+When creating a database table with many different sources of data, it is recommended to include the data source as a descriptive:
+
+- `msis_cases_testdate_n` - number of cases by testing date
+- `msis_cases_regdate_n` - number of cases by registration date
+- `msislab_tests_n` - number of tests performed
+- `nipar_hospital_main_cause_n` - number of people who were admitted to the hospital with covid-19 as a main cause
+- `nipar_icu_n` - number of people who were admitted to the ICU with covid-19
+- `mor_deaths_n` - number of deaths
+
+#### Tag format
+
+`format` is the format that the value is stored in.
+
+For **percentages/proportions**, we recommend using `pr100` (i.e. values going between 0 and 100) over `pr1` (i.e. values going between 0 and 1).
+
+For **intervals**, use `XintervalY`. We recommend:
+
+- `X` describing the type of interval. If you are using frequentist statistics, this is probably `predinterval` or `confinterval`. If you are using Bayesian statistics, then `credinterval` would be appropriate, and the `descriptive` would then determine if the credible interval is describing a variable (Bayesian prediction interval) or a population/distribution parameter (Bayesian confidence interval).
+- `Y` describes the limit, for example (in percentiles) `_p02x5`, `_p97x5`, `_p00x1`, `_p99x9` or (in z-scores) `_l2`, `_u2`, `_l4`, `_u4`.
+
+Some examples are as follows:
+
+- `deaths_n` - number of deaths
+- `deaths_n_sum0_13` - number of deaths that occurred today and the preceeding 13 days
+- `deaths_pr100000_sum0_13` - number of deaths that occurred today and the preceeding 13 days, per 100 00 population
+- `consultations_r80_vk_ote_n` - number of influenza consultations
+- `deaths_registered_n` - number of deaths registered
+- `deaths_corrected_n` - number of deaths (corrected for registration delay) 
+- `deaths_corrected_n_credinterval_p02x5` - Bayesian prediction interval for the "true" number of deaths 
+- `deaths_corrected_n_credinterval_p97x5` - Bayesian prediction interval for the "true" number of deaths 
+- `deaths_corrected_baseline_n` - Expected number of deaths (i.e. the baseline)
+- `deaths_corrected_baseline_n_credinterval_p02x5` - Bayesian prediction interval for the expected number of death (baseline)
+- `deaths_corrected_baseline_n_credinterval_p97x5` - Bayesian prediction interval for the expected number of death (baseline)
+
+#### Tag functiontime
+
+We can also include variables that refer to multiple days/weeks:
+
+- `msis_cases_testdate_n_sum0_13` - the aggregate number of cases for today and the preceeding 13 days by testing date
+- `msis_cases_testdate_pr100000_sum0_13` - the aggregate number of cases for today and the preceeding 13 days by testing date per 100 000 population
