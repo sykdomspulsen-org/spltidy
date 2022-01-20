@@ -1,5 +1,8 @@
 url: https://docs.sykdomspulsen.no/spltidy
 
+home:
+  strip_header: true
+
 template:
   bootstrap: 5
   bslib:
@@ -7,6 +10,6 @@ template:
     secondary: "#E9F39F"
     border-radius: 0.0rem
     btn-border-radius: 0.0rem
-    font-size-base: 0.75rem
+    # font-size-base: 0.75rem
   navbar:
-    bg: "primary"
+    bg: primary
