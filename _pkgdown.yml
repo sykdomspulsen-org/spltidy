@@ -3,22 +3,15 @@ url: https://docs.sykdomspulsen.no/spltidy
 template:
   bootstrap: 5
   bslib:
-    primary: "#393c61"
-    secondary: "#E9F39F"
+    # primary: "#393c61"
+    # secondary: "#E9F39F"
     border-radius: 0.0rem
     btn-border-radius: 0.0rem
-    pkgdown-nav-height: 100px
     nav-tabs-link-active-bg: "#FF0000"
     # font-size-base: 0.75rem
 
 navbar:
-  bg: primary
-
-nav-text:
-  bg: secondary
-
-nav-item-active:
-  bg: "red"
+  bg: "#393c61"
 
 authors:
   Folkehelseinstituttet:
