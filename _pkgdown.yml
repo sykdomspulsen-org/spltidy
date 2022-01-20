@@ -12,6 +12,9 @@ template:
 navbar:
   bg: primary
 
+nav-text:
+  bg: secondary
+
 authors:
   Folkehelseinstituttet:
     href: "https://www.fhi.no"
@@ -20,6 +23,6 @@ authors:
     roles: [cre]
     text: "Crafted by"
   sidebar:
-    roles: [aut, ctb]
+    roles: [aut, ctb, cph]
   before: "This package is proudly brought to you by:"
   after: "See the [changelog](news/index.html) for other contributors. :pray:"
