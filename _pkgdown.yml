@@ -11,5 +11,6 @@ template:
     border-radius: 0.0rem
     btn-border-radius: 0.0rem
     # font-size-base: 0.75rem
-  navbar:
-    bg: primary
+
+navbar:
+  bg: primary
