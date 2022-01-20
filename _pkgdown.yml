@@ -2,10 +2,11 @@ url: https://docs.sykdomspulsen.no/spltidy
 
 template:
   bootstrap: 5
+  bootswatch: flatly
   bslib:
     primary: "#393c61"
-    border-radius: 0.5rem
-    btn-border-radius: 0.25rem
+    border-radius: 0.0rem
+    btn-border-radius: 0.0rem
     font-size-base: 0.75rem
   navbar:
     bg: primary
