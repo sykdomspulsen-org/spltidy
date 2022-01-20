@@ -1,5 +1,9 @@
 url: https://docs.sykdomspulsen.no/spltidy
 
+repo:
+  url:
+    source: https://github.com/sykdomspulsen-org/spltidy/blob/HEAD/
+
 home:
   strip_header: true
 
@@ -14,3 +18,4 @@ template:
 
 navbar:
   bg: primary
+
