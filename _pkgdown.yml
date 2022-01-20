@@ -7,6 +7,8 @@ template:
     secondary: "#E9F39F"
     border-radius: 0.0rem
     btn-border-radius: 0.0rem
+    pkgdown-nav-height: 100px
+    nav-tabs-link-active-bg: "#FF0000"
     # font-size-base: 0.75rem
 
 navbar:
@@ -14,6 +16,9 @@ navbar:
 
 nav-text:
   bg: secondary
+
+nav-item-active:
+  bg: "red"
 
 authors:
   Folkehelseinstituttet:
