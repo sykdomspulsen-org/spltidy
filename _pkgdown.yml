@@ -4,9 +4,6 @@ repo:
   url:
     source: https://github.com/sykdomspulsen-org/spltidy/blob/HEAD/
 
-home:
-  strip_header: true
-
 template:
   bootstrap: 5
   bslib:
@@ -19,3 +16,7 @@ template:
 navbar:
   bg: primary
 
+authors:
+  Folkehelseinstituttet:
+    href: "https://www.fhi.no"
+    html: "<img src='man/figures/fhi.png' width=72>"

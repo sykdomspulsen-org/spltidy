@@ -1,12 +1,12 @@
 # spltidy <a href="https://docs.sykdomspulsen.no/spltidy"><img src="man/figures/logo.png" align="right" width="120" /></a>
 
-# Overview 
+## Overview 
 
 [spltidy](https://docs.sykdomspulsen.no/spltidy) contains helpful functions for cleaning data.
 
 Read the introduction vignette [here](http://docs.sykdomspulsen.no/spltidy/articles/spltidy.html) or run `help(package="spltidy")`.
 
-# splverse
+## splverse
 
 <a href="https://docs.sykdomspulsen.no/packages"><img src="https://docs.sykdomspulsen.no/packages/splverse.png" align="right" width="120" /></a>
 
