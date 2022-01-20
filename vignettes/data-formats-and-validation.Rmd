@@ -55,6 +55,8 @@ Capital letters are to be avoided whenever possible. This is also the case in fi
 
 Use snake_case.
 
+<hr>
+
 ## File names
 
 ### `location_code` or `location_name`?
@@ -77,7 +79,9 @@ In results (e.g. reports), an indicator of time when the files are created are n
 
 e.g. `Epidemiologisk_situasjonsrapport_2021-05-31_0659.docx` for a report generated on May 31, 2021 06:59 AM. 
 
-## Dat variables: unified variables
+<hr>
+
+## Unified variables
 
 All accessible DB tables will contain these 16 variables.
 
@@ -92,7 +96,9 @@ d <- data.frame(
 gt::gt(d)
 ```
 
-## DB table variables: task-specific variables 
+<hr>
+
+## Task-specific variables 
 
 Task-specific variables are commonly referred to as Tags. A `tag` is a descriptor of the row. That is, an identifier of data that is in long format. For example: `tag_outcome, tag_exposure`.
 
