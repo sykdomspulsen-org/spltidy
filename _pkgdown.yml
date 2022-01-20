@@ -5,10 +5,8 @@ template:
   bslib:
     # primary: "#393c61"
     # secondary: "#E9F39F"
-    navbar-bg: "#393c61"
     border-radius: 0.0rem
     btn-border-radius: 0.0rem
-    nav-tabs-link-active-bg: "#FF0000"
     # font-size-base: 0.75rem
 
 # navbar:
