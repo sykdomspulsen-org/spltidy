@@ -89,12 +89,15 @@ d <- rbind(
 )
 
 gt::gt(d) %>%
+  gt::tab_options(
+    container.width = "1100px"
+  ) %>%
   gt::tab_header(title = "Valid times in the splverse format") %>%
   gt::cols_label(
     granularity_time = "Time (Granularity)",
     class = "Class",
     fn = "Function",
-    example = "Example"
+    example = "Example(s)"
   ) %>%
   gt::cols_width(
     granularity_time ~ "20%",
