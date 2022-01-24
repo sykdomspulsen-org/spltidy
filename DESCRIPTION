@@ -19,6 +19,7 @@ Suggests: testthat,
     knitr,
     rmarkdown,
     rstudioapi,
-    glue
+    glue,
+    gt
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

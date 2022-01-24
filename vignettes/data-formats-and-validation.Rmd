@@ -18,9 +18,8 @@ knitr::opts_chunk$set(
 
 ```{r echo=FALSE, include=FALSE}
 library(data.table)
+library(magrittr)
 ```
-
-## General rules
 
 ### Language
 
@@ -39,6 +38,116 @@ Sometimes variables need to be ordered. Variables should be ordered as follows:
 
 e.g. A database table could be called `msis_by_time_location_age_sex` or a filename could be called `2020_oslo_05-10_male.xlsx`
 
+### Time
+
+Time functions can be obtained from [spltime](/spltime).
+
+```{r echo=FALSE, results='asis'}
+d <- rbind(
+  data.frame(
+    granularity_time = "day",
+    class = "Date",
+    fn = "as.Date",
+    example = "2021-12-31"
+  ),
+  data.frame(
+    granularity_time = "isoweek (numeric)",
+    class = "numeric",
+    fn = "spltime::isoweek_n",
+    example = "1"
+  ),
+  data.frame(
+    granularity_time = "isoweek (character)",
+    class = "character",
+    fn = "spltime::isoweek_c",
+    example = "\"01\""
+  ),
+  data.frame(
+    granularity_time = "isoyear (numeric)",
+    class = "character",
+    fn = "spltime::isoyear_n",
+    example = "2021"
+  ),
+  data.frame(
+    granularity_time = "isoyear (character)",
+    class = "character",
+    fn = "spltime::isoyear_c",
+    example = "\"2021\""
+  ),
+  data.frame(
+    granularity_time = "isoyearweek",
+    class = "character",
+    fn = "spltime::isoyearweek_c",
+    example = "\"2021-01\""
+  ),
+  data.frame(
+    granularity_time = "event_*_date1_to_date2",
+    class = "character",
+    fn = "as.character",
+    example = "\"event_covid19_norway_vaccination_2020_12_02_to_9999_99_99\", \"event_covid19_norway_2020_02_21_to_9999_99_99\""
+  )
+)
+
+gt::gt(d) %>%
+  gt::tab_header(title = "Valid times in the splverse format") %>%
+  gt::cols_label(
+    granularity_time = "Time (Granularity)",
+    class = "Class",
+    fn = "Function",
+    example = "Example"
+  ) %>%
+  gt::cols_width(
+    granularity_time ~ "20%",
+    class ~ "15%",
+    fn ~ "20%",
+    example ~ "55%"
+  ) %>%
+  gt::tab_style(
+    style = list(
+      gt::cell_text(decorate = "line-through")
+      ),
+    locations = gt::cells_body(
+      columns = gt::everything(),
+      rows = stringr::str_detect(granularity_time, "character")
+    )
+  ) %>%
+  gt::tab_footnote(
+    footnote = "isoweek (numeric) is used when it is a standalone variable.",
+    locations = gt::cells_body(
+      columns = granularity_time,
+      rows = granularity_time == "isoweek (numeric)"
+    )
+  ) %>%
+    gt::tab_footnote(
+    footnote = "isoweek (character) is only used within isoyearweek.",
+    locations = gt::cells_body(
+      columns = granularity_time,
+      rows = granularity_time == "isoweek (character)"
+    )
+  ) %>%
+  gt::tab_footnote(
+    footnote = "isoyear (numeric) is used when it is a standalone variable.",
+    locations = gt::cells_body(
+      columns = granularity_time,
+      rows = granularity_time == "isoyear (numeric)"
+    )
+  ) %>%
+    gt::tab_footnote(
+    footnote = "isoyear (character) is only used within isoyearweek.",
+    locations = gt::cells_body(
+      columns = granularity_time,
+      rows = granularity_time == "isoyear (character)"
+    )
+  ) %>%
+    gt::tab_footnote(
+    footnote = "If the event is ongoing, then the 'to' date should be 9999_99_99.",
+    locations = gt::cells_body(
+      columns = granularity_time,
+      rows = stringr::str_detect(granularity_time, "event")
+    )
+  )
+```
+
 ### Ages
 
 Ages should always contain 3 digits and are joined by a hyphen (e.g. `005-010`). 
@@ -55,10 +164,6 @@ Capital letters are to be avoided whenever possible. This is also the case in fi
 
 Use snake_case.
 
-<hr>
-
-## File names
-
 ### `location_code` or `location_name`?
 
 - Data files: use `location_code`
@@ -73,13 +178,11 @@ Use `location_name_nb_utf` for the Norwegian Bokmål language and UTF-8 encoding
 
 You can get `location_name_nb_utf` from the function `spldata::norway_locations_names()`
 
-### When is the file created
+### Timestamping of file names
 
 In results (e.g. reports), an indicator of time when the files are created are necessary. It allows us to find which one is the most recent version of files with the same names, and it allows easy tracking of an Airflow error. 
 
 e.g. `Epidemiologisk_situasjonsrapport_2021-05-31_0659.docx` for a report generated on May 31, 2021 06:59 AM. 
-
-<hr>
 
 ## Unified variables
 
