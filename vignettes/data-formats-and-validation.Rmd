@@ -21,13 +21,13 @@ library(data.table)
 library(magrittr)
 ```
 
-### Language
+## Language
 
 English is the primary language for our code.
 
 Names that are abbreviations or in Norwegian are kept as they are: data sources such as `msis, dar, sysvak, normomo`.
 
-### Ordering of variables
+## Ordering of variables
 
 Sometimes variables need to be ordered. Variables should be ordered as follows:
 
@@ -38,7 +38,7 @@ Sometimes variables need to be ordered. Variables should be ordered as follows:
 
 e.g. A database table could be called `msis_by_time_location_age_sex` or a filename could be called `2020_oslo_05-10_male.xlsx`
 
-### Time
+## Time
 
 Time functions can be obtained from [spltime](/spltime).
 
@@ -90,7 +90,7 @@ d <- rbind(
 
 gt::gt(d) %>%
   gt::tab_options(
-    container.width = "1100px"
+    table.width = "1100px"
   ) %>%
   gt::tab_header(title = "Valid times in the splverse format") %>%
   gt::cols_label(
@@ -151,7 +151,7 @@ gt::gt(d) %>%
   )
 ```
 
-### Ages
+## Ages
 
 Ages should always contain 3 digits and are joined by a hyphen (e.g. `005-010`). 
 
@@ -159,15 +159,15 @@ Use `085p` instead of `>=085`.
 
 These tips will help your data be easily sorted and kept in the right order.
 
-### Capital letters
+## Capital letters
 
 Capital letters are to be avoided whenever possible. This is also the case in filenames (e.g. `data.rds` is preferred to `data.RDS`)
 
-### snake_case or camelCase?
+## snake_case or camelCase?
 
 Use snake_case.
 
-### `location_code` or `location_name`?
+## `location_code` or `location_name`?
 
 - Data files: use `location_code`
 
@@ -181,7 +181,7 @@ Use `location_name_nb_utf` for the Norwegian Bokmål language and UTF-8 encoding
 
 You can get `location_name_nb_utf` from the function `spldata::norway_locations_names()`
 
-### Timestamping of file names
+## Timestamping of file names
 
 In results (e.g. reports), an indicator of time when the files are created are necessary. It allows us to find which one is the most recent version of files with the same names, and it allows easy tracking of an Airflow error. 
 
