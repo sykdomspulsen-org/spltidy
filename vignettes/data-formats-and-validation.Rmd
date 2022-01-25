@@ -187,7 +187,7 @@ gt::gt(d) %>%
     columns = c(location_code, location_name, location_name_description_nb, location_name_file_nb_utf, location_name_file_nb_ascii)
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("**location_code**: Used a) **inside datasets** and b) in data **file names** for transfer of data/results between analytic systems."),
+    footnote = gt::md("**location_code**: Used a) **inside datasets** and b) in data **file names** for transfer of data/results between analytic systems. All values are unique."),
     locations = gt::cells_column_labels(
       columns = location_code
     )
@@ -208,19 +208,19 @@ gt::gt(d) %>%
     )
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("**location_name_description_nb**: Used (frequently) **inside results** (figures, tables, documents)."),
+    footnote = gt::md("**location_name_description_nb**: Used (frequently) **inside results** (figures, tables, documents). All values are unique."),
     locations = gt::cells_column_labels(
       columns = location_name_description_nb
     )
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("**location_name_file_nb_utf**: Used (frequently) in the **file names** for results (figures, tables, documents)."),
+    footnote = gt::md("**location_name_file_nb_utf**: Used (frequently) in the **file names** for results (figures, tables, documents). All values are unique."),
     locations = gt::cells_column_labels(
       columns = location_name_file_nb_utf
     )
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("**location_name_file_nb_ascii**: Used (rarely) in the **file names** for results (figures, tables, documents). Used if file systems have problems with the Norwegian letters æøå."),
+    footnote = gt::md("**location_name_file_nb_ascii**: Used (rarely) in the **file names** for results (figures, tables, documents). Used if file systems have problems with the Norwegian letters æøå. All values are unique."),
     locations = gt::cells_column_labels(
       columns = location_name_file_nb_ascii
     )
@@ -248,13 +248,13 @@ Here we list as a reference table the valid `location_code`s and `location_name_
 ```{r echo=FALSE, results='asis'}
 d <- spldata::norway_locations_names()[,.(
   location_order = paste0(location_order," / ",.N),
-  granularity_geo,
+  location_code,
   location_name_description_nb
 )]
 
 gt::gt(d) %>%
   gt::tab_options(
-    table.width = "800px"
+    table.width = "750px"
   ) %>%
   gt::tab_header(title = "Reference of valid `location_code`s and `location_name_description_nb`s") %>%
   gt::cols_label(
@@ -267,7 +267,7 @@ gt::gt(d) %>%
 
 Ages should always contain 3 digits and are joined by a hyphen (e.g. `005-010`). 
 
-Use `085p` instead of `>=085`. 
+Use `085p` instead of `>=085` or `85+`. 
 
 These tips will help your data be easily sorted and kept in the right order.
 
