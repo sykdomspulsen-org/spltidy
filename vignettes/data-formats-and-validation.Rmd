@@ -21,11 +21,27 @@ library(data.table)
 library(magrittr)
 ```
 
-## Language
+## Style
+
+**Language**
 
 English is the primary language for our code.
 
 Names that are abbreviations or in Norwegian are kept as they are: data sources such as `msis, dar, sysvak, normomo`.
+
+**Capital letters**
+
+Capital letters are to be avoided whenever possible. This is also the case in filenames (e.g. `data.rds` is preferred to `data.RDS`)
+
+**snake_case or camelCase?**
+
+Use snake_case.
+
+**Timestamping of file names**
+
+In results (e.g. reports), an indicator of time when the files are created are necessary. It allows us to find which one is the most recent version of files with the same names, and it allows easy tracking of an Airflow error. 
+
+e.g. `Epidemiologisk_situasjonsrapport_2021-05-31_0659.docx` for a report generated on May 31, 2021 06:59 AM. 
 
 ## Ordering of variables
 
@@ -40,7 +56,7 @@ e.g. A database table could be called `msis_by_time_location_age_sex` or a filen
 
 ## Time
 
-Time functions can be obtained from [spltime](/spltime).
+Time functions can be obtained from [spltime](/spltime). Missing time data should be coded as `NA_character_`.
 
 ```{r echo=FALSE, results='asis'}
 d <- rbind(
@@ -264,7 +280,6 @@ gt::gt(d) %>%
   ) 
 ```
 
-
 ## Ages
 
 Ages should always contain 3 digits and are joined by a hyphen (e.g. `005-010`). 
@@ -273,21 +288,39 @@ Use `085p` instead of `>=085` or `85+`.
 
 These tips will help your data be easily sorted and kept in the right order.
 
-## Capital letters
+Missing ages should be coded as `NA_character_`.
 
-Capital letters are to be avoided whenever possible. This is also the case in filenames (e.g. `data.rds` is preferred to `data.RDS`)
+## Sex
 
-## snake_case or camelCase?
+Sex should be coded as strings.
 
-Use snake_case.
+```{r echo=FALSE, results='asis'}
+d <- rbind(
+  data.frame(
+    value = "\"male\"",
+    definition = "Male"
+  ),
+  data.frame(
+    value = "\"female\"",
+    definition = "Female"
+  ),
+  data.frame(
+    value = "NA_character_",
+    definition = "Missing/unknown"
+  ),
+  data.frame(
+    value = "\"total\"",
+    definition = "Everyone"
+  )
+)
 
-
-
-## Timestamping of file names
-
-In results (e.g. reports), an indicator of time when the files are created are necessary. It allows us to find which one is the most recent version of files with the same names, and it allows easy tracking of an Airflow error. 
-
-e.g. `Epidemiologisk_situasjonsrapport_2021-05-31_0659.docx` for a report generated on May 31, 2021 06:59 AM. 
+gt::gt(d) %>%
+  gt::tab_header(title = "Valid sexes in the splverse format") %>%
+  gt::cols_label(
+    value = "Value",
+    definition = "Definition"
+  )
+```
 
 ## Unified variables
 
