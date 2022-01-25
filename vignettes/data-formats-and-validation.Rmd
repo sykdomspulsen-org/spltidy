@@ -243,11 +243,13 @@ gt::gt(d) %>%
 
 ## Location (reference)
 
+Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
+
 Here we list as a reference table the valid `location_code`s and `location_name_description_nb`s (the two most commonly used locations).
 
 ```{r echo=FALSE, results='asis'}
 d <- spldata::norway_locations_names()[,.(
-  location_order = paste0(location_order," / ",.N),
+  location_order = paste0("#", location_order),
   location_code,
   location_name_description_nb
 )]
@@ -256,7 +258,7 @@ gt::gt(d) %>%
   gt::tab_options(
     table.width = "750px"
   ) %>%
-  gt::tab_header(title = "Reference of valid `location_code`s and `location_name_description_nb`s") %>%
+  gt::tab_header(title = "Reference table of valid `location_code`s and `location_name_description_nb`s") %>%
   gt::cols_label(
     location_order = "#"
   ) 
