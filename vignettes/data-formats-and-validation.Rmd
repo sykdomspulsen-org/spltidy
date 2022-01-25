@@ -151,6 +151,83 @@ gt::gt(d) %>%
   )
 ```
 
+## Location
+
+Locations can be obtained from [spldata](/spldata). Valid locations are available in `spldata::norway_locations_names()`.
+
+```{r echo=FALSE, results='asis'}
+d <- spldata::norway_locations_names()[,.(
+  n=.N, 
+  location_code = location_code[1],
+  location_name = location_name[1],
+  location_name_description_nb = location_name_description_nb[1],
+  location_name_file_nb_utf = location_name_file_nb_utf[1],
+  location_name_file_nb_ascii = location_name_file_nb_ascii[1]
+  ),
+  by=.(granularity_geo)
+  ]
+
+gt::gt(d) %>%
+  gt::tab_options(
+    table.width = "1500px"
+  ) %>%
+  gt::tab_header(title = "Valid locations in the splverse format") %>%
+  gt::cols_label(
+    granularity_geo = "Geo (Granularity)",
+    n = "N"
+  ) %>%
+  # gt::cols_width(
+  #   granularity_time ~ "20%",
+  #   class ~ "15%",
+  #   fn ~ "20%",
+  #   example ~ "55%"
+  # ) %>%
+  gt::tab_spanner(
+    label = "Examples",
+    columns = c(location_code, location_name, location_name_description_nb, location_name_file_nb_utf, location_name_file_nb_ascii)
+  ) %>%
+  gt::tab_footnote(
+    footnote = gt::md("Used a) **inside datasets** and b) in data **file names** for transfer of data/results between analytic systems."),
+    locations = gt::cells_column_labels(
+      columns = location_code
+    )
+  ) %>%
+  gt::tab_footnote(
+    footnote = gt::md("Used (rarely) **inside results** (figures, tables, documents). Can be confusing as some names are duplicated."),
+    locations = gt::cells_column_labels(
+      columns = location_name
+    )
+  ) %>%
+  gt::tab_style(
+    style = list(
+      gt::cell_text(decorate = "line-through")
+      ),
+    locations = gt::cells_body(
+      columns = location_name,
+      rows = gt::everything()
+    )
+  ) %>%
+  gt::tab_footnote(
+    footnote = gt::md("Used (frequently) **inside results** (figures, tables, documents)."),
+    locations = gt::cells_column_labels(
+      columns = location_name_description_nb
+    )
+  ) %>%
+  gt::tab_footnote(
+    footnote = gt::md("Used (frequently) in the **file names** for results (figures, tables, documents)."),
+    locations = gt::cells_column_labels(
+      columns = location_name_file_nb_utf
+    )
+  ) %>%
+  gt::tab_footnote(
+    footnote = gt::md("Used (rarely) in the **file names** for results (figures, tables, documents). Used if file systems have problems with the Norwegian letters æøå."),
+    locations = gt::cells_column_labels(
+      columns = location_name_file_nb_ascii
+    )
+  )
+```
+
+
 ## Ages
 
 Ages should always contain 3 digits and are joined by a hyphen (e.g. `005-010`). 
@@ -167,19 +244,7 @@ Capital letters are to be avoided whenever possible. This is also the case in fi
 
 Use snake_case.
 
-## `location_code` or `location_name`?
 
-- Data files: use `location_code`
-
-When saving data files, `location_code` (e.g. `county03`) should be used, such as `2020_county03_05-10_male.rds`.
-
-- Results: use `location_name`
-
-This applies to figures, tables in excel sheets, documents. Use the actual location name because they will be read by people outside the Sykdomspulsen team.
-
-Use `location_name_nb_utf` for the Norwegian Bokmål language and UTF-8 encoding. For instance `2020_Oslo_fylke_05-10_male.xlsx`.
-
-You can get `location_name_nb_utf` from the function `spldata::norway_locations_names()`
 
 ## Timestamping of file names
 

@@ -3,8 +3,9 @@
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage(paste0(
     "spltidy ",
-    # utils::packageDescription("spltidy")$Version,
+    utils::packageDescription("spltidy")$Version,
     "\n",
     "https://docs.sykdomspulsen.no/spltidy"
   ))
 }
+
