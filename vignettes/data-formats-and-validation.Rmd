@@ -153,7 +153,7 @@ gt::gt(d) %>%
 
 ## Location
 
-Locations can be obtained from [spldata](/spldata). Valid locations are available in `spldata::norway_locations_names()`.
+Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
 
 ```{r echo=FALSE, results='asis'}
 d <- spldata::norway_locations_names()[,.(
@@ -171,7 +171,7 @@ gt::gt(d) %>%
   gt::tab_options(
     table.width = "1500px"
   ) %>%
-  gt::tab_header(title = "Valid locations in the splverse format") %>%
+  gt::tab_header(title = "Valid locations and location types in the splverse format") %>%
   gt::cols_label(
     granularity_geo = "Geo (Granularity)",
     n = "N"
@@ -187,13 +187,13 @@ gt::gt(d) %>%
     columns = c(location_code, location_name, location_name_description_nb, location_name_file_nb_utf, location_name_file_nb_ascii)
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("Used a) **inside datasets** and b) in data **file names** for transfer of data/results between analytic systems."),
+    footnote = gt::md("**location_code**: Used a) **inside datasets** and b) in data **file names** for transfer of data/results between analytic systems."),
     locations = gt::cells_column_labels(
       columns = location_code
     )
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("Used (rarely) **inside results** (figures, tables, documents). Can be confusing as some names are duplicated."),
+    footnote = gt::md("**location_name**: Used (rarely) **inside results** (figures, tables, documents). Can be confusing as some names are duplicated."),
     locations = gt::cells_column_labels(
       columns = location_name
     )
@@ -208,23 +208,58 @@ gt::gt(d) %>%
     )
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("Used (frequently) **inside results** (figures, tables, documents)."),
+    footnote = gt::md("**location_name_description_nb**: Used (frequently) **inside results** (figures, tables, documents)."),
     locations = gt::cells_column_labels(
       columns = location_name_description_nb
     )
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("Used (frequently) in the **file names** for results (figures, tables, documents)."),
+    footnote = gt::md("**location_name_file_nb_utf**: Used (frequently) in the **file names** for results (figures, tables, documents)."),
     locations = gt::cells_column_labels(
       columns = location_name_file_nb_utf
     )
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("Used (rarely) in the **file names** for results (figures, tables, documents). Used if file systems have problems with the Norwegian letters æøå."),
+    footnote = gt::md("**location_name_file_nb_ascii**: Used (rarely) in the **file names** for results (figures, tables, documents). Used if file systems have problems with the Norwegian letters æøå."),
     locations = gt::cells_column_labels(
       columns = location_name_file_nb_ascii
     )
-  )
+  ) %>%
+    gt::tab_footnote(
+    footnote = "Bo- og arbeidsmarkedsregioner. Housing and labor market regions.",
+    locations = gt::cells_body(
+      columns = granularity_geo,
+      rows = granularity_geo == "baregion"
+    )
+  ) %>%
+    gt::tab_footnote(
+    footnote = "Mattilsynet-regioner. Food authority regions.",
+    locations = gt::cells_body(
+      columns = granularity_geo,
+      rows = granularity_geo == "faregion"
+    )
+  ) 
+```
+
+## Location (reference)
+
+Here we list as a reference table the valid `location_code`s and `location_name_description_nb`s (the two most commonly used locations).
+
+```{r echo=FALSE, results='asis'}
+d <- spldata::norway_locations_names()[,.(
+  location_order = paste0(location_order," / ",.N),
+  granularity_geo,
+  location_name_description_nb
+)]
+
+gt::gt(d) %>%
+  gt::tab_options(
+    table.width = "800px"
+  ) %>%
+  gt::tab_header(title = "Reference of valid `location_code`s and `location_name_description_nb`s") %>%
+  gt::cols_label(
+    location_order = "#"
+  ) 
 ```
 
 
