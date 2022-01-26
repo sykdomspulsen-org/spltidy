@@ -1,10 +1,10 @@
 ---
-title: "Data formats"
+title: "Data format"
 author: "Richard Aubrey White"
 date: "2022-01-19"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data formats}
+  %\VignetteIndexEntry{Data format}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,9 +21,13 @@ library(data.table)
 library(magrittr)
 ```
 
-## splfmt_v1 / splfmt_mini_v1
+## splfmt_rts_v1_mini / splfmt_rts_v1_max
 
+This document presents the data format `splfmt_rts_v1_mini`.
 
+`splfmt_rts_v1_mini` is the data format that the Sykdomspulsen team recommends using for the real-time surveillance of infectious diseases.
+
+`splfmt_rts_v1_max` is the internal data format for the real-time analysis and disease surveillance framework Sykdomspulsen Core. `splfmt_rts_v1_max` is identical to `splfmt_rts_v1_mini`, except that it contains a few extra (superfluous) columns that make it easier to perform data selections on large datasets. It is easy to convert between `splfmt_rts_v1_mini` and `splfmt_rts_v1_max`.
 
 ## Style
 
@@ -374,7 +378,7 @@ gt::gt(d) %>%
 
 Missing sexes should be coded as `NA_character_`.
 
-## Unified variables (splmini)
+## Unified variables
 
 All accessible DB tables will contain these 16 variables.
 
