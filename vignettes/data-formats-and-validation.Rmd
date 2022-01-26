@@ -1,10 +1,10 @@
 ---
-title: "Data formats and validation"
+title: "Data formats"
 author: "Richard Aubrey White"
 date: "2022-01-19"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data formats and validation}
+  %\VignetteIndexEntry{Data formats}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,6 +20,10 @@ knitr::opts_chunk$set(
 library(data.table)
 library(magrittr)
 ```
+
+## splfmt_v1 / splfmt_mini_v1
+
+
 
 ## Style
 
@@ -328,7 +332,7 @@ gt::gt(d) %>%
   )
 ```
 
-These tips will help your data be easily sorted and kept in the right order.
+This format will help your data be easily sorted and kept in the right order.
 
 Missing ages should be coded as `NA_character_`.
 
@@ -368,7 +372,9 @@ gt::gt(d) %>%
   )
 ```
 
-## Unified variables
+Missing sexes should be coded as `NA_character_`.
+
+## Unified variables (splmini)
 
 All accessible DB tables will contain these 16 variables.
 
