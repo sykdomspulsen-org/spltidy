@@ -56,7 +56,7 @@ e.g. A database table could be called `msis_by_time_location_age_sex` or a filen
 
 ## Time
 
-Time functions can be obtained from [spltime](/spltime). Missing time data should be coded as `NA_character_`.
+Time functions can be obtained from [spltime](/spltime). Missing time data should be coded as `NA`.
 
 ```{r echo=FALSE, results='asis'}
 d <- rbind(
@@ -282,9 +282,51 @@ gt::gt(d) %>%
 
 ## Ages
 
-Ages should always contain 3 digits and are joined by a hyphen (e.g. `005-010`). 
+Ages should be coded as characters and should always contain 3 digits. If it is an age range, the two ages are joined by a hyphen (e.g. `005-010`). 
 
 Use `085p` instead of `>=085` or `85+`. 
+
+```{r echo=FALSE, results='asis'}
+d <- rbind(
+  data.frame(
+    value = "\"000\"",
+    class = "character",
+    definition = "One year age group (0 year olds)"
+  ),
+  data.frame(
+    value = "\"079\"",
+    class = "character",
+    definition = "One year age group(79 year olds)"
+  ),
+  data.frame(
+    value = "\"000-004\"",
+    class = "character",
+    definition = "Age span of 0-4 year olds"
+  ),
+  data.frame(
+    value = "\"065p\"",
+    class = "character",
+    definition = "Age span of >=65 year olds"
+  ),
+  data.frame(
+    value = "NA_character_",
+    class = "character",
+    definition = "Missing/unknown"
+  ),
+  data.frame(
+    value = "\"total\"",
+    class = "character",
+    definition = "Everyone"
+  )
+)
+
+gt::gt(d) %>%
+  gt::tab_header(title = "Valid ages in the splverse format") %>%
+  gt::cols_label(
+    value = "Value",
+    definition = "Definition"
+  )
+```
 
 These tips will help your data be easily sorted and kept in the right order.
 
@@ -292,24 +334,28 @@ Missing ages should be coded as `NA_character_`.
 
 ## Sex
 
-Sex should be coded as strings.
+Sex should be coded as characters.
 
 ```{r echo=FALSE, results='asis'}
 d <- rbind(
   data.frame(
     value = "\"male\"",
+    class = "character",
     definition = "Male"
   ),
   data.frame(
     value = "\"female\"",
+    class = "character",
     definition = "Female"
   ),
   data.frame(
     value = "NA_character_",
+    class = "character",
     definition = "Missing/unknown"
   ),
   data.frame(
     value = "\"total\"",
+    class = "character",
     definition = "Everyone"
   )
 )
