@@ -23,6 +23,8 @@ Suggests: testthat,
     rmarkdown,
     rstudioapi,
     glue,
-    gt
+    gt,
+    dplyr,
+    purrr
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

@@ -108,7 +108,7 @@ d <- rbind(
     granularity_time = "event_*_date1_to_date2",
     class = "character",
     fn = "as.character",
-    example = "\"event_covid19_norway_vaccination_2020_12_02_to_9999_99_99\", \"event_covid19_norway_2020_02_21_to_9999_99_99\""
+    example = "\"event_covid19_norway_vaccination_2020_12_02_to_9999_01_01\", \"event_covid19_norway_2020_02_21_to_9999_01_01\""
   )
 )
 
@@ -167,7 +167,7 @@ gt::gt(d) %>%
     )
   ) %>%
     gt::tab_footnote(
-    footnote = "If the event is ongoing, then the 'to' date should be 9999_99_99.",
+    footnote = "If the event is ongoing, then the 'to' date should be 9999_01_01.",
     locations = gt::cells_body(
       columns = granularity_time,
       rows = stringr::str_detect(granularity_time, "event")
@@ -380,24 +380,88 @@ Missing sexes should be coded as `NA_character_`.
 
 ## Unified variables
 
-All accessible DB tables will contain these 16 variables.
+All datasets in the splverse format splfmt_rts_v1_mini will contain these 10 variables.
 
-Time conversion functions can be found in package [fhiplot](https://folkehelseinstituttet.github.io/fhiplot/articles/time_conversion.html). 
+Time conversion functions can be found in package [spltime](https://docs.sykdomspulsen.no/spltime). 
 
 ```{r echo=FALSE, results='asis'}
-d <- data.frame(
-  x1 = "granularity_time",
-  x2 = "isoyear"
-)
+d <- rbind(
+  data.frame(
+    variable = "granularity_time",
+    accepted_values = gt::html("<a href='#Time'>Time</a> (day, isoweek, isoyear)"),
+    definition = "Granularity of time"
+  ),
+  data.frame(
+    variable = "granularity_geo",
+    accepted_values = paste0(unique(spldata::norway_locations_names()$granularity_geo), collapse=", "),
+    definition = "Granularity of geography"
+  ),
+  data.frame(
+    variable = "country_iso3",
+    accepted_values = "nor, den, swe, fin",
+    definition = "ISO3 country code, e.g. nor for Norway"
+  ),
+  data.frame(
+    variable = "location_code",
+    accepted_values = gt::html("<a href='#Location'>Location</a> (norge, countyXX, municipXXXX, ...)"),
+    definition = "ISO3 country code, e.g. nor for Norway"
+  ),
+  data.frame(
+    variable = "border",
+    accepted_values = "2020",
+    definition = "The borders (kommunesammenslåing) that location_code represents"
+  ),
+  data.frame(
+    variable = "age",
+    accepted_values = gt::html("<a href='#Age'>Age</a> (0, 1, 000-004, 065p, total, ...)"),
+    definition = "Age in years"
+  ),
+  data.frame(
+    variable = "sex",
+    accepted_values = gt::html("<a href='#Sex'>Sex</a> (male, female, total)"),
+    definition = "Sex"
+  ),
+  data.frame(
+    variable = "isoyear",
+    accepted_values = "YYYY",
+    definition = "Use function spltime::isoyear_n"
+  ),
+  data.frame(
+    variable = "isoyearweek",
+    accepted_values = "\"YYYY-WW\"",
+    definition = "Use function spltime::isoyearweek_c"
+  ),
+  data.frame(
+    variable = "date",
+    accepted_values = "YYYY-MM-DD",
+    definition = "Always corresponds to the last date in the time period. E.g. if granularity_time=='isoweek' then date is the Sunday of that week. If granularity_time == 'event_*_date1_to_9999_01_01' then date is 9999-01-01"
+  )
+) %>%
+  dplyr::mutate(
+    accepted_values = purrr::map(accepted_values, ~ gt::html(as.character(.)))
+  )
 
-gt::gt(d)
+gt::gt(d) %>%
+  gt::tab_options(
+    table.width = "750px"
+  ) %>%
+  gt::cols_width(
+    variable ~ "20%",
+    accepted_values ~ "40%",
+    definition ~ "40%"
+  ) %>%
+  gt::cols_align(
+    align = "left"
+  ) %>%
+  gt::tab_header(title = "10 Unified variables in the splverse format splfmt_rts_v1_mini") %>%
+  gt::cols_label(
+    variable = "Variable",
+    accepted_values = "Accepted values",
+    definition = "Definition"
+  )
 ```
 
-<hr>
-
 ## Task-specific variables 
-
-Task-specific variables are commonly referred to as Tags. A `tag` is a descriptor of the row. That is, an identifier of data that is in long format. For example: `tag_outcome, tag_exposure`.
 
 Variable names that contain values should be in one the following forms:
 
@@ -405,12 +469,81 @@ Variable names that contain values should be in one the following forms:
 - `descriptive_format_functiontime`
 
 ```{r echo=FALSE, results='asis'}
-d <- data.frame(
-  x1 = "granularity_time",
-  x2 = "isoyear"
+d <- rbind(
+  data.frame(
+    x = "",
+    examples = "deaths, consultations, cases",
+    definition = "Simple"
+  ),
+  data.frame(
+    x = "",
+    examples = "hospital_deaths, sysvak_vax_dose_1",
+    definition = "Complex"
+  ),
+  data.frame(
+    x = "",
+    examples = "msis_cases_testdate, msis_cases_regdate",
+    definition = "Complex"
+  ),
+  
+  data.frame(
+    x = "",
+    examples = "tag",
+    definition = "Used when data is in long format, to indicate an id variable."
+  ),
+  data.frame(
+    x = "",
+    examples = "n",
+    definition = "Integer count"
+  ),
+  data.frame(
+    x = "",
+    examples = "cum_n",
+    definition = "Integer count corresponding to all time prior"
+  ),
+  data.frame(
+    x = "",
+    examples = "pr1",
+    definition = "Proportion (between 0 and 1)"
+  ),
+  data.frame(
+    x = "",
+    examples = "pr100",
+    definition = "Percentage (between 0 and 100)"
+  ),
+  data.frame(
+    x = "",
+    examples = "pr100000, prX",
+    definition = "Rate per X"
+  )
 )
 
-gt::gt(d)
+gt::gt(d) %>%
+  gt::tab_options(
+    table.width = "750px"
+  ) %>%
+  gt::cols_width(
+    x ~ "10%",
+    examples ~ "30%",
+    definition ~ "60%"
+  ) %>%
+  gt::cols_align(
+    align = "left"
+  ) %>%
+  gt::tab_header(title = "Task-specific variables in the splverse format splfmt_rts_v1_mini") %>%
+  gt::cols_label(
+    x = "",
+    examples = "Examples",
+    definition = "Definition"
+  ) %>%
+  gt::tab_row_group(
+    label = "Format",
+    rows = 4:nrow(d)
+  ) %>%
+  gt::tab_row_group(
+    label = "Descriptive",
+    rows = 1:3
+  )
 ```
 
 #### Tag descriptive
