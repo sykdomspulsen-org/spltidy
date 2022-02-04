@@ -388,7 +388,7 @@ Time conversion functions can be found in package [spltime](https://docs.sykdoms
 d <- rbind(
   data.frame(
     variable = "granularity_time",
-    accepted_values = gt::html("<a href='#Time'>Time</a> (day, isoweek, isoyear)"),
+    accepted_values = gt::html("<a href='#time'>Time</a> (day, isoweek, isoyear)"),
     definition = "Granularity of time"
   ),
   data.frame(
@@ -403,7 +403,7 @@ d <- rbind(
   ),
   data.frame(
     variable = "location_code",
-    accepted_values = gt::html("<a href='#Location'>Location</a> (norge, countyXX, municipXXXX, ...)"),
+    accepted_values = gt::html("<a href='#location'>Location</a> (norge, countyXX, municipXXXX, ...)"),
     definition = "ISO3 country code, e.g. nor for Norway"
   ),
   data.frame(
@@ -413,12 +413,12 @@ d <- rbind(
   ),
   data.frame(
     variable = "age",
-    accepted_values = gt::html("<a href='#Age'>Age</a> (0, 1, 000-004, 065p, total, ...)"),
+    accepted_values = gt::html("<a href='#age'>Age</a> (0, 1, 000-004, 065p, total, ...)"),
     definition = "Age in years"
   ),
   data.frame(
     variable = "sex",
-    accepted_values = gt::html("<a href='#Sex'>Sex</a> (male, female, total)"),
+    accepted_values = gt::html("<a href='#sex'>Sex</a> (male, female, total)"),
     definition = "Sex"
   ),
   data.frame(
@@ -453,7 +453,7 @@ gt::gt(d) %>%
   gt::cols_align(
     align = "left"
   ) %>%
-  gt::tab_header(title = "10 Unified variables in the splverse format splfmt_rts_v1_mini") %>%
+  gt::tab_header(title = "Unified variables (10) in the splverse format splfmt_rts_v1_mini") %>%
   gt::cols_label(
     variable = "Variable",
     accepted_values = "Accepted values",
