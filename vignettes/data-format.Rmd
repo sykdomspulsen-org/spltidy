@@ -403,7 +403,7 @@ d <- rbind(
   ),
   data.frame(
     variable = "location_code",
-    accepted_values = gt::html("<a href='#location'>Location</a> (norge, countyXX, municipXXXX, ...)"),
+    accepted_values = gt::html("norge, countyXX, municipXXXX, ... (<a href='#location'>Location</a>)"),
     definition = "ISO3 country code, e.g. nor for Norway"
   ),
   data.frame(
@@ -413,12 +413,12 @@ d <- rbind(
   ),
   data.frame(
     variable = "age",
-    accepted_values = gt::html("<a href='#age'>Age</a> (0, 1, 000-004, 065p, total, ...)"),
+    accepted_values = gt::html("0, 1, 000-004, 065p, total, ... (<a href='#age'>Age</a>)"),
     definition = "Age in years"
   ),
   data.frame(
     variable = "sex",
-    accepted_values = gt::html("<a href='#sex'>Sex</a> (male, female, total)"),
+    accepted_values = gt::html("male, female, total (<a href='#sex'>Sex</a>)"),
     definition = "Sex"
   ),
   data.frame(
@@ -461,45 +461,88 @@ gt::gt(d) %>%
   )
 ```
 
-## Task-specific variables 
+## Context-specific variables 
 
-Variable names that contain values should be in one the following forms:
+Variable names that are not part of the (unified variables)[#unified-variables] are called context-specific variables, and are made up of 2 mandatory and 3 optional sections.
 
-- `descriptive_format`
-- `descriptive_format_functiontime`
+The format is as follows:
+
+description[[_time]][[_statistics]]_format[[_censor/status]]
 
 ```{r echo=FALSE, results='asis'}
 d <- rbind(
   data.frame(
     x = "",
     examples = "deaths, consultations, cases",
-    definition = "Simple"
+    definition = "Simple."
   ),
   data.frame(
     x = "",
-    examples = "hospital_deaths, sysvak_vax_dose_1",
-    definition = "Complex"
+    examples = "deaths_registered, deaths_nowcasted, deaths_nowcasted_baseline",
+    definition = "Slightly complex."
   ),
   data.frame(
     x = "",
-    examples = "msis_cases_testdate, msis_cases_regdate",
-    definition = "Complex"
+    examples = "hospital_deaths, vax_administered_dose_1, vax_coverage_dose_1, msis_cases_testdate, msis_cases_regdate",
+    definition = "Complex."
+  ),
+  data.frame(
+    x = "",
+    examples = "outcome, exposure, model",
+    definition = "Generally used in conjunction with 'tag' (see 'Format')."
+  ),
+  
+  data.frame(
+    x = "",
+    examples = "sum0_13",
+    definition = "The sum of values for the given date and the previous 13 days. If granularity_time=='isoweek' and the given isoweek has full data, then it is the sum of values for the Sunday in the given isoweek and the previous 13 days. If granularity_time=='isoweek' and the given isoweek does not have full data, or granularity_time=='event_*_to_9999_01_01' (ongoing event), then it is the sum of values for the last day with data and the previous 13 days."
+  ),
+  data.frame(
+    x = "",
+    examples = "sum0_999999",
+    definition = "The sum of all days with data."
+  ),
+  data.frame(
+    x = "",
+    examples = "daymean0_13",
+    definition = "The mean of all the daily observations for the given date and the previous 13 days."
+  ),
+  data.frame(
+    x = "",
+    examples = "isoweekmean0_13",
+    definition = "The mean of all the weekly observations for the given date and the previous 13 days (i.e. the last 2 weeks)."
+  ),
+  
+  data.frame(
+    x = "",
+    examples = "predinterval_q02x5",
+    definition = "Prediction interval for the baseline (2.5th quantile)."
+  ),
+  data.frame(
+    x = "",
+    examples = "credintervalobs_q02x5",
+    definition = "Credibility interval for a new observation of data according to the baseline model (2.5th quantile)."
+  ),
+  data.frame(
+    x = "",
+    examples = "credintervalmean_q02x5",
+    definition = "Credibility interval for the mean of the data according to the baseline model (2.5th quantile)."
+  ),
+  data.frame(
+    x = "",
+    examples = "*interval*_q50x0",
+    definition = "Generally speaking, the 50th percentile is the expected value."
   ),
   
   data.frame(
     x = "",
     examples = "tag",
-    definition = "Used when data is in long format, to indicate an id variable."
+    definition = "Used when data is in long format, to indicate an id variable. Frequently combined with descriptions of 'outcome', 'exposure', 'model'."
   ),
   data.frame(
     x = "",
     examples = "n",
     definition = "Integer count"
-  ),
-  data.frame(
-    x = "",
-    examples = "cum_n",
-    definition = "Integer count corresponding to all time prior"
   ),
   data.frame(
     x = "",
@@ -515,6 +558,17 @@ d <- rbind(
     x = "",
     examples = "pr100000, prX",
     definition = "Rate per X"
+  ),
+  
+  data.frame(
+    x = "",
+    examples = "censored",
+    definition = "TRUE/FALSE"
+  ),
+  data.frame(
+    x = "",
+    examples = "status",
+    definition = "Character."
   )
 )
 
@@ -523,8 +577,8 @@ gt::gt(d) %>%
     table.width = "750px"
   ) %>%
   gt::cols_width(
-    x ~ "10%",
-    examples ~ "30%",
+    x ~ "5%",
+    examples ~ "35%",
     definition ~ "60%"
   ) %>%
   gt::cols_align(
@@ -537,14 +591,57 @@ gt::gt(d) %>%
     definition = "Definition"
   ) %>%
   gt::tab_row_group(
-    label = "Format",
-    rows = 4:nrow(d)
+    label = "Censor/Status (optional)",
+    rows = 18:nrow(d)
   ) %>%
   gt::tab_row_group(
-    label = "Descriptive",
-    rows = 1:3
+    label = "Format (mandatory)",
+    rows = 13:17
+  ) %>%
+  gt::tab_row_group(
+    label = "Statistics (optional)",
+    rows = 9:12
+  ) %>%
+  gt::tab_row_group(
+    label = "Time (optional)",
+    rows = 5:8
+  ) %>%
+  gt::tab_row_group(
+    label = "Description (mandatory)",
+    rows = 1:4
   )
 ```
+
+### Examples
+
+An example relating to death and nowcasting.
+
+- **deaths_registered_n**: Number of registered deaths.
+- **deaths_nowcasted_n**: Number of registered deaths, corrected for registration delay (nowcasting).
+- **deaths_nowcasted_n_censored**: Has 'deaths_nowcasted_n' been censored?
+- **deaths_nowcasted_n_status**: Status of 'deaths_nowcasted_n' in relation to 'deaths_nowcasted_baseline_credintervalobs_q\*_n'.
+- **deaths_nowcasted_credintervalobs_q02x5_n**: The 2.5th quantile of where we expect the real number of registered deaths (Bayesian).
+- **deaths_nowcasted_baseline_predinterval_q02x5_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_baseline_predinterval_q97x5_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_baseline_credintervalobs_q02x5_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
+- **deaths_nowcasted_baseline_credintervalmean_q02x5_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
+
+An example relating to number of covid-19 cases.
+
+- **covid19_cases_regdate_n**: Number of covid-19 cases by registration date.
+- **covid19_cases_testdate_n**: Number of covid-19 cases by testing date.
+- **covid19_cases_testdate_sum0_13_n**: The sum of 14 days of cases. When granularity_time=='day', date=='2022-01-20', and the current date is '2022-02-07', the value is the sum of covid19_cases_testdate_n between '2022-01-07' and '2022-01-20'. When granularity_time=='isoweek',  isoyearweek=='2022-03', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06') the value is the sum of covid19_cases_testdate_n between '2022-01-10' (Monday in isoyearweek '2022-02') and '2022-01-23' (Sunday in isoyearweek '2022-03'). When granularity_time=='isoweek',  isoyearweek=='2022-06', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06'), the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior. When granularity_time=='event_covid19_norway_2020_02_21_to_9999_01_01', the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior.
+- **covid19_cases_testdate_sum0_999999_n**: The sum of all recorded days of cases.
+- **covid19_cases_testdate_expected_sum0_13_n**: Expected number of nowcasted deaths (i.e. baseline).
+- **deaths_nowcasted_expected_predinterval_q02x5_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_expected_predinterval_q97x5_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_expected_credintervalobs_q02x5_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
+- **deaths_nowcasted_expected_credintervalmean_q02x5_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
+
+An example relating to vaccination.
+
+- **covid19_vax_administered_dose_1_n**: Number of people who received their first dose during this day/isoweek/event. The corresponding age is permanently fixed (a person who received their first dose when 21, will always have received their first dose when 21).
+- **covid19_vax_coverage_dose_1_n**: Number of people who (on the last day of the day/isoweek/event) have received 1 dose of vaccine. The corresponding age is fixed at the last day of the day/isoweek/event.
 
 #### Tag descriptive
 
