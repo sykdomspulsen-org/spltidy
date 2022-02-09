@@ -463,7 +463,7 @@ gt::gt(d) %>%
 
 ## Context-specific variables 
 
-Variable names that are not part of the (unified variables)[#unified-variables] are called context-specific variables, and are made up of 2 mandatory and 3 optional sections.
+Variable names that are not part of the (unified variables)[#unified-variables] are called context-specific variables, and are made up of 2 mandatory (description, format) and 3 optional (time, statistics, censor/status) sections, separated by underscores.
 
 The format is as follows:
 
@@ -614,17 +614,19 @@ gt::gt(d) %>%
 
 ### Examples
 
+In the below examples, the description, time, statistics, format, and censor/status) sections are separated by /.
+
 An example relating to death and nowcasting.
 
-- **deaths_registered_n**: Number of registered deaths.
-- **deaths_nowcasted_n**: Number of registered deaths, corrected for registration delay (nowcasting).
-- **deaths_nowcasted_n_censored**: Has 'deaths_nowcasted_n' been censored?
-- **deaths_nowcasted_n_status**: Status of 'deaths_nowcasted_n' in relation to 'deaths_nowcasted_baseline_credintervalobs_q\*_n'.
-- **deaths_nowcasted_credintervalobs_q02x5_n**: The 2.5th quantile of where we expect the real number of registered deaths (Bayesian).
-- **deaths_nowcasted_baseline_predinterval_q02x5_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
-- **deaths_nowcasted_baseline_predinterval_q97x5_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
-- **deaths_nowcasted_baseline_credintervalobs_q02x5_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
-- **deaths_nowcasted_baseline_credintervalmean_q02x5_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
+- **deaths_registered/_n**: Number of registered deaths.
+- **deaths_nowcasted/_n**: Number of registered deaths, corrected for registration delay (nowcasting).
+- **deaths_nowcasted/_n/_censored**: Has 'deaths_nowcasted_n' been censored?
+- **deaths_nowcasted/_n/_status**: Status of 'deaths_nowcasted_n' in relation to 'deaths_nowcasted_baseline_credintervalobs_q\*_n'.
+- **deaths_nowcasted/_credintervalobs_q02x5/_n**: The 2.5th quantile of where we expect the real number of registered deaths (Bayesian).
+- **deaths_nowcasted_baseline/_predinterval_q02x5/_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_baseline/_predinterval_q97x5/_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_baseline/_credintervalobs_q02x5/_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
+- **deaths_nowcasted_baseline/_credintervalmean_q02x5/_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
 
 An example relating to number of covid-19 cases.
 
