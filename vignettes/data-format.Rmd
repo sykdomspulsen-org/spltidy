@@ -618,7 +618,7 @@ In the below examples, the description, time, statistics, format, and censor/sta
 
 An example relating to death and nowcasting.
 
-- **deaths_registered/_n**: Number of registered deaths.
+- **deaths_registered\/_n**: Number of registered deaths.
 - **deaths_nowcasted/_n**: Number of registered deaths, corrected for registration delay (nowcasting).
 - **deaths_nowcasted/_n/_censored**: Has 'deaths_nowcasted_n' been censored?
 - **deaths_nowcasted/_n/_status**: Status of 'deaths_nowcasted_n' in relation to 'deaths_nowcasted_baseline_credintervalobs_q\*_n'.
@@ -630,11 +630,11 @@ An example relating to death and nowcasting.
 
 An example relating to number of covid-19 cases.
 
-- **covid19_cases_regdate_n**: Number of covid-19 cases by registration date.
-- **covid19_cases_testdate_n**: Number of covid-19 cases by testing date.
-- **covid19_cases_testdate_sum0_13_n**: The sum of 14 days of cases. When granularity_time=='day', date=='2022-01-20', and the current date is '2022-02-07', the value is the sum of covid19_cases_testdate_n between '2022-01-07' and '2022-01-20'. When granularity_time=='isoweek',  isoyearweek=='2022-03', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06') the value is the sum of covid19_cases_testdate_n between '2022-01-10' (Monday in isoyearweek '2022-02') and '2022-01-23' (Sunday in isoyearweek '2022-03'). When granularity_time=='isoweek',  isoyearweek=='2022-06', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06'), the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior. When granularity_time=='event_covid19_norway_2020_02_21_to_9999_01_01', the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior.
-- **covid19_cases_testdate_sum0_999999_n**: The sum of all recorded days of cases.
-- **covid19_cases_testdate_expected_sum0_13_n**: Expected number of nowcasted deaths (i.e. baseline).
+- **covid19_cases_regdate/_n**: Number of covid-19 cases by registration date.
+- **covid19_cases_testdate/_n**: Number of covid-19 cases by testing date.
+- **covid19_cases_testdate/_sum0_13/_n**: The sum of 14 days of cases. When granularity_time=='day', date=='2022-01-20', and the current date is '2022-02-07', the value is the sum of covid19_cases_testdate_n between '2022-01-07' and '2022-01-20'. When granularity_time=='isoweek',  isoyearweek=='2022-03', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06') the value is the sum of covid19_cases_testdate_n between '2022-01-10' (Monday in isoyearweek '2022-02') and '2022-01-23' (Sunday in isoyearweek '2022-03'). When granularity_time=='isoweek',  isoyearweek=='2022-06', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06'), the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior. When granularity_time=='event_covid19_norway_2020_02_21_to_9999_01_01', the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior.
+- **covid19_cases_testdate/_sum0_999999/_n**: The sum of all recorded days of cases.
+- **covid19_cases_testdate__sum0_13_n**: Expected number of nowcasted deaths (i.e. baseline).
 - **deaths_nowcasted_expected_predinterval_q02x5_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
 - **deaths_nowcasted_expected_predinterval_q97x5_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
 - **deaths_nowcasted_expected_credintervalobs_q02x5_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
