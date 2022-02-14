@@ -388,7 +388,7 @@ Time conversion functions can be found in package [spltime](https://docs.sykdoms
 d <- rbind(
   data.frame(
     variable = "granularity_time",
-    accepted_values = gt::html("\"day\", \"isoweek\", \"isoyear\" (<a href='#time'>Time</a>)"),
+    accepted_values = gt::html("\"day\", \"isoweek\", \"isoyear\", \"event_covid19_norway_vaccination_2020_12_02_to_9999_01_01\", \"event_covid19_norway_2020_02_21_to_9999_01_01\" (<a href='#time'>Time</a>)"),
     definition = "Granularity of time"
   ),
   data.frame(
@@ -413,12 +413,12 @@ d <- rbind(
   ),
   data.frame(
     variable = "age",
-    accepted_values = gt::html("\"000\", \"001\", \"000-004\", \"065p\", \"total\", ... (<a href='#age'>Age</a>)"),
+    accepted_values = gt::html("\"000\", \"001\", \"000-004\", \"065p\", \"total\", NA_character_, ... (<a href='#age'>Age</a>)"),
     definition = "Age in years"
   ),
   data.frame(
     variable = "sex",
-    accepted_values = gt::html("\"male\", \"female\", \"total\" (<a href='#sex'>Sex</a>)"),
+    accepted_values = gt::html("\"male\", \"female\", \"total\", NA_character_ (<a href='#sex'>Sex</a>)"),
     definition = "Sex"
   ),
   data.frame(
