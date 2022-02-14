@@ -183,11 +183,11 @@ The following are approved events:
 d <- rbind(
   data.frame(
     granularity_time = "event_covid19_norway_2020_02_21_to_9999_01_01",
-    definition = "Simple."
+    definition = "Covid-19 outbreak in Norway (on-going)."
   ),
   data.frame(
     granularity_time = "event_covid19_norway_vaccination_2020_12_02_to_9999_01_01",
-    definition = "Simple."
+    definition = "Covid-19 vaccination campaign in Norway (on-going)."
   )
 )
 
