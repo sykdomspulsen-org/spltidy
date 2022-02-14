@@ -175,6 +175,36 @@ gt::gt(d) %>%
   )
 ```
 
+### Approved events 
+
+The following are approved events:
+
+```{r echo=FALSE, results='asis'}
+d <- rbind(
+  data.frame(
+    granularity_time = "event_covid19_norway_2020_02_21_to_9999_01_01",
+    definition = "Simple."
+  ),
+  data.frame(
+    granularity_time = "event_covid19_norway_vaccination_2020_12_02_to_9999_01_01",
+    definition = "Simple."
+  )
+)
+
+gt::gt(d) %>%
+  gt::tab_options(
+    table.width = "750px"
+  ) %>%
+  gt::cols_width(
+    granularity_time ~ "65%",
+    definition ~ "35%"
+  ) %>%
+  gt::cols_align(
+    align = "left"
+  ) %>%
+  gt::tab_header(title = "Approved events")
+```
+
 ## Location
 
 Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
@@ -388,7 +418,7 @@ Time conversion functions can be found in package [spltime](https://docs.sykdoms
 d <- rbind(
   data.frame(
     variable = "granularity_time",
-    accepted_values = gt::html("\"day\", \"isoweek\", \"isoyear\", \"event_covid19_norway_vaccination_2020_12_02_to_9999_01_01\", \"event_covid19_norway_2020_02_21_to_9999_01_01\" (<a href='#time'>Time</a>)"),
+    accepted_values = gt::html("\"day\", \"isoweek\", \"isoyear\", \"event_*_*_to_*\" (<a href='#time'>Time</a>)"),
     definition = "Granularity of time"
   ),
   data.frame(
