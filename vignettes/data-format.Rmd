@@ -388,23 +388,23 @@ Time conversion functions can be found in package [spltime](https://docs.sykdoms
 d <- rbind(
   data.frame(
     variable = "granularity_time",
-    accepted_values = gt::html("<a href='#time'>Time</a> (day, isoweek, isoyear)"),
+    accepted_values = gt::html("\"day\", \"isoweek\", \"isoyear\" (<a href='#time'>Time</a>)"),
     definition = "Granularity of time"
   ),
   data.frame(
     variable = "granularity_geo",
-    accepted_values = paste0(unique(spldata::norway_locations_names()$granularity_geo), collapse=", "),
+    accepted_values = paste0("\"",paste0(unique(spldata::norway_locations_names()$granularity_geo), collapse="\", \""),"\""),
     definition = "Granularity of geography"
   ),
   data.frame(
     variable = "country_iso3",
-    accepted_values = "nor, den, swe, fin",
+    accepted_values = "\"nor\", \"den\", \"swe\", \"fin\"",
     definition = "ISO3 country code, e.g. nor for Norway"
   ),
   data.frame(
     variable = "location_code",
-    accepted_values = gt::html("norge, countyXX, municipXXXX, ... (<a href='#location'>Location</a>)"),
-    definition = "ISO3 country code, e.g. nor for Norway"
+    accepted_values = gt::html("\"norge\", \"countyXX\", \"municipXXXX\", ... (<a href='#location'>Location</a>)"),
+    definition = "Location code"
   ),
   data.frame(
     variable = "border",
@@ -413,12 +413,12 @@ d <- rbind(
   ),
   data.frame(
     variable = "age",
-    accepted_values = gt::html("0, 1, 000-004, 065p, total, ... (<a href='#age'>Age</a>)"),
+    accepted_values = gt::html("\"000\", \"001\", \"000-004\", \"065p\", \"total\", ... (<a href='#age'>Age</a>)"),
     definition = "Age in years"
   ),
   data.frame(
     variable = "sex",
-    accepted_values = gt::html("male, female, total (<a href='#sex'>Sex</a>)"),
+    accepted_values = gt::html("\"male\", \"female\", \"total\" (<a href='#sex'>Sex</a>)"),
     definition = "Sex"
   ),
   data.frame(
@@ -463,7 +463,7 @@ gt::gt(d) %>%
 
 ## Context-specific variables 
 
-Variable names that are not part of the (unified variables)[#unified-variables] are called context-specific variables, and are made up of 2 mandatory (description, format) and 3 optional (time, statistics, censor/status) sections, separated by underscores.
+Variable names that are not part of the [unified variables](#unified-variables) are called context-specific variables, and are made up of 2 mandatory (description, format) and 3 optional (time, statistics, censor/status) sections, separated by underscores.
 
 The format is as follows:
 
@@ -614,76 +614,34 @@ gt::gt(d) %>%
 
 ### Examples
 
-In the below examples, the description, time, statistics, format, and censor/status) sections are separated by /.
+In the below examples, the description, time, statistics, format, and censor/status sections are separated by /.
 
 An example relating to death and nowcasting.
 
 - **deaths_registered/\_n**: Number of registered deaths.
-- **deaths_nowcasted/_n**: Number of registered deaths, corrected for registration delay (nowcasting).
-- **deaths_nowcasted/_n/_censored**: Has 'deaths_nowcasted_n' been censored?
-- **deaths_nowcasted/_n/_status**: Status of 'deaths_nowcasted_n' in relation to 'deaths_nowcasted_baseline_credintervalobs_q\*_n'.
-- **deaths_nowcasted/_credintervalobs_q02x5/_n**: The 2.5th quantile of where we expect the real number of registered deaths (Bayesian).
-- **deaths_nowcasted_baseline/_predinterval_q02x5/_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
-- **deaths_nowcasted_baseline/_predinterval_q97x5/_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
-- **deaths_nowcasted_baseline/_credintervalobs_q02x5/_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
-- **deaths_nowcasted_baseline/_credintervalmean_q02x5/_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
+- **deaths_nowcasted/\_n**: Number of registered deaths, corrected for registration delay (nowcasting).
+- **deaths_nowcasted/\_n/\_censored**: Has 'deaths_nowcasted_n' been censored?
+- **deaths_nowcasted/\_n/\_status**: Status of 'deaths_nowcasted_n' in relation to 'deaths_nowcasted_baseline_credintervalobs_q\*_n'.
+- **deaths_nowcasted/\_credintervalobs_q02x5/\_n**: The 2.5th quantile of where we expect the real number of registered deaths (Bayesian).
+- **deaths_nowcasted_baseline/\_predinterval_q02x5/\_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_baseline/\_predinterval_q97x5/\_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_baseline/\_credintervalobs_q02x5/\_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
+- **deaths_nowcasted_baseline/\_credintervalmean_q02x5/\_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
 
 An example relating to number of covid-19 cases.
 
-- **covid19_cases_regdate/_n**: Number of covid-19 cases by registration date.
-- **covid19_cases_testdate/_n**: Number of covid-19 cases by testing date.
-- **covid19_cases_testdate/_sum0_13/_n**: The sum of 14 days of cases. When granularity_time=='day', date=='2022-01-20', and the current date is '2022-02-07', the value is the sum of covid19_cases_testdate_n between '2022-01-07' and '2022-01-20'. When granularity_time=='isoweek',  isoyearweek=='2022-03', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06') the value is the sum of covid19_cases_testdate_n between '2022-01-10' (Monday in isoyearweek '2022-02') and '2022-01-23' (Sunday in isoyearweek '2022-03'). When granularity_time=='isoweek',  isoyearweek=='2022-06', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06'), the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior. When granularity_time=='event_covid19_norway_2020_02_21_to_9999_01_01', the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior.
-- **covid19_cases_testdate/_sum0_999999/_n**: The sum of all recorded days of cases.
-- **covid19_cases_testdate_sum0_13_n**: Expected number of nowcasted deaths (i.e. baseline).
-- **deaths_nowcasted_expected_predinterval_q02x5_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
-- **deaths_nowcasted_expected_predinterval_q97x5_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
-- **deaths_nowcasted_expected_credintervalobs_q02x5_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
-- **deaths_nowcasted_expected_credintervalmean_q02x5_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
+- **covid19_cases_regdate/\_n**: Number of covid-19 cases by registration date.
+- **covid19_cases_testdate/\_n**: Number of covid-19 cases by testing date.
+- **covid19_cases_testdate/\_sum0_13/\_n**: The sum of 14 days of cases. When granularity_time=='day', date=='2022-01-20', and the current date is '2022-02-07', the value is the sum of covid19_cases_testdate_n between '2022-01-07' and '2022-01-20'. When granularity_time=='isoweek',  isoyearweek=='2022-03', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06') the value is the sum of covid19_cases_testdate_n between '2022-01-10' (Monday in isoyearweek '2022-02') and '2022-01-23' (Sunday in isoyearweek '2022-03'). When granularity_time=='isoweek',  isoyearweek=='2022-06', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06'), the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior. When granularity_time=='event_covid19_norway_2020_02_21_to_9999_01_01', the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior.
+- **covid19_cases_testdate/\_sum0_999999/\_n**: The sum of all recorded days of cases.
+- **covid19_cases_testdate/\_sum0_13/\_n**: Expected number of nowcasted deaths (i.e. baseline).
+- **deaths_nowcasted_baseline/\_predinterval_q02x5/\_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_baseline/\_predinterval_q97x5/\_n**: The 97.5th quantile of an expected new observation of nowcasted deaths (frequentist).
+- **deaths_nowcasted_baseline/\_credintervalobs_q02x5/\_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
+- **deaths_nowcasted_baseline/\_credintervalmean_q02x5/\_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
 
 An example relating to vaccination.
 
-- **covid19_vax_administered_dose_1_n**: Number of people who received their first dose during this day/isoweek/event. The corresponding age is permanently fixed (a person who received their first dose when 21, will always have received their first dose when 21).
-- **covid19_vax_coverage_dose_1_n**: Number of people who (on the last day of the day/isoweek/event) have received 1 dose of vaccine. The corresponding age is fixed at the last day of the day/isoweek/event.
+- **covid19_vax_administered_dose_1/\_n**: Number of people who received their first dose during this day/isoweek/event. The corresponding age is permanently fixed (a person who received their first dose when 21, will always have received their first dose when 21).
+- **covid19_vax_coverage_dose_1/\_n**: Number of people who (on the last day of the day/isoweek/event) have received 1 dose of vaccine. The corresponding age is fixed at the last day of the day/isoweek/event.
 
-#### Tag descriptive
-
-When creating a database table with many different sources of data, it is recommended to include the data source as a descriptive:
-
-- `msis_cases_testdate_n` - number of cases by testing date
-- `msis_cases_regdate_n` - number of cases by registration date
-- `msislab_tests_n` - number of tests performed
-- `nipar_hospital_main_cause_n` - number of people who were admitted to the hospital with covid-19 as a main cause
-- `nipar_icu_n` - number of people who were admitted to the ICU with covid-19
-- `mor_deaths_n` - number of deaths
-
-#### Tag format
-
-`format` is the format that the value is stored in.
-
-For **percentages/proportions**, we recommend using `pr100` (i.e. values going between 0 and 100) over `pr1` (i.e. values going between 0 and 1).
-
-For **intervals**, use `XintervalY`. We recommend:
-
-- `X` describing the type of interval. If you are using frequentist statistics, this is probably `predinterval` or `confinterval`. If you are using Bayesian statistics, then `credinterval` would be appropriate, and the `descriptive` would then determine if the credible interval is describing a variable (Bayesian prediction interval) or a population/distribution parameter (Bayesian confidence interval).
-- `Y` describes the limit, for example (in percentiles) `_p02x5`, `_p97x5`, `_p00x1`, `_p99x9` or (in z-scores) `_l2`, `_u2`, `_l4`, `_u4`.
-
-Some examples are as follows:
-
-- `deaths_n` - number of deaths
-- `deaths_n_sum0_13` - number of deaths that occurred today and the preceeding 13 days
-- `deaths_pr100000_sum0_13` - number of deaths that occurred today and the preceeding 13 days, per 100 00 population
-- `consultations_r80_vk_ote_n` - number of influenza consultations
-- `deaths_registered_n` - number of deaths registered
-- `deaths_corrected_n` - number of deaths (corrected for registration delay) 
-- `deaths_corrected_n_credinterval_p02x5` - Bayesian prediction interval for the "true" number of deaths 
-- `deaths_corrected_n_credinterval_p97x5` - Bayesian prediction interval for the "true" number of deaths 
-- `deaths_corrected_baseline_n` - Expected number of deaths (i.e. the baseline)
-- `deaths_corrected_baseline_n_credinterval_p02x5` - Bayesian prediction interval for the expected number of death (baseline)
-- `deaths_corrected_baseline_n_credinterval_p97x5` - Bayesian prediction interval for the expected number of death (baseline)
-
-#### Tag functiontime
-
-We can also include variables that refer to multiple days/weeks:
-
-- `msis_cases_testdate_n_sum0_13` - the aggregate number of cases for today and the preceeding 13 days by testing date
-- `msis_cases_testdate_pr100000_sum0_13` - the aggregate number of cases for today and the preceeding 13 days by testing date per 100 000 population
