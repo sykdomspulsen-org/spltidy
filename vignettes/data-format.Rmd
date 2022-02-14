@@ -618,7 +618,7 @@ In the below examples, the description, time, statistics, format, and censor/sta
 
 An example relating to death and nowcasting.
 
-- **deaths_registered**/**_n**: Number of registered deaths.
+- **deaths_registered/\_n**: Number of registered deaths.
 - **deaths_nowcasted/_n**: Number of registered deaths, corrected for registration delay (nowcasting).
 - **deaths_nowcasted/_n/_censored**: Has 'deaths_nowcasted_n' been censored?
 - **deaths_nowcasted/_n/_status**: Status of 'deaths_nowcasted_n' in relation to 'deaths_nowcasted_baseline_credintervalobs_q\*_n'.
