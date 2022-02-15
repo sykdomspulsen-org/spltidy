@@ -146,7 +146,7 @@ gt::gt(d) %>%
     )
   ) %>%
     gt::tab_footnote(
-    footnote = "isoweek (character) is only used within isoyearweek.",
+    footnote = "isoweek (character) is only used internally within isoyearweek. Internal use is demarcated by a line through the text.",
     locations = gt::cells_body(
       columns = granularity_time,
       rows = granularity_time == "isoweek (character)"
@@ -160,7 +160,7 @@ gt::gt(d) %>%
     )
   ) %>%
     gt::tab_footnote(
-    footnote = "isoyear (character) is only used within isoyearweek.",
+    footnote = "isoyear (character) is only used internally within isoyearweek. Internal use is demarcated by a line through the text.",
     locations = gt::cells_body(
       columns = granularity_time,
       rows = granularity_time == "isoyear (character)"
@@ -292,29 +292,6 @@ gt::gt(d) %>%
       columns = granularity_geo,
       rows = granularity_geo == "faregion"
     )
-  ) 
-```
-
-## Location (reference)
-
-Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
-
-Here we list as a reference table the valid `location_code`s and `location_name_description_nb`s (the two most commonly used locations).
-
-```{r echo=FALSE, results='asis'}
-d <- spldata::norway_locations_names()[,.(
-  location_order = paste0("#", location_order),
-  location_code,
-  location_name_description_nb
-)]
-
-gt::gt(d) %>%
-  gt::tab_options(
-    table.width = "750px"
-  ) %>%
-  gt::tab_header(title = "Reference table of valid `location_code`s and `location_name_description_nb`s") %>%
-  gt::cols_label(
-    location_order = "#"
   ) 
 ```
 
@@ -497,7 +474,12 @@ Variable names that are not part of the [unified variables](#unified-variables) 
 
 The format is as follows:
 
-description[[_time]][[_statistics]]_format[[_censor/status]]
+```{yaml}
+description[_time][_statistics]_format[_censor/status]
+```
+
+Where `[blah]` indicates an optional argument. It is rare that all of the optional arguments will be used at the same time.
+
 
 ```{r echo=FALSE, results='asis'}
 d <- rbind(
@@ -546,7 +528,7 @@ d <- rbind(
   data.frame(
     x = "",
     examples = "predinterval_q02x5",
-    definition = "Prediction interval for the baseline (2.5th quantile)."
+    definition = "Prediction interval for the baseline (2.5th quantile). 'x' is used to denominate a decimal point, so that we can differentiate between 100 and 10.0."
   ),
   data.frame(
     x = "",
@@ -646,7 +628,7 @@ gt::gt(d) %>%
 
 In the below examples, the description, time, statistics, format, and censor/status sections are separated by /.
 
-An example relating to death and nowcasting.
+An example relating to death and nowcasting:
 
 - **deaths_registered/\_n**: Number of registered deaths.
 - **deaths_nowcasted/\_n**: Number of registered deaths, corrected for registration delay (nowcasting).
@@ -658,7 +640,7 @@ An example relating to death and nowcasting.
 - **deaths_nowcasted_baseline/\_credintervalobs_q02x5/\_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
 - **deaths_nowcasted_baseline/\_credintervalmean_q02x5/\_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
 
-An example relating to number of covid-19 cases.
+An example relating to number of covid-19 cases:
 
 - **covid19_cases_regdate/\_n**: Number of covid-19 cases by registration date.
 - **covid19_cases_testdate/\_n**: Number of covid-19 cases by testing date.
@@ -670,8 +652,40 @@ An example relating to number of covid-19 cases.
 - **deaths_nowcasted_baseline/\_credintervalobs_q02x5/\_n**: The 2.5th quantile of where we expect an observation of nowcasted deaths (Bayesian).
 - **deaths_nowcasted_baseline/\_credintervalmean_q02x5/\_n**: The 2.5th quantile of the mean of nowcasted deaths (Bayesian).
 
-An example relating to vaccination.
+An example relating to number of covid-19 tests:
+
+- **covid19_testevents/\_n**: Number of covid-19 test events (i.e. a person getting tested within a 7 day period).
+- **covid19_testevents_pos/\_pr1**: Proportion (0-1) of covid-19 test events that were positive.
+- **covid19_testevents_pos/\_pr100**: Percentage (0-100) of covid-19 test events that were positive.
+- **covid19_testevents_pos/\_sum0_13/\_pr100**: Percentage (0-100) of covid-19 test events that were positive over the last 14 days.
+- **covid19_testevents_pos/\_daymean0_13/\_pr100**: For each of the last 14 days, calculate the percentage (0-100) of covid-19 test events that were positive, and then take the mean of these 14 values.
+- **covid19_testevents_pos/\_isoweekmean0_13/\_pr100**: For each of the last 7 day periods (0-6 days, 7-13 days), calculate the percentage (0-100) of covid-19 test events that were positive, and then take the mean of these 2 values.
+
+An example relating to vaccination:
 
 - **covid19_vax_administered_dose_1/\_n**: Number of people who received their first dose during this day/isoweek/event. The corresponding age is permanently fixed (a person who received their first dose when 21, will always have received their first dose when 21).
 - **covid19_vax_coverage_dose_1/\_n**: Number of people who (on the last day of the day/isoweek/event) have received 1 dose of vaccine. The corresponding age is fixed at the last day of the day/isoweek/event.
+
+## Reference (Location)
+
+Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
+
+Here we list as a reference table the valid `location_code`s and `location_name_description_nb`s (the two most commonly used locations).
+
+```{r echo=FALSE, results='asis'}
+d <- spldata::norway_locations_names()[,.(
+  location_order = paste0("#", location_order),
+  location_code,
+  location_name_description_nb
+)]
+
+gt::gt(d) %>%
+  gt::tab_options(
+    table.width = "750px"
+  ) %>%
+  gt::tab_header(title = "Reference table of valid `location_code`s and `location_name_description_nb`s") %>%
+  gt::cols_label(
+    location_order = "#"
+  ) 
+```
 
