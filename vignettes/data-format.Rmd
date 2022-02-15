@@ -247,7 +247,7 @@ gt::gt(d) %>%
     )
   ) %>%
   gt::tab_footnote(
-    footnote = gt::md("**location_name**: Used (rarely) **inside results** (figures, tables, documents). Can be confusing as some names are duplicated."),
+    footnote = gt::md("**location_name**: Used (rarely) **inside results** (figures, tables, documents). Can be confusing as some names are duplicated. Its rare usage is demarcated by a line through the text."),
     locations = gt::cells_column_labels(
       columns = location_name
     )
@@ -299,7 +299,7 @@ gt::gt(d) %>%
 
 Ages should be coded as characters and should always contain 3 digits. If it is an age range, the two ages are joined by a hyphen (e.g. `005-010`). 
 
-Use `085p` instead of `>=085` or `85+`. 
+Use `085p` instead of `>=085` or `85+`, as this will allow for an easy conversion from long to wide formatted data.
 
 ```{r echo=FALSE, results='asis'}
 d <- rbind(
@@ -528,7 +528,7 @@ d <- rbind(
   data.frame(
     x = "",
     examples = "predinterval_q02x5",
-    definition = "Prediction interval for the baseline (2.5th quantile). 'x' is used to denominate a decimal point, so that we can differentiate between 100 and 10.0."
+    definition = "Prediction interval for the baseline (2.5th quantile). 'x' is used to denominate a decimal point, so that we can differentiate between 100 (100x0) and 10.0 (10x0)."
   ),
   data.frame(
     x = "",
