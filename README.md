@@ -19,8 +19,8 @@ Then write in:
 ```
 options(
   repos = structure(c(
-    FHI  = "https://docs.sykdomspulsen.no/drat/",
-    CRAN = "https://cran.rstudio.com"
+    SPLVERSE  = "https://docs.sykdomspulsen.no/drat/",
+    CRAN      = "https://cran.rstudio.com"
   ))
 )
 ```
