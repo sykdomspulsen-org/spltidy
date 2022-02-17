@@ -35,7 +35,7 @@ This document presents the data format `splfmt_rts_v1_mini`.
 
 English is the primary language for our code.
 
-Names that are abbreviations or in Norwegian are kept as they are: data sources such as `msis, dar, sysvak, normomo`.
+Names that are abbreviations or in Norwegian are kept as they are: data sources such as `msis`, `daar`, `sysvak`, `normomo`.
 
 **Capital letters**
 
@@ -64,7 +64,7 @@ e.g. A database table could be called `msis_by_time_location_age_sex` or a filen
 
 ## Time
 
-Time functions can be obtained from [spltime](/spltime). Missing time data should be coded as `NA`.
+Time functions can be obtained from [spltime](/spltime). Missing time data should be coded as `NA`. Uncommon/internal use is demarcated by a line through the text.
 
 ```{r echo=FALSE, results='asis'}
 d <- rbind(
@@ -207,7 +207,7 @@ gt::gt(d) %>%
 
 ## Location
 
-Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
+Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.  Uncommon/internal use is demarcated by a line through the text.
 
 ```{r echo=FALSE, results='asis'}
 d <- spldata::norway_locations_names()[,.(
