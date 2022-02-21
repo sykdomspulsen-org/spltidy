@@ -670,8 +670,8 @@ An example relating to vaccination:
 
 ```{r}
 
-d <- test_data_generator()
-set_splfmt_rts_v1_mini(d)
+d <- spltidy::test_data_generator()
+spltidy::set_splfmt_rts_v1_mini(d)
 
 d[]
 d[1,isoyearweek := "2021-01"]
