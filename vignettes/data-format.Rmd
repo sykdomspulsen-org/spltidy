@@ -666,6 +666,29 @@ An example relating to vaccination:
 - **covid19_vax_administered_dose_1/\_n**: Number of people who received their first dose during this day/isoweek/event. The corresponding age is permanently fixed (a person who received their first dose when 21, will always have received their first dose when 21).
 - **covid19_vax_coverage_dose_1/\_n**: Number of people who (on the last day of the day/isoweek/event) have received 1 dose of vaccine. The corresponding age is fixed at the last day of the day/isoweek/event.
 
+## In action
+
+```{r}
+
+d <- test_data_generator()
+set_splfmt_rts_v1_mini(d)
+
+d[]
+d[1,isoyearweek := "2021-01"]
+d
+d[2,isoyear := 2019]
+d
+d[4:5,date := as.Date("2020-01-01")]
+d
+d[10,c("isoyear","isoyearweek") := .(2021,"2021-01")]
+d
+
+
+d[10,c("location_code") := .("norge")]
+d
+
+```
+
 ## Reference (Location)
 
 Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
