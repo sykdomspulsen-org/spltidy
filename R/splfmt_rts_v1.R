@@ -88,7 +88,6 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
   return(d)
 }
 
-
 "[.splfmt_rts_v1_mini" = function (x, ...){
   # original call
   modified_call <- orig_call <- sys.calls()[[sys.nframe()-1]]
@@ -98,7 +97,14 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
   # try to find which part uses :=
   first_call <- lapply(orig_call, function(x){if(length(x)>1)deparse(x[[1]])})
   i <- as.numeric(which(first_call==":="))
-  if(length(i) == 1){
+  if(length(i) == 0){
+    # no assignment
+    old_class <- attr(x, "class")
+    on.exit(setattr(x, "class", old_class))
+    setattr(x, "class", class(x)[-1])
+
+    return(eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2)))
+  } else if(length(i) == 1){
     # smart-assignment for time ----
     # identify if a time variable is mentioned
     lhs <- unlist(lapply(orig_call[[i]][[2]], function(x){deparse(x)}))
@@ -182,20 +188,20 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
         '{orig_call[[2]]}[, x_modified_geovar_97531 := NULL]'
       )
     }
+    # print(orig_call)
+    # print(modified_call)
+    # print(healing_calls)
+
+    old_class <- attr(x, "class")
+    on.exit(setattr(x, "class", old_class))
+    setattr(x, "class", class(x)[-1])
+
+    #print(modified_call)
+    eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
+    lapply(healing_calls, function(x){eval(parse(text = x), envir = parent.frame(1:2))})
+
+    return(invisible(x))
   }
-  # print(orig_call)
-  # print(modified_call)
-  # print(healing_calls)
-
-  old_class <- attr(x, "class")
-  on.exit(setattr(x, "class", old_class))
-  setattr(x, "class", class(x)[-1])
-
-  #print(modified_call)
-  eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
-  lapply(healing_calls, function(x){eval(parse(text = x), envir = parent.frame(1:2))})
-
-  return(invisible(x))
 }
 
 

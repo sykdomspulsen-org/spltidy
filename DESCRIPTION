@@ -16,8 +16,10 @@ Imports: data.table,
     magrittr,
     ggplot2,
     spldata,
-    splstyle,
-    spltime
+    spltime,
+    crayon,
+    digest,
+    stringr
 Suggests: testthat,
     knitr,
     rmarkdown,
