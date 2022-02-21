@@ -88,6 +88,10 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
   return(d)
 }
 
+#' assignment
+#' @param x x
+#' @param ... dots
+#' @export
 "[.splfmt_rts_v1_mini" = function (x, ...){
   # original call
   modified_call <- orig_call <- sys.calls()[[sys.nframe()-1]]
@@ -103,7 +107,10 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
     on.exit(setattr(x, "class", old_class))
     setattr(x, "class", class(x)[-1])
 
-    return(eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2)))
+    y <- eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
+    set_splfmt_rts_v1_mini(y)
+    return(invisible(y))
+
   } else if(length(i) == 1){
     # smart-assignment for time ----
     # identify if a time variable is mentioned
@@ -225,19 +232,19 @@ create_unified_columns.splfmt_rts_v1_mini <- function(x){
 
 
 heal.splfmt_rts_v1_mini <- function(x){
-  create_unified_columns(x)
+  create_unified_columns.splfmt_rts_v1_mini(x)
 
   # granularity_time = mandatory
 
   # granularity_geo = interpolate from location_code
-  d[is.na(granularity_geo) & !is.na(location_code), location_code := location_code]
+  x[is.na(granularity_geo) & !is.na(location_code), location_code := location_code]
 
   # country_iso3
-  d[is.na(country_iso3) & !is.na(location_code), location_code := location_code]
+  x[is.na(country_iso3) & !is.na(location_code), location_code := location_code]
 
-  d[granularity_time=="isoyear" & !is.na(isoyear) & (is.na(isoyearweek) | is.na(date)), isoyear := isoyear]
-  d[granularity_time=="isoweek" & !is.na(isoyearweek) & (is.na(isoyear) | is.na(date)), isoyearweek := isoyearweek]
-  d[granularity_time=="day" & !is.na(date) & (is.na(isoyear) | is.na(isoyearweek)), date := date]
+  x[granularity_time=="isoyear" & !is.na(isoyear) & (is.na(isoyearweek) | is.na(date)), isoyear := isoyear]
+  x[granularity_time=="isoweek" & !is.na(isoyearweek) & (is.na(isoyear) | is.na(date)), isoyearweek := isoyearweek]
+  x[granularity_time=="day" & !is.na(date) & (is.na(isoyear) | is.na(isoyearweek)), date := date]
 
   return(invisible(x))
 }
@@ -268,7 +275,6 @@ set_splfmt_rts_v1_mini <- function(x){
   setattr(x, "format_unified", fmt)
   setattr(x, "class", unique(c("splfmt_rts_v1_mini", class(x))))
 
-  create_unified_columns.splfmt_rts_v1_mini(x)
   heal.splfmt_rts_v1_mini(x)
 
   return(invisible(x))
