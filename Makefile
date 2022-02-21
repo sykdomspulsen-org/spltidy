@@ -121,7 +121,7 @@ pkgdown:
 	sudo podman run --rm --privileged \
 		-v $(shell pwd):/rpkg \
 		-v $(shell pwd)/../built:/built \
-		-v $(shell pwd)/../drat:/drat \
+		-v $(shell pwd)/../drat_sp:/drat \
 		docker.io/fhix/rfhiverse:latest /bin/bash -c 'Rscript -e "devtools::install(\"/rpkg\", dependencies = TRUE, upgrade = FALSE); pkgdown::build_site(\"/rpkg\")"'
 
 	git add .
