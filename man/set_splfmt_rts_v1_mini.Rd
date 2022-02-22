@@ -4,17 +4,19 @@
 \alias{set_splfmt_rts_v1_mini}
 \title{Set as splfmt_rts_v1_mini}
 \usage{
-set_splfmt_rts_v1_mini(x)
+set_splfmt_rts_v1_mini(x, heal = FALSE)
 }
 \arguments{
 \item{x}{The data.table to be converted to splfmt_rts_v1_mini}
+
+\item{heal}{Do you want it to heal on creation?}
 }
 \description{
 Set as splfmt_rts_v1_mini
 }
 \examples{
 d <- test_data_generator()
-set_splfmt_rts_v1_mini(d)
+set_splfmt_rts_v1_mini(d, heal = TRUE)
 d[1,isoyearweek := "2021-01"]
 d
 d[2,isoyear := 2019]

@@ -71,6 +71,17 @@ formats$splfmt_rts_v1_mini$unified$date <- list(
   class = "Date"
 )
 
+#' remove class splfmt_rts_v1_mini
+#' @param x data.table
+#' @export
+remove_class_splfmt_rts_v1_mini <- function(x){
+  classes <- class(x)
+  classes <- classes[!classes %in% "splfmt_rts_v1_mini"]
+  setattr(x, "class", classes)
+  return(invisible(x))
+}
+
+
 #' Test data generator
 #' @param fmt Format (splfmt_rts_v1_mini)
 #' @examples
@@ -91,6 +102,7 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
 #' assignment
 #' @param x x
 #' @param ... dots
+#' @method [ splfmt_rts_v1_mini
 #' @export
 "[.splfmt_rts_v1_mini" = function (x, ...){
   # original call
@@ -103,12 +115,11 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
   i <- as.numeric(which(first_call==":="))
   if(length(i) == 0){
     # no assignment
-    old_class <- attr(x, "class")
-    on.exit(setattr(x, "class", old_class))
-    setattr(x, "class", class(x)[-1])
+    remove_class_splfmt_rts_v1_mini(x)
+    on.exit(set_splfmt_rts_v1_mini(x, heal = FALSE))
 
     y <- eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
-    set_splfmt_rts_v1_mini(y)
+    set_splfmt_rts_v1_mini(y, heal = FALSE)
     return(invisible(y))
 
   } else if(length(i) == 1){
@@ -199,13 +210,10 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
     # print(modified_call)
     # print(healing_calls)
 
-    old_class <- attr(x, "class")
-    on.exit(setattr(x, "class", old_class))
-    setattr(x, "class", class(x)[-1])
+    remove_class_splfmt_rts_v1_mini(x)
+    on.exit(set_splfmt_rts_v1_mini(x, heal = FALSE))
 
-    #print(modified_call)
     eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
-    #print(x)
     for(i in seq_along(healing_calls)){
       eval(parse(text = healing_calls[[i]]), envir = parent.frame(1:2))
     }
@@ -219,10 +227,6 @@ create_unified_columns <- function (x, ...) {
   UseMethod("create_unified_columns", x)
 }
 
-heal <- function (x, ...) {
-  UseMethod("heal", x)
-}
-
 create_unified_columns.splfmt_rts_v1_mini <- function(x){
   fmt <- attr(x, "format_unified")
   for(i in names(fmt)){
@@ -233,7 +237,19 @@ create_unified_columns.splfmt_rts_v1_mini <- function(x){
   setcolorder(x, names(fmt))
 }
 
+#' heal generic
+#'
+#' @param x An object
+#' @param ... Arguments passed to or from other methods
+#' @export
+heal <- function (x, ...) {
+  UseMethod("heal", x)
+}
 
+#' Heal
+#' @param x x
+#' @method heal splfmt_rts_v1_mini
+#' @export
 heal.splfmt_rts_v1_mini <- function(x){
   create_unified_columns.splfmt_rts_v1_mini(x)
 
@@ -255,9 +271,10 @@ heal.splfmt_rts_v1_mini <- function(x){
 
 #' Set as splfmt_rts_v1_mini
 #' @param x The data.table to be converted to splfmt_rts_v1_mini
+#' @param heal Do you want it to heal on creation?
 #' @examples
 #' d <- test_data_generator()
-#' set_splfmt_rts_v1_mini(d)
+#' set_splfmt_rts_v1_mini(d, heal = TRUE)
 #' d[1,isoyearweek := "2021-01"]
 #' d
 #' d[2,isoyear := 2019]
@@ -269,7 +286,7 @@ heal.splfmt_rts_v1_mini <- function(x){
 #' d[10,c("location_code") := .("norge")]
 #' d
 #' @export
-set_splfmt_rts_v1_mini <- function(x){
+set_splfmt_rts_v1_mini <- function(x, heal = FALSE){
   if(!is.data.table(x)){
     stop("x must be data.table. Run setDT('x').")
   }
@@ -278,11 +295,10 @@ set_splfmt_rts_v1_mini <- function(x){
   setattr(x, "format_unified", fmt)
   setattr(x, "class", unique(c("splfmt_rts_v1_mini", class(x))))
 
-  heal.splfmt_rts_v1_mini(x)
+  if(heal) heal.splfmt_rts_v1_mini(x)
 
   return(invisible(x))
 }
-
 
 validate <- function(x){
   new_hash <- digest::digest(attr(x, ".internal.selfref"),"md5")
