@@ -205,7 +205,10 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
 
     #print(modified_call)
     eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
-    lapply(healing_calls, function(x){eval(parse(text = x), envir = parent.frame(1:2))})
+    #print(x)
+    for(i in seq_along(healing_calls)){
+      eval(parse(text = healing_calls[[i]]), envir = parent.frame(1:2))
+    }
 
     return(invisible(x))
   }

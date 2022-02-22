@@ -669,7 +669,6 @@ An example relating to vaccination:
 ## In action
 
 ```{r}
-
 d <- spltidy::test_data_generator()
 spltidy::set_splfmt_rts_v1_mini(d)
 
