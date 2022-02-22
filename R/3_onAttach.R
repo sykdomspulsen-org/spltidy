@@ -3,7 +3,7 @@
 .onAttach <- function(libname, pkgname) {
   version <- tryCatch(
     utils::packageDescription("spltidy", fields = "Version"),
-    warning = function(w){
+    warning = function(w) {
       1
     }
   )
@@ -16,7 +16,6 @@
   ))
 }
 
-dummy_function <- function(){
+dummy_function <- function() {
   spltime::isoyearweek_to_isoweek_c("2021-01")
 }
-

@@ -74,7 +74,7 @@ formats$splfmt_rts_v1_mini$unified$date <- list(
 #' remove class splfmt_rts_v1_mini
 #' @param x data.table
 #' @export
-remove_class_splfmt_rts_v1_mini <- function(x){
+remove_class_splfmt_rts_v1_mini <- function(x) {
   classes <- class(x)
   classes <- classes[!classes %in% "splfmt_rts_v1_mini"]
   setattr(x, "class", classes)
@@ -87,11 +87,11 @@ remove_class_splfmt_rts_v1_mini <- function(x){
 #' @examples
 #' test_data_generator("splfmt_rts_v1_mini")
 #' @export
-test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
+test_data_generator <- function(fmt = "splfmt_rts_v1_mini") {
   stopifnot(fmt %in% c("splfmt_rts_v1_mini"))
 
-  if(fmt == "splfmt_rts_v1_mini"){
-    d <- data.table(location_code = spldata::norway_locations_names()[granularity_geo=="county"]$location_code)
+  if (fmt == "splfmt_rts_v1_mini") {
+    d <- data.table(location_code = spldata::norway_locations_names()[granularity_geo == "county"]$location_code)
     d[, granularity_time := "isoweek"]
     d[, isoyearweek := "2022-03"]
     d[, deaths_n := stats::rpois(.N, 5)]
@@ -104,16 +104,18 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
 #' @param ... dots
 #' @method [ splfmt_rts_v1_mini
 #' @export
-"[.splfmt_rts_v1_mini" = function (x, ...){
+"[.splfmt_rts_v1_mini" <- function(x, ...) {
   # original call
-  modified_call <- orig_call <- sys.calls()[[sys.nframe()-1]]
+  modified_call <- orig_call <- sys.calls()[[sys.nframe() - 1]]
   healing_calls <- list()
 
   # smart-assignment
   # try to find which part uses :=
-  first_call <- lapply(orig_call, function(x){if(length(x)>1)deparse(x[[1]])})
-  i <- as.numeric(which(first_call==":="))
-  if(length(i) == 0){
+  first_call <- lapply(orig_call, function(x) {
+    if (length(x) > 1) deparse(x[[1]])
+  })
+  i <- as.numeric(which(first_call == ":="))
+  if (length(i) == 0) {
     # no assignment
     remove_class_splfmt_rts_v1_mini(x)
     on.exit(set_splfmt_rts_v1_mini(x, heal = FALSE))
@@ -121,24 +123,25 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
     y <- eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
     set_splfmt_rts_v1_mini(y, heal = FALSE)
     return(invisible(y))
-
-  } else if(length(i) == 1){
+  } else if (length(i) == 1) {
     # smart-assignment for time ----
     # identify if a time variable is mentioned
-    lhs <- unlist(lapply(orig_call[[i]][[2]], function(x){deparse(x)}))
+    lhs <- unlist(lapply(orig_call[[i]][[2]], function(x) {
+      deparse(x)
+    }))
     time_vars <- c("isoyear", "isoyearweek", "date")
-    time_vars_with_quotes <- c(time_vars, paste0("\"",time_vars,"\""))
+    time_vars_with_quotes <- c(time_vars, paste0("\"", time_vars, "\""))
     time_var_modified_index <- which(lhs %in% time_vars_with_quotes)
 
-    if(length(time_var_modified_index)>1){
+    if (length(time_var_modified_index) > 1) {
       warning("Multiple time variables specified. Smart-assignment disabled.")
-    } else if(length(time_var_modified_index)==1){
+    } else if (length(time_var_modified_index) == 1) {
       modified_time <- TRUE
       # one date thing is modified
       # find out which type
-      time_var_modified <- stringr::str_replace_all(lhs[time_var_modified_index],"\"","")
+      time_var_modified <- stringr::str_replace_all(lhs[time_var_modified_index], "\"", "")
 
-      if(length(lhs)==1){
+      if (length(lhs) == 1) {
         # only one thing on the left
         # need to turn this call into a "multiple assignment" call
         modified_call[[i]][[2]] <- substitute(c(x, "x_modified_timevar_97531"), list(x = deparse(orig_call[[i]][[2]])))
@@ -150,21 +153,21 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
         modified_call[[i]][[3]][[length(lhs) + 1]] <- time_var_modified
       }
 
-      if(time_var_modified=="isoyear"){
-        healing_calls[[length(healing_calls)+1]] <- glue::glue(
+      if (time_var_modified == "isoyear") {
+        healing_calls[[length(healing_calls) + 1]] <- glue::glue(
           '{orig_call[[2]]}[!is.na(x_modified_timevar_97531),c("granularity_time", "isoyearweek", "date") := .("isoyear", spltime::isoyear_to_last_isoyearweek_c(isoyear), spltime::isoyear_to_last_date(isoyear))]'
         )
-      } else if(time_var_modified=="isoyearweek"){
-        healing_calls[[length(healing_calls)+1]] <- glue::glue(
+      } else if (time_var_modified == "isoyearweek") {
+        healing_calls[[length(healing_calls) + 1]] <- glue::glue(
           '{orig_call[[2]]}[!is.na(x_modified_timevar_97531),c("granularity_time", "isoyear", "date") := .("isoweek", spltime::isoyearweek_to_isoyear_n(isoyearweek), spltime::isoyearweek_to_last_date(isoyearweek))]'
         )
-      } else if(time_var_modified=="date"){
-        healing_calls[[length(healing_calls)+1]] <- glue::glue(
+      } else if (time_var_modified == "date") {
+        healing_calls[[length(healing_calls) + 1]] <- glue::glue(
           '{orig_call[[2]]}[!is.na(x_modified_timevar_97531),c("granularity_time", "isoyear", "isoyearweek") := .("day", spltime::date_to_isoyear_n(date), spltime::date_to_isoyearweek_c(date))]'
         )
       }
-      healing_calls[[length(healing_calls)+1]] <- glue::glue(
-        '{orig_call[[2]]}[, x_modified_timevar_97531 := NULL]'
+      healing_calls[[length(healing_calls) + 1]] <- glue::glue(
+        "{orig_call[[2]]}[, x_modified_timevar_97531 := NULL]"
       )
     }
 
@@ -172,20 +175,22 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
     # our smart-assignment code always starts off with orig_call = modified_code
     orig_call <- modified_call
     # identify if a geo variable is mentioned
-    lhs <- unlist(lapply(orig_call[[i]][[2]], function(x){deparse(x)}))
+    lhs <- unlist(lapply(orig_call[[i]][[2]], function(x) {
+      deparse(x)
+    }))
     geo_vars <- c("granularity_geo", "location_code", "iso3")
-    geo_vars_with_quotes <- c(geo_vars, paste0("\"",geo_vars,"\""))
+    geo_vars_with_quotes <- c(geo_vars, paste0("\"", geo_vars, "\""))
     geo_var_modified_index <- which(lhs %in% geo_vars_with_quotes)
 
-    if(length(geo_var_modified_index)>1){
+    if (length(geo_var_modified_index) > 1) {
       warning("Multiple geo variables specified. Smart-assignment disabled.")
-    } else if(length(geo_var_modified_index)==1){
+    } else if (length(geo_var_modified_index) == 1) {
       modified_geo <- TRUE
       # one date thing is modified
       # find out which type
-      geo_var_modified <- stringr::str_replace_all(lhs[geo_var_modified_index],"\"","")
+      geo_var_modified <- stringr::str_replace_all(lhs[geo_var_modified_index], "\"", "")
 
-      if(length(lhs)==1){
+      if (length(lhs) == 1) {
         # only one thing on the left
         # need to turn this call into a "multiple assignment" call
         modified_call[[i]][[2]] <- substitute(c(x, "x_modified_geovar_97531"), list(x = deparse(orig_call[[i]][[2]])))
@@ -197,13 +202,13 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
         modified_call[[i]][[3]][[length(lhs) + 1]] <- geo_var_modified
       }
 
-      if(geo_var_modified=="location_code"){
-        healing_calls[[length(healing_calls)+1]] <- glue::glue(
+      if (geo_var_modified == "location_code") {
+        healing_calls[[length(healing_calls) + 1]] <- glue::glue(
           '{orig_call[[2]]}[!is.na(x_modified_geovar_97531),c("granularity_geo", "country_iso3") := .(spldata::location_code_to_granularity_geo(location_code), spldata::location_code_to_iso3(location_code))]'
         )
       }
-      healing_calls[[length(healing_calls)+1]] <- glue::glue(
-        '{orig_call[[2]]}[, x_modified_geovar_97531 := NULL]'
+      healing_calls[[length(healing_calls) + 1]] <- glue::glue(
+        "{orig_call[[2]]}[, x_modified_geovar_97531 := NULL]"
       )
     }
     # print(orig_call)
@@ -214,7 +219,7 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
     on.exit(set_splfmt_rts_v1_mini(x, heal = FALSE))
 
     eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
-    for(i in seq_along(healing_calls)){
+    for (i in seq_along(healing_calls)) {
       eval(parse(text = healing_calls[[i]]), envir = parent.frame(1:2))
     }
 
@@ -223,15 +228,15 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini"){
 }
 
 
-create_unified_columns <- function (x, ...) {
+create_unified_columns <- function(x, ...) {
   UseMethod("create_unified_columns", x)
 }
 
-create_unified_columns.splfmt_rts_v1_mini <- function(x){
+create_unified_columns.splfmt_rts_v1_mini <- function(x) {
   fmt <- attr(x, "format_unified")
-  for(i in names(fmt)){
-    if(!i %in% names(x)){
-      x[,(i) := fmt[[i]]$NA_class]
+  for (i in names(fmt)) {
+    if (!i %in% names(x)) {
+      x[, (i) := fmt[[i]]$NA_class]
     }
   }
   setcolorder(x, names(fmt))
@@ -242,15 +247,16 @@ create_unified_columns.splfmt_rts_v1_mini <- function(x){
 #' @param x An object
 #' @param ... Arguments passed to or from other methods
 #' @export
-heal <- function (x, ...) {
+heal <- function(x, ...) {
   UseMethod("heal", x)
 }
 
 #' Heal
 #' @param x x
+#' @param ... Arguments passed to or from other methods
 #' @method heal splfmt_rts_v1_mini
 #' @export
-heal.splfmt_rts_v1_mini <- function(x){
+heal.splfmt_rts_v1_mini <- function(x, ...) {
   create_unified_columns.splfmt_rts_v1_mini(x)
 
   # granularity_time = mandatory
@@ -261,9 +267,9 @@ heal.splfmt_rts_v1_mini <- function(x){
   # country_iso3
   x[is.na(country_iso3) & !is.na(location_code), location_code := location_code]
 
-  x[granularity_time=="isoyear" & !is.na(isoyear) & (is.na(isoyearweek) | is.na(date)), isoyear := isoyear]
-  x[granularity_time=="isoweek" & !is.na(isoyearweek) & (is.na(isoyear) | is.na(date)), isoyearweek := isoyearweek]
-  x[granularity_time=="day" & !is.na(date) & (is.na(isoyear) | is.na(isoyearweek)), date := date]
+  x[granularity_time == "isoyear" & !is.na(isoyear) & (is.na(isoyearweek) | is.na(date)), isoyear := isoyear]
+  x[granularity_time == "isoweek" & !is.na(isoyearweek) & (is.na(isoyear) | is.na(date)), isoyearweek := isoyearweek]
+  x[granularity_time == "day" & !is.na(date) & (is.na(isoyear) | is.na(isoyearweek)), date := date]
 
   return(invisible(x))
 }
@@ -275,19 +281,19 @@ heal.splfmt_rts_v1_mini <- function(x){
 #' @examples
 #' d <- test_data_generator()
 #' set_splfmt_rts_v1_mini(d, heal = TRUE)
-#' d[1,isoyearweek := "2021-01"]
+#' d[1, isoyearweek := "2021-01"]
 #' d
-#' d[2,isoyear := 2019]
+#' d[2, isoyear := 2019]
 #' d
-#' d[4:5,date := as.Date("2020-01-01")]
+#' d[4:5, date := as.Date("2020-01-01")]
 #' d
-#' d[10,c("isoyear","isoyearweek") := .(2021,"2021-01")]
+#' d[10, c("isoyear", "isoyearweek") := .(2021, "2021-01")]
 #' d
-#' d[10,c("location_code") := .("norge")]
+#' d[10, c("location_code") := .("norge")]
 #' d
 #' @export
-set_splfmt_rts_v1_mini <- function(x, heal = FALSE){
-  if(!is.data.table(x)){
+set_splfmt_rts_v1_mini <- function(x, heal = FALSE) {
+  if (!is.data.table(x)) {
     stop("x must be data.table. Run setDT('x').")
   }
 
@@ -295,39 +301,39 @@ set_splfmt_rts_v1_mini <- function(x, heal = FALSE){
   setattr(x, "format_unified", fmt)
   setattr(x, "class", unique(c("splfmt_rts_v1_mini", class(x))))
 
-  if(heal) heal.splfmt_rts_v1_mini(x)
+  if (heal) heal.splfmt_rts_v1_mini(x)
 
   return(invisible(x))
 }
 
-validate <- function(x){
-  new_hash <- digest::digest(attr(x, ".internal.selfref"),"md5")
+validate <- function(x) {
+  new_hash <- digest::digest(attr(x, ".internal.selfref"), "md5")
   old_hash <- attr(x, "hash")
 
   # data hasnt changed since last validation
-  if(identical(new_hash, old_hash)){
-    #return(invisible())
+  if (identical(new_hash, old_hash)) {
+    # return(invisible())
   }
   status <- attr(x, "status")
-  if(is.null(status)) status <- list()
+  if (is.null(status)) status <- list()
 
   fmt <- attr(x, "format_unified")
-  for(i in names(fmt)){
+  for (i in names(fmt)) {
     fmt_i <- fmt[[i]]
     status_i <- list()
     status_i$errors <- "\U274C Errors:"
 
     # variable doesn't exist
-    if(!i %in% names(x)){
-      status_i$errors <- paste0(status_i$errors,"\n- Variable doesn't exist")
+    if (!i %in% names(x)) {
+      status_i$errors <- paste0(status_i$errors, "\n- Variable doesn't exist")
     } else {
       # check for NAs allowed
-      if(fmt_i$NA_allowed==FALSE & sum(is.na(x[[i]])) > 0){
-        status_i$errors <- paste0(status_i$errors,"\n- NA exists (but not allowed)")
+      if (fmt_i$NA_allowed == FALSE & sum(is.na(x[[i]])) > 0) {
+        status_i$errors <- paste0(status_i$errors, "\n- NA exists (but not allowed)")
       }
       # if(!is.null())
 
-      if(status_i$errors=="\U274C Errors:") status_i$errors <- "\U2705 No errors"
+      if (status_i$errors == "\U274C Errors:") status_i$errors <- "\U2705 No errors"
     }
     status[[i]] <- status_i
   }
@@ -336,20 +342,20 @@ validate <- function(x){
   setattr(x, "hash", new_hash)
 }
 
-summary.splfmt_rts_v1_mini <- function(object, ...){
+summary.splfmt_rts_v1_mini <- function(object, ...) {
   validate(object)
   status <- attr(object, "status")
 
-  for(i in names(status)){
+  for (i in names(status)) {
     status_i <- status[[i]]
 
-    cat("\n", crayon::underline(i), "\n", sep="")
-    cat(status_i$errors, "\n", sep="")
+    cat("\n", crayon::underline(i), "\n", sep = "")
+    cat(status_i$errors, "\n", sep = "")
   }
 }
 
 
-hash_structure <- function(x){
+hash_structure <- function(x) {
   # Take in the data table
   # data <- data$cases
   # data <- data$vax
@@ -438,5 +444,4 @@ hash_structure <- function(x){
 
     q1[[name]] <- d
   }
-
 }
