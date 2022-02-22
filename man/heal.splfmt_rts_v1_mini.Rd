@@ -4,10 +4,12 @@
 \alias{heal.splfmt_rts_v1_mini}
 \title{Heal}
 \usage{
-\method{heal}{splfmt_rts_v1_mini}(x)
+\method{heal}{splfmt_rts_v1_mini}(x, ...)
 }
 \arguments{
 \item{x}{x}
+
+\item{...}{Arguments passed to or from other methods}
 }
 \description{
 Heal

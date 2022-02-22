@@ -17,14 +17,14 @@ Set as splfmt_rts_v1_mini
 \examples{
 d <- test_data_generator()
 set_splfmt_rts_v1_mini(d, heal = TRUE)
-d[1,isoyearweek := "2021-01"]
+d[1, isoyearweek := "2021-01"]
 d
-d[2,isoyear := 2019]
+d[2, isoyear := 2019]
 d
-d[4:5,date := as.Date("2020-01-01")]
+d[4:5, date := as.Date("2020-01-01")]
 d
-d[10,c("isoyear","isoyearweek") := .(2021,"2021-01")]
+d[10, c("isoyear", "isoyearweek") := .(2021, "2021-01")]
 d
-d[10,c("location_code") := .("norge")]
+d[10, c("location_code") := .("norge")]
 d
 }
