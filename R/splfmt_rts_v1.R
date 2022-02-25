@@ -1,110 +1,258 @@
 formats <- list()
-formats$splfmt_rts_v1_mini <- list()
-formats$splfmt_rts_v1_mini$unified <- list()
-formats$splfmt_rts_v1_mini$unified$granularity_time <- list(
+formats$splfmt_rts_v1 <- list()
+formats$splfmt_rts_v1$unified <- list()
+formats$splfmt_rts_v1$unified$granularity_time <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = c("day", "isoweek", "isoyear"),
   class = "character"
 )
 
-formats$splfmt_rts_v1_mini$unified$granularity_geo <- list(
+formats$splfmt_rts_v1$unified$granularity_geo <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = unique(spldata::norway_locations_names()$granularity_geo),
   class = "character"
 )
 
-formats$splfmt_rts_v1_mini$unified$country_iso3 <- list(
+formats$splfmt_rts_v1$unified$country_iso3 <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = c("nor", "den", "swe", "fin"),
   class = "character"
 )
 
-formats$splfmt_rts_v1_mini$unified$location_code <- list(
+formats$splfmt_rts_v1$unified$location_code <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1_mini$unified$border <- list(
+formats$splfmt_rts_v1$unified$border <- list(
   NA_allowed = FALSE,
   NA_class = NA_integer_,
   values_allowed = 2020,
   class = "integer"
 )
 
-formats$splfmt_rts_v1_mini$unified$age <- list(
+formats$splfmt_rts_v1$unified$age <- list(
   NA_allowed = TRUE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1_mini$unified$sex <- list(
+formats$splfmt_rts_v1$unified$sex <- list(
   NA_allowed = TRUE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1_mini$unified$isoyear <- list(
-  NA_allowed = FALSE,
+formats$splfmt_rts_v1$unified$isoyear <- list(
+  NA_allowed = TRUE,
   NA_class = NA_integer_,
   values_allowed = NULL,
   class = "integer"
 )
 
-formats$splfmt_rts_v1_mini$unified$isoyearweek <- list(
+formats$splfmt_rts_v1$unified$isoweek <- list(
+  NA_allowed = TRUE,
+  NA_class = NA_integer_,
+  values_allowed = NULL,
+  class = "integer"
+)
+
+formats$splfmt_rts_v1$unified$isoyearweek <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1_mini$unified$date <- list(
+formats$splfmt_rts_v1$unified$season <- list(
+  NA_allowed = TRUE,
+  NA_class = NA_character_,
+  values_allowed = NULL,
+  class = "character"
+)
+
+formats$splfmt_rts_v1$unified$seasonweek <- list(
+  NA_allowed = TRUE,
+  NA_class = NA_real_,
+  values_allowed = NULL,
+  class = "numeric"
+)
+
+formats$splfmt_rts_v1$unified$calyear <- list(
+  NA_allowed = TRUE,
+  NA_class = NA_integer_,
+  values_allowed = NULL,
+  class = "integer"
+)
+
+formats$splfmt_rts_v1$unified$calmonth <- list(
+  NA_allowed = TRUE,
+  NA_class = NA_integer_,
+  values_allowed = NULL,
+  class = "integer"
+)
+
+formats$splfmt_rts_v1$unified$calyearmonth <- list(
+  NA_allowed = TRUE,
+  NA_class = NA_character_,
+  values_allowed = NULL,
+  class = "character"
+)
+
+formats$splfmt_rts_v1$unified$date <- list(
   NA_allowed = FALSE,
   NA_class = as.Date(NA),
   values_allowed = NULL,
   class = "Date"
 )
 
-#' remove class splfmt_rts_v1_mini
+#' remove class splfmt_rts_*
 #' @param x data.table
 #' @export
-remove_class_splfmt_rts_v1_mini <- function(x) {
+remove_class_splfmt_rts <- function(x) {
   classes <- class(x)
-  classes <- classes[!classes %in% "splfmt_rts_v1_mini"]
+  classes <- classes[!stringr::str_detect(classes, "^splfmt_rts_")]
   setattr(x, "class", classes)
   return(invisible(x))
 }
 
 
 #' Test data generator
-#' @param fmt Format (splfmt_rts_v1_mini)
+#' @param fmt Format (splfmt_rts_v1)
 #' @examples
-#' test_data_generator("splfmt_rts_v1_mini")
+#' test_data_generator("splfmt_rts_v1")
 #' @export
-test_data_generator <- function(fmt = "splfmt_rts_v1_mini") {
-  stopifnot(fmt %in% c("splfmt_rts_v1_mini"))
+test_data_generator <- function(fmt = "splfmt_rts_v1") {
+  stopifnot(fmt %in% c("splfmt_rts_v1"))
 
-  if (fmt == "splfmt_rts_v1_mini") {
-    d <- data.table(location_code = spldata::norway_locations_names()[granularity_geo == "county"]$location_code)
-    d[, granularity_time := "isoweek"]
-    d[, isoyearweek := "2022-03"]
-    d[, deaths_n := stats::rpois(.N, 5)]
+  if (fmt == "splfmt_rts_v1") {
+    d1 <- data.table(location_code = spldata::norway_locations_names()[granularity_geo == "county"]$location_code)
+    d1[, granularity_time := "isoweek"]
+    d1[, isoyearweek := "2022-03"]
+    d1[, deaths_n := stats::rpois(.N, 5)]
+
+    d2 <- copy(d1)
+    d2[, isoyear := 2022]
+    d2[, age := "total"]
+    d2[, sex := "total"]
+
+    d3 <- copy(d1)
+    d3[, isoyear := 2022]
+    d3[, age := "000-005"]
+    d3[, sex := "total"]
+
+    d <- rbind(d1, d2, d3, fill = T)
   }
   return(d)
+}
+
+#' print
+#' @param x x
+#' @param ... dots
+#' @method print splfmt_rts_v1
+#' @export
+print.splfmt_rts_v1 <- function(x, ...) {
+  # https://cran.r-project.org/web/packages/data.table/vignettes/datatable-faq.html#ok-thanks.-what-was-so-difficult-about-the-result-of-dti-col-value-being-returned-invisibly
+  if (!data.table::shouldPrint(x)) {
+    return(invisible(x))
+  }
+  # this function is recursive, so that
+  dots <- list(...)
+  print_dots_before_row <- 999999999999999
+  if (nrow(x) == 0) {
+    cat(glue::glue("splfmt_rts_v1 with {ncol(x)} columns and 0 rows"))
+    cat(names(x))
+    return(invisible(x))
+  } else if (nrow(x) > 100) {
+    row_numbers <- c(1:nrow(x))[c(1:5, (nrow(x) - 4):nrow(x))]
+    to_print <- x[c(1:5, (.N - 4):.N)]
+    print_dots_before_row <- 6
+  } else {
+    row_numbers <- 1:nrow(x)
+    to_print <- copy(x)
+  }
+
+  format_unified <- attr(to_print, "format_unified")
+  variable_types <- rep("[context]", ncol(to_print))
+  for(i in seq_along(variable_types)){
+    pos <- which(names(format_unified) %in% names(to_print))
+    # if(length(pos))
+  }
+  names(to_print)
+  names(format_unified)
+  variable_types <- dplyr::case_when(
+    names(to_print) %in% names(format_unified) ~ "[unified]",
+    TRUE ~ "[context]"
+  )
+  variable_classes <- paste0("<", unlist(lapply(to_print, class)), ">")
+  variable_names <- names(to_print)
+  row_numbers <- formatC(row_numbers, width = max(nchar(row_numbers))) %>%
+    paste0(":", sep = "")
+  row_number_spacing <- formatC("", width = max(nchar(row_numbers)))
+
+  width_char <- apply(to_print, 2, nchar, keepNA = F) %>%
+    rbind(nchar(variable_types)) %>%
+    rbind(nchar(variable_classes)) %>%
+    rbind(nchar(variable_names)) %>%
+    apply(2, max)
+
+  max_width <- getOption("width")
+  cum_width <- nchar(row_number_spacing) + cumsum(width_char + 3)
+  breaks <- floor(cum_width / max_width)
+
+  if (!"recursive" %in% names(dots)) {
+    # if this is the first time the function is run, then it just acts
+    # as the brain, and determines how many times the function needs to be called
+    for (i in unique(breaks)) {
+      print(x[, names(breaks)[breaks == i], with = F], recursive = TRUE)
+      cat("\n")
+    }
+    return(invisible(x))
+  } else {
+    # we are in the recursive level, so we actually print things!
+    for (i in -2:nrow(to_print)) {
+      if (i == print_dots_before_row) {
+        for (j in seq_len(max(cum_width))) cat(".")
+        cat("\n")
+      }
+
+      if (i <= 0) {
+        cat(row_number_spacing)
+      } else {
+        cat(row_numbers[i])
+      }
+      for (j in 1:ncol(to_print)) {
+        cat("   ")
+
+        if (i == -2) {
+          cat(formatC(variable_types[j], width = width_char[j]))
+        } else if (i == -1) {
+          cat(formatC(variable_classes[j], width = width_char[j]))
+        } else if (i == 0) {
+          cat(crayon::bold(formatC(variable_names[j], width = width_char[j])))
+        } else {
+          cat(formatC(as.character(to_print[i][[j]]), width = width_char[j]))
+        }
+      }
+      cat("\n")
+    }
+    return(invisible(x))
+  }
 }
 
 #' assignment
 #' @param x x
 #' @param ... dots
-#' @method [ splfmt_rts_v1_mini
+#' @method [ splfmt_rts_v1
 #' @export
-"[.splfmt_rts_v1_mini" <- function(x, ...) {
+"[.splfmt_rts_v1" <- function(x, ...) {
   # original call
   modified_call <- orig_call <- sys.calls()[[sys.nframe() - 1]]
   healing_calls <- list()
@@ -117,11 +265,11 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini") {
   i <- as.numeric(which(first_call == ":="))
   if (length(i) == 0) {
     # no assignment
-    remove_class_splfmt_rts_v1_mini(x)
-    on.exit(set_splfmt_rts_v1_mini(x, heal = FALSE))
+    remove_class_splfmt_rts(x)
+    on.exit(set_splfmt_rts_v1(x, create_unified_variables = FALSE, heal = FALSE))
 
     y <- eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
-    set_splfmt_rts_v1_mini(y, heal = FALSE)
+    set_splfmt_rts_v1(y, create_unified_variables = FALSE, heal = FALSE)
     return(invisible(y))
   } else if (length(i) == 1) {
     # smart-assignment for time ----
@@ -154,18 +302,58 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini") {
       }
 
       if (time_var_modified == "isoyear") {
-        healing_calls[[length(healing_calls) + 1]] <- glue::glue(
-          '{orig_call[[2]]}[!is.na(x_modified_timevar_97531),c("granularity_time", "isoyearweek", "date") := .("isoyear", spltime::isoyear_to_last_isoyearweek_c(isoyear), spltime::isoyear_to_last_date(isoyear))]'
+        healing_options <- list(
+          "granularity_time" = "\"isoyear\"",
+          "isoweek" = "spltime::isoyear_to_last_isoweek_n(isoyear)",
+          "isoyearweek" = "spltime::isoyear_to_last_isoyearweek_c(isoyear)",
+          "season" = "NA_character_",
+          "seasonweek" = "NA_real_",
+          "calyear" = "NA_integer_",
+          "calmonth" = "NA_integer_",
+          "calyearmonth" = "NA_character_",
+          "date" = "spltime::isoyear_to_last_date(isoyear)"
         )
       } else if (time_var_modified == "isoyearweek") {
-        healing_calls[[length(healing_calls) + 1]] <- glue::glue(
-          '{orig_call[[2]]}[!is.na(x_modified_timevar_97531),c("granularity_time", "isoyear", "date") := .("isoweek", spltime::isoyearweek_to_isoyear_n(isoyearweek), spltime::isoyearweek_to_last_date(isoyearweek))]'
+        healing_options <- list(
+          "granularity_time" = "\"isoweek\"",
+          "isoyear" = "spltime::isoyearweek_to_isoyear_n(isoyearweek)",
+          "isoweek" = "spltime::isoyearweek_to_isoweek_n(isoyearweek)",
+          "season" = "spltime::isoyearweek_to_season_c(isoyearweek)",
+          "seasonweek" = "spltime::isoyearweek_to_seasonweek_n(isoyearweek)",
+          "calyear" = "NA_integer_",
+          "calmonth" = "NA_integer_",
+          "calyearmonth" = "NA_character_",
+          "date" = "spltime::isoyearweek_to_last_date(isoyearweek)"
         )
       } else if (time_var_modified == "date") {
-        healing_calls[[length(healing_calls) + 1]] <- glue::glue(
-          '{orig_call[[2]]}[!is.na(x_modified_timevar_97531),c("granularity_time", "isoyear", "isoyearweek") := .("day", spltime::date_to_isoyear_n(date), spltime::date_to_isoyearweek_c(date))]'
+        healing_options <- list(
+          "granularity_time" = "\"day\"",
+          "isoyear" = "spltime::date_to_isoyear_n(date)",
+          "isoweek" = "spltime::date_to_isoweek_n(date)",
+          "isoyearweek" = "spltime::date_to_isoyearweek_c(date)",
+          "season" = "spltime::date_to_season_c(date)",
+          "seasonweek" = "spltime::date_to_seasonweek_n(date)",
+          "calyear" = "spltime::date_to_calyear_n(date)",
+          "calmonth" = "spltime::date_to_calmonth_n(date)",
+          "calyearmonth" = "spltime::date_to_calyearmonth_c(date)"
         )
+      } else {
+        healing_options <- NULL
       }
+
+      if (!is.null(healing_options)) {
+        healing_options <- healing_options[names(healing_options) %in% names(x)]
+        if(length(healing_options) > 0){
+          healing_calls[[length(healing_calls) + 1]] <- glue::glue(
+            '{orig_call[[2]]}[!is.na(x_modified_timevar_97531),
+            c("{paste0(names(healing_options), collapse="\\",\\"")}")
+            :=
+            .({paste0(healing_options, collapse=",")})
+            ]'
+          )
+        }
+      }
+
       healing_calls[[length(healing_calls) + 1]] <- glue::glue(
         "{orig_call[[2]]}[, x_modified_timevar_97531 := NULL]"
       )
@@ -178,7 +366,7 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini") {
     lhs <- unlist(lapply(orig_call[[i]][[2]], function(x) {
       deparse(x)
     }))
-    geo_vars <- c("granularity_geo", "location_code", "iso3")
+    geo_vars <- c("granularity_geo", "location_code", "country_iso3")
     geo_vars_with_quotes <- c(geo_vars, paste0("\"", geo_vars, "\""))
     geo_var_modified_index <- which(lhs %in% geo_vars_with_quotes)
 
@@ -203,10 +391,27 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini") {
       }
 
       if (geo_var_modified == "location_code") {
-        healing_calls[[length(healing_calls) + 1]] <- glue::glue(
-          '{orig_call[[2]]}[!is.na(x_modified_geovar_97531),c("granularity_geo", "country_iso3") := .(spldata::location_code_to_granularity_geo(location_code), spldata::location_code_to_iso3(location_code))]'
+        healing_options <- list(
+          "granularity_geo" = "spldata::location_code_to_granularity_geo(location_code)",
+          "country_iso3" = "spldata::location_code_to_iso3(location_code)"
         )
+      } else {
+        healing_options <- NULL
       }
+
+      if (!is.null(healing_options)) {
+        healing_options <- healing_options[names(healing_options) %in% names(x)]
+        if(length(healing_options) > 0){
+          healing_calls[[length(healing_calls) + 1]] <- glue::glue(
+            '{orig_call[[2]]}[!is.na(x_modified_geovar_97531),
+            c("{paste0(names(healing_options), collapse="\\",\\"")}")
+            :=
+            .({paste0(healing_options, collapse=",")})
+            ]'
+          )
+        }
+      }
+
       healing_calls[[length(healing_calls) + 1]] <- glue::glue(
         "{orig_call[[2]]}[, x_modified_geovar_97531 := NULL]"
       )
@@ -215,8 +420,8 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini") {
     # print(modified_call)
     # print(healing_calls)
 
-    remove_class_splfmt_rts_v1_mini(x)
-    on.exit(set_splfmt_rts_v1_mini(x, heal = FALSE))
+    remove_class_splfmt_rts(x)
+    on.exit(set_splfmt_rts_v1(x, create_unified_variables = FALSE, heal = FALSE))
 
     eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
     for (i in seq_along(healing_calls)) {
@@ -227,19 +432,64 @@ test_data_generator <- function(fmt = "splfmt_rts_v1_mini") {
   }
 }
 
-
+#' create_unified_columns generic
+#'
+#' @param x An object
+#' @param ... Arguments passed to or from other methods
+#' @export
 create_unified_columns <- function(x, ...) {
   UseMethod("create_unified_columns", x)
 }
 
-create_unified_columns.splfmt_rts_v1_mini <- function(x) {
+#' create_unified_columns
+#' @param x x
+#' @param ... Arguments passed to or from other methods
+#' @method create_unified_columns splfmt_rts_v1
+#' @export
+create_unified_columns.splfmt_rts_v1 <- function(x) {
   fmt <- attr(x, "format_unified")
   for (i in names(fmt)) {
     if (!i %in% names(x)) {
+      # create empty columns
       x[, (i) := fmt[[i]]$NA_class]
     }
   }
   setcolorder(x, names(fmt))
+
+  # allows us to print
+  data.table::shouldPrint(x)
+
+  return(invisible(x))
+}
+
+assert_classes <- function(x, ...) {
+  UseMethod("assert_classes", x)
+}
+
+assert_classes.splfmt_rts_v1 <- function(x) {
+  fmt <- attr(x, "format_unified")
+  classes_real <- lapply(x, class)
+  classes_wanted <- lapply(fmt, function(x) {
+    x$class
+  })
+  # just take the ones that are intersected
+  classes_wanted <- classes_wanted[names(classes_wanted) %in% names(classes_real)]
+  classes_real <- classes_real[names(classes_real) %in% names(classes_wanted)]
+  for (i in names(classes_real)) {
+    if (classes_real[[i]] != classes_wanted[[i]]) {
+      # force class
+      if (classes_wanted[[i]] == "Date") {
+        x[, (i) := as.Date(get(i))]
+      } else {
+        x[, (i) := as(get(i), classes_wanted[[i]])]
+      }
+    }
+  }
+
+  # allows us to print
+  data.table::shouldPrint(x)
+
+  return(invisible(x))
 }
 
 #' heal generic
@@ -254,33 +504,78 @@ heal <- function(x, ...) {
 #' Heal
 #' @param x x
 #' @param ... Arguments passed to or from other methods
-#' @method heal splfmt_rts_v1_mini
+#' @method heal splfmt_rts_v1
 #' @export
-heal.splfmt_rts_v1_mini <- function(x, ...) {
-  create_unified_columns.splfmt_rts_v1_mini(x)
+heal.splfmt_rts_v1 <- function(x, ...) {
+  assert_classes.splfmt_rts_v1(x)
 
   # granularity_time = mandatory
+  imputing_vars <- list(
+    "location_code" = c("granularity_geo", "country_iso3"),
+    "isoyear" = c(
+      "granularity_time",
+      "isoweek",
+      "isoyearweek",
+      "season",
+      "seasonweek",
+      "calyear",
+      "calmonth",
+      "calyearmonth",
+      "date"
+    ),
+    "isoyearweek" = c(
+      "granularity_time",
+      "isoyear",
+      "isoweek",
+      "season",
+      "seasonweek",
+      "calyear",
+      "calmonth",
+      "calyearmonth",
+      "date"
+    ),
+    "date" = c(
+      "granularity_time",
+      "isoyear",
+      "isoweek",
+      "isoyearweek",
+      "season",
+      "seasonweek",
+      "calyear",
+      "calmonth",
+      "calyearmonth"
+    )
+  )
 
-  # granularity_geo = interpolate from location_code
-  x[is.na(granularity_geo) & !is.na(location_code), location_code := location_code]
+  for(i in seq_along(imputing_vars)){
+    imputed_from <- names(imputing_vars)[i]
+    to_be_imputed <- imputing_vars[[i]]
 
-  # country_iso3
-  x[is.na(country_iso3) & !is.na(location_code), location_code := location_code]
+    to_be_imputed <- to_be_imputed[to_be_imputed %in% names(x)]
+    if(imputed_from %in% names(x) & length(to_be_imputed)>0){
+      txt <- glue::glue(
+        '
+        x[!is.na({imputed_from}) & (is.na({paste0(to_be_imputed, collapse=")|is.na(")})), {imputed_from} := {imputed_from}]
+        '
+      )
+      eval(parse(text = txt), envir = parent.frame(1:2))
+    }
+  }
 
-  x[granularity_time == "isoyear" & !is.na(isoyear) & (is.na(isoyearweek) | is.na(date)), isoyear := isoyear]
-  x[granularity_time == "isoweek" & !is.na(isoyearweek) & (is.na(isoyear) | is.na(date)), isoyearweek := isoyearweek]
-  x[granularity_time == "day" & !is.na(date) & (is.na(isoyear) | is.na(isoyearweek)), date := date]
+  # allows us to print
+  data.table::shouldPrint(x)
 
   return(invisible(x))
 }
 
 
-#' Set as splfmt_rts_v1_mini
-#' @param x The data.table to be converted to splfmt_rts_v1_mini
-#' @param heal Do you want it to heal on creation?
+#' Set as splfmt_rts_v1
+#' @param x The data.table to be converted to splfmt_rts_v1
+#' @param create_unified_variables Do you want it to create all unified variables?
+#' @param heal Do you want to heal on creation?
 #' @examples
 #' d <- test_data_generator()
-#' set_splfmt_rts_v1_mini(d, heal = TRUE)
+#' set_splfmt_rts_v1(d, create_unified_variables = TRUE)
 #' d[1, isoyearweek := "2021-01"]
 #' d
 #' d[2, isoyear := 2019]
@@ -292,16 +587,22 @@ heal.splfmt_rts_v1_mini <- function(x, ...) {
 #' d[10, c("location_code") := .("norge")]
 #' d
 #' @export
-set_splfmt_rts_v1_mini <- function(x, heal = FALSE) {
+set_splfmt_rts_v1 <- function(x, create_unified_variables = TRUE, heal = TRUE) {
   if (!is.data.table(x)) {
     stop("x must be data.table. Run setDT('x').")
   }
 
-  fmt <- formats$splfmt_rts_v1_mini$unified
+  fmt <- formats$splfmt_rts_v1$unified
   setattr(x, "format_unified", fmt)
-  setattr(x, "class", unique(c("splfmt_rts_v1_mini", class(x))))
+  setattr(x, "class", unique(c("splfmt_rts_v1", class(x))))
 
-  if (heal) heal.splfmt_rts_v1_mini(x)
+  if (create_unified_variables) {
+    create_unified_columns.splfmt_rts_v1(x)
+  }
+
+  if (heal) {
+    heal.splfmt_rts_v1(x)
+  }
 
   return(invisible(x))
 }
@@ -329,7 +630,7 @@ validate <- function(x) {
     } else {
       # check for NAs allowed
       if (fmt_i$NA_allowed == FALSE & sum(is.na(x[[i]])) > 0) {
-        status_i$errors <- paste0(status_i$errors, "\n- NA exists (but not allowed)")
+        status_i$errors <- paste0(status_i$errors, "\n- NA exists (not allowed)")
       }
       # if(!is.null())
 
@@ -342,7 +643,7 @@ validate <- function(x) {
   setattr(x, "hash", new_hash)
 }
 
-summary.splfmt_rts_v1_mini <- function(object, ...) {
+summary.splfmt_rts_v1 <- function(object, ...) {
   validate(object)
   status <- attr(object, "status")
 
@@ -355,93 +656,135 @@ summary.splfmt_rts_v1_mini <- function(object, ...) {
 }
 
 
-hash_structure <- function(x) {
+hash_structure <- function(x, var) {
+  # var <-
   # Take in the data table
   # data <- data$cases
   # data <- data$vax
 
-  d <- copy(data)
+  summarized <- x[, .(
+    num_valid = sum(!is.na(get(var))),
+    num_na = sum(is.na(get(var)))
+  ),
+  keyby = .(
+    granularity_time,
+    granularity_geo,
+    age,
+    sex
+  )
+  ]
 
+  skeleton <- CJ(
+    granularity_time = c("isoyear", "isoweek", "day"),
+    granularity_geo = unique(spldata::norway_locations_names()$granularity_geo),
+    age = unique(d$age),
+    sex = unique(d$sex)
+  )
+  skeleton[
+    summarized,
+    on = c("granularity_time", "granularity_geo", "age", "sex"),
+    c("num_valid", "num_na") := .(num_valid, num_na)
+  ]
+  skeleton[is.na(num_valid), num_valid := 0]
+  skeleton[is.na(num_na), num_na := 0]
 
-  extra_cols <- 5:ncol(d)
+  skeleton[, category := dplyr::case_when(
+    num_valid == 0 & num_na == 0 ~ "structurally_missing",
+    num_valid == 0 & num_na > 0 ~ "only_na",
+    num_valid > 0 & num_na == 0 ~ "only_data",
+    num_valid > 0 & num_na > 0 ~ "data_and_na",
+  )]
+  skeleton[is.na(age), age := "missing"]
+  skeleton[is.na(sex), sex := "missing"]
 
-  d1 <- copy(d)
-  d1[, (extra_cols[1]) := NULL]
-  # d1[, cases_testdate_n := NULL]
+  skeleton[, num_valid := NULL]
+  skeleton[, num_na := NULL]
+  skeleton[, granularity_geo := factor(granularity_geo, levels = unique(spldata::norway_locations_names()$granularity_geo))]
 
-  d2 <- copy(d)
-  d2[, (extra_cols[2]) := NULL]
-  # d2[, cases_testdate_n_sum0_13 := NULL]
+  # check if can merge together age groups
+  skeleton_wide <- dcast.data.table(
+    skeleton,
+    granularity_time + granularity_geo + sex ~ age,
+    value.var = "category"
+  )
 
-  l1 <- list()
-
-  l1$d1 <- d1
-  l1$d2 <- d2
-
-  # a vector of all the column names
-  q <- 1
-  q1 <- list()
-
-
-  for (d in l1) {
-    # d <- l1$d1
-    colnames_all <- colnames(d)
-
-
-    # one vector of the standard column names, and one for all the other column names
-    standard_cols <- c("granularity_time", "granularity_geo", "age", "sex")
-    color_col_names <- colnames_all[!(colnames_all %in% standard_cols)]
-
-    # make a list that consists of lists with all the values from the to-be-colored columns
-    color_cols <- list()
-    j <- 1
-
-    color_cols[[1]] <- d[[5]]
-
-    # remove the column that will be colored
-    d <- subset(d, select = standard_cols)
-
-    # Adding colors to the rows that exist
-    # blue - if it exist and has values
-    # yellow - if it exist and is NA
-    t1 <- dplyr::case_when(
-      !is.na(color_cols[[1]]) ~ "blue",
-      TRUE ~ "yellow"
-    )
-    d <- cbind(d, t1)
-    setnames(d, "t1", color_col_names[1])
-
-    # Removes duplicates
-    d <- unique(d)
-
-    # Make a data table of all possible combinations of the variables
-    ages <- unique(d$age)
-    sex <- unique(d$sex)
-    gran_geo <- unique(d$granularity_geo)
-    gran_time <- unique(d$granularity_time)
-
-    d_1 <- CJ(granularity_time = gran_time, granularity_geo = gran_geo, age = ages, sex = sex)
-
-    # Removing all the rows in d from d_1
-    d_1 <- d_1[!d, on = .(granularity_time, granularity_geo, age, sex)]
-
-    # if d_1 has any rows, they should be red, so they get filled with NA
-    if (nrow(d_1) != 0) {
-      d <- rbind(d, d_1, fill = TRUE)
+  equality <- diag(3)
+  colnames(equality) <- names(skeleton_wide)[4:ncol(skeleton_wide)]
+  rownames(equality) <- names(skeleton_wide)[4:ncol(skeleton_wide)]
+  for (i in 4:ncol(skeleton_wide)) {
+    for (j in 4:ncol(skeleton_wide)) {
+      if (sum(skeleton_wide[[i]] != skeleton_wide[[j]]) == 0) equality[i - 3, j - 3] <- 1
     }
-
-    # set order to make it easier to look over
-    setorder(d, granularity_time, granularity_geo, age, sex)
-
-    # name <- paste0("q_", q)
-    name <- names(d)[5]
-
-    d <- unique(d)
-
-    q <- q + 1
-
-    # d <- dcast(d, granularity_time + age + sex + get(name) ~ granularity_geo, value.var = get(name))
-
-    q1[[name]] <- d
   }
+  while (nrow(equality) > 0) {
+    if (sum(equality[1, ]) > 1) {
+      names_to_sum <- colnames(equality)[equality[1, ] == 1]
+      end_name <- paste0(names_to_sum, collapse = ",")
+      skeleton_wide[, (end_name) := get(names_to_sum[1])]
+      for (i in names_to_sum) {
+        # delete the data in the skeleton
+        skeleton_wide[, (i) := NULL]
+        # delete the data in the equality matrix
+        equality <- equality[-which(rownames(equality) == i), , drop = FALSE]
+      }
+    } else {
+      equality <- equality[-1, , drop = FALSE]
+    }
+  }
+
+  skeleton <- melt.data.table(
+    skeleton_wide,
+    id.vars = c("granularity_time", "granularity_geo", "sex"),
+    variable.factor = FALSE,
+    variable.name = "age",
+    value.name = "category"
+  )
+
+  skeleton_wide <- dcast.data.table(
+    skeleton,
+    granularity_time + age + sex ~ granularity_geo,
+    value.var = "category"
+  )
+
+  # delete columns that are just structurally_missing and furthest to the right
+  for (i in rev(names(skeleton_wide))) {
+    if (i == "municip") {
+      break()
+    } else if (sum(skeleton_wide[[i]] != "structurally_missing", na.rm = T) == 0) {
+      skeleton_wide[, (i) := NULL]
+    } else {
+      break()
+    }
+  }
+
+  skeleton_long <- melt.data.table(
+    skeleton_wide,
+    id.vars = c("granularity_time", "age", "sex"),
+    variable.factor = FALSE,
+    variable.name = "granularity_geo",
+    value.name = "category"
+  )
+  skeleton_long[, granularity_geo := factor(granularity_geo, levels = unique(spldata::norway_locations_names()$granularity_geo))]
+  skeleton_long[, category := factor(category, levels = c("structurally_missing", "only_na", "data_and_na", "only_data"))]
+  skeleton_long[, age := paste0("age=", age)]
+  skeleton_long[, sex := paste0("sex=", sex)]
+
+  q <- ggplot(skeleton_long, aes(x = granularity_geo, y = age, fill = category))
+  q <- q + geom_tile(color = "black")
+  q <- q + facet_grid(sex ~ granularity_time)
+  # q <- q + facet_wrap(~granularity_time, scales = "free")
+  q <- q + splstyle::scale_fill_fhi(NULL, drop = F, direction = -1)
+  q <- q + scale_x_discrete(NULL)
+  q <- q + scale_y_discrete(NULL)
+  q <- q + splstyle::set_x_axis_vertical()
+  q
+}
+
+#' print
+#' @param x x
+#' @param ... dots
+#' @method print splfmt_rts_v1
+#' @export
+plot.splfmt_rts_v1 <- function(x, ...) {
+
 }
