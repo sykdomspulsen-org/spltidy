@@ -404,7 +404,7 @@ d <- rbind(
   data.frame(
     variable = "country_iso3",
     accepted_values = "\"nor\", \"den\", \"swe\", \"fin\"",
-    definition = "ISO3 country code, e.g. nor for Norway"
+    definition = "ISO3 country code."
   ),
   data.frame(
     variable = "location_code",
@@ -758,6 +758,7 @@ d %>%
   spltidy::hash_data_structure("deaths_n") %>%
   plot()
 ```
+
 ## Reference (Location)
 
 Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
