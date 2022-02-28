@@ -12,8 +12,7 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  compact = TRUE
+  comment = "#>"
 )
 ```
 
@@ -720,13 +719,20 @@ d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_ti
 d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
   spltidy::remove_class_splfmt_rts_data() %>%
   print()
+```
 
+## Hashing data structures
+
+We need a way to easily summarize the data structure of a dataset.
+
+```{r}
+d <- spltidy::test_data_generator()
+spltidy::set_splfmt_rts_data_v1(d)
 
 d %>%
   spltidy::hash_data_structure("deaths_n") %>%
   plot()
 ```
-
 ## Reference (Location)
 
 Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.
