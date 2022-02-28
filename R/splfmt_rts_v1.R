@@ -1,138 +1,138 @@
 formats <- list()
-formats$splfmt_rts_v1 <- list()
-formats$splfmt_rts_v1$unified <- list()
-formats$splfmt_rts_v1$unified$granularity_time <- list(
+formats$splfmt_rts_data_v1 <- list()
+formats$splfmt_rts_data_v1$unified <- list()
+formats$splfmt_rts_data_v1$unified$granularity_time <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = c("day", "isoweek", "isoyear"),
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$granularity_geo <- list(
+formats$splfmt_rts_data_v1$unified$granularity_geo <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = unique(spldata::norway_locations_names()$granularity_geo),
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$country_iso3 <- list(
+formats$splfmt_rts_data_v1$unified$country_iso3 <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = c("nor", "den", "swe", "fin"),
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$location_code <- list(
+formats$splfmt_rts_data_v1$unified$location_code <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$border <- list(
+formats$splfmt_rts_data_v1$unified$border <- list(
   NA_allowed = FALSE,
   NA_class = NA_integer_,
   values_allowed = 2020,
   class = "integer"
 )
 
-formats$splfmt_rts_v1$unified$age <- list(
+formats$splfmt_rts_data_v1$unified$age <- list(
   NA_allowed = TRUE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$sex <- list(
+formats$splfmt_rts_data_v1$unified$sex <- list(
   NA_allowed = TRUE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$isoyear <- list(
+formats$splfmt_rts_data_v1$unified$isoyear <- list(
   NA_allowed = TRUE,
   NA_class = NA_integer_,
   values_allowed = NULL,
   class = "integer"
 )
 
-formats$splfmt_rts_v1$unified$isoweek <- list(
+formats$splfmt_rts_data_v1$unified$isoweek <- list(
   NA_allowed = TRUE,
   NA_class = NA_integer_,
   values_allowed = NULL,
   class = "integer"
 )
 
-formats$splfmt_rts_v1$unified$isoyearweek <- list(
+formats$splfmt_rts_data_v1$unified$isoyearweek <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$season <- list(
+formats$splfmt_rts_data_v1$unified$season <- list(
   NA_allowed = TRUE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$seasonweek <- list(
+formats$splfmt_rts_data_v1$unified$seasonweek <- list(
   NA_allowed = TRUE,
   NA_class = NA_real_,
   values_allowed = NULL,
   class = "numeric"
 )
 
-formats$splfmt_rts_v1$unified$calyear <- list(
+formats$splfmt_rts_data_v1$unified$calyear <- list(
   NA_allowed = TRUE,
   NA_class = NA_integer_,
   values_allowed = NULL,
   class = "integer"
 )
 
-formats$splfmt_rts_v1$unified$calmonth <- list(
+formats$splfmt_rts_data_v1$unified$calmonth <- list(
   NA_allowed = TRUE,
   NA_class = NA_integer_,
   values_allowed = NULL,
   class = "integer"
 )
 
-formats$splfmt_rts_v1$unified$calyearmonth <- list(
+formats$splfmt_rts_data_v1$unified$calyearmonth <- list(
   NA_allowed = TRUE,
   NA_class = NA_character_,
   values_allowed = NULL,
   class = "character"
 )
 
-formats$splfmt_rts_v1$unified$date <- list(
+formats$splfmt_rts_data_v1$unified$date <- list(
   NA_allowed = FALSE,
   NA_class = as.Date(NA),
   values_allowed = NULL,
   class = "Date"
 )
 
-#' remove class splfmt_rts_*
+#' remove class splfmt_rts_data_*
 #' @param x data.table
 #' @export
-remove_class_splfmt_rts <- function(x) {
+remove_class_splfmt_rts_data <- function(x) {
   classes <- class(x)
-  classes <- classes[!stringr::str_detect(classes, "^splfmt_rts_")]
+  classes <- classes[!stringr::str_detect(classes, "^splfmt_rts_data_")]
   setattr(x, "class", classes)
   return(invisible(x))
 }
 
 
 #' Test data generator
-#' @param fmt Format (splfmt_rts_v1)
+#' @param fmt Format (splfmt_rts_data_v1)
 #' @examples
-#' test_data_generator("splfmt_rts_v1")
+#' test_data_generator("splfmt_rts_data_v1")
 #' @export
-test_data_generator <- function(fmt = "splfmt_rts_v1") {
-  stopifnot(fmt %in% c("splfmt_rts_v1"))
+test_data_generator <- function(fmt = "splfmt_rts_data_v1") {
+  stopifnot(fmt %in% c("splfmt_rts_data_v1"))
 
-  if (fmt == "splfmt_rts_v1") {
+  if (fmt == "splfmt_rts_data_v1") {
     d1 <- data.table(location_code = spldata::norway_locations_names()[granularity_geo == "county"]$location_code)
     d1[, granularity_time := "isoweek"]
     d1[, isoyearweek := "2022-03"]
@@ -156,9 +156,9 @@ test_data_generator <- function(fmt = "splfmt_rts_v1") {
 #' print
 #' @param x x
 #' @param ... dots
-#' @method print splfmt_rts_v1
+#' @method print splfmt_rts_data_v1
 #' @export
-print.splfmt_rts_v1 <- function(x, ...) {
+print.splfmt_rts_data_v1 <- function(x, ...) {
   # https://cran.r-project.org/web/packages/data.table/vignettes/datatable-faq.html#ok-thanks.-what-was-so-difficult-about-the-result-of-dti-col-value-being-returned-invisibly
   if (!data.table::shouldPrint(x)) {
     return(invisible(x))
@@ -167,7 +167,7 @@ print.splfmt_rts_v1 <- function(x, ...) {
   dots <- list(...)
   print_dots_before_row <- 999999999999999
   if (nrow(x) == 0) {
-    cat(glue::glue("splfmt_rts_v1 with {ncol(x)} columns and 0 rows"))
+    cat(glue::glue("splfmt_rts_data_v1 with {ncol(x)} columns and 0 rows"))
     cat(names(x))
     return(invisible(x))
   } else if (nrow(x) > 100) {
@@ -250,9 +250,9 @@ print.splfmt_rts_v1 <- function(x, ...) {
 #' assignment
 #' @param x x
 #' @param ... dots
-#' @method [ splfmt_rts_v1
+#' @method [ splfmt_rts_data_v1
 #' @export
-"[.splfmt_rts_v1" <- function(x, ...) {
+"[.splfmt_rts_data_v1" <- function(x, ...) {
   # original call
   modified_call <- orig_call <- sys.calls()[[sys.nframe() - 1]]
   healing_calls <- list()
@@ -275,11 +275,11 @@ print.splfmt_rts_v1 <- function(x, ...) {
   i <- as.numeric(which(first_call == ":="))
   if (length(i) == 0) {
     # no assignment
-    remove_class_splfmt_rts(x)
-    on.exit(set_splfmt_rts_v1(x, create_unified_variables = FALSE, heal = FALSE))
+    remove_class_splfmt_rts_data(x)
+    on.exit(set_splfmt_rts_data_v1(x, create_unified_variables = FALSE, heal = FALSE))
 
     y <- eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
-    set_splfmt_rts_v1(y, create_unified_variables = FALSE, heal = FALSE)
+    set_splfmt_rts_data_v1(y, create_unified_variables = FALSE, heal = FALSE)
     return(invisible(y))
   } else if (length(i) == 1) {
     # smart-assignment for time ----
@@ -430,8 +430,8 @@ print.splfmt_rts_v1 <- function(x, ...) {
     # print(modified_call)
     # print(healing_calls)
 
-    remove_class_splfmt_rts(x)
-    on.exit(set_splfmt_rts_v1(x, create_unified_variables = FALSE, heal = FALSE))
+    remove_class_splfmt_rts_data(x)
+    on.exit(set_splfmt_rts_data_v1(x, create_unified_variables = FALSE, heal = FALSE))
 
     eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
     for (i in seq_along(healing_calls)) {
@@ -456,10 +456,10 @@ heal <- function(x, ...) {
 #' Heal
 #' @param x x
 #' @param ... Arguments passed to or from other methods
-#' @method heal splfmt_rts_v1
+#' @method heal splfmt_rts_data_v1
 #' @export
-heal.splfmt_rts_v1 <- function(x, ...) {
-  assert_classes.splfmt_rts_v1(x)
+heal.splfmt_rts_data_v1 <- function(x, ...) {
+  assert_classes.splfmt_rts_data_v1(x)
 
   # granularity_time = mandatory
   imputing_vars <- list(
@@ -532,9 +532,9 @@ create_unified_columns <- function(x, ...) {
 #' create_unified_columns
 #' @param x x
 #' @param ... Arguments passed to or from other methods
-#' @method create_unified_columns splfmt_rts_v1
+#' @method create_unified_columns splfmt_rts_data_v1
 #' @export
-create_unified_columns.splfmt_rts_v1 <- function(x, ...) {
+create_unified_columns.splfmt_rts_data_v1 <- function(x, ...) {
   fmt <- attr(x, "format_unified")
   for (i in names(fmt)) {
     if (!i %in% names(x)) {
@@ -545,7 +545,7 @@ create_unified_columns.splfmt_rts_v1 <- function(x, ...) {
   setcolorder(x, names(fmt))
 
   # heal it
-  heal.splfmt_rts_v1(x)
+  heal.splfmt_rts_data_v1(x)
 
   # allows us to print
   data.table::shouldPrint(x)
@@ -557,7 +557,7 @@ assert_classes <- function(x, ...) {
   UseMethod("assert_classes", x)
 }
 
-assert_classes.splfmt_rts_v1 <- function(x) {
+assert_classes.splfmt_rts_data_v1 <- function(x) {
   fmt <- attr(x, "format_unified")
   classes_real <- lapply(x, class)
   classes_wanted <- lapply(fmt, function(x) {
@@ -583,13 +583,13 @@ assert_classes.splfmt_rts_v1 <- function(x) {
   return(invisible(x))
 }
 
-#' Set as splfmt_rts_v1
-#' @param x The data.table to be converted to splfmt_rts_v1
+#' Set as splfmt_rts_data_v1
+#' @param x The data.table to be converted to splfmt_rts_data_v1
 #' @param create_unified_variables Do you want it to create all unified variables?
 #' @param heal Do you want to heal on creation?
 #' @examples
 #' d <- test_data_generator()
-#' set_splfmt_rts_v1(d, create_unified_variables = TRUE)
+#' set_splfmt_rts_data_v1(d, create_unified_variables = TRUE)
 #' d[1, isoyearweek := "2021-01"]
 #' d
 #' d[2, isoyear := 2019]
@@ -601,21 +601,21 @@ assert_classes.splfmt_rts_v1 <- function(x) {
 #' d[10, c("location_code") := .("norge")]
 #' d
 #' @export
-set_splfmt_rts_v1 <- function(x, create_unified_variables = TRUE, heal = TRUE) {
+set_splfmt_rts_data_v1 <- function(x, create_unified_variables = TRUE, heal = TRUE) {
   if (!is.data.table(x)) {
     stop("x must be data.table. Run setDT('x').")
   }
 
-  fmt <- formats$splfmt_rts_v1$unified
+  fmt <- formats$splfmt_rts_data_v1$unified
   setattr(x, "format_unified", fmt)
-  setattr(x, "class", unique(c("splfmt_rts_v1", class(x))))
+  setattr(x, "class", unique(c("splfmt_rts_data_v1", class(x))))
 
   if (create_unified_variables) {
-    create_unified_columns.splfmt_rts_v1(x)
+    create_unified_columns.splfmt_rts_data_v1(x)
   }
 
   if (heal) {
-    heal.splfmt_rts_v1(x)
+    heal.splfmt_rts_data_v1(x)
   }
 
   return(invisible(x))
@@ -657,7 +657,7 @@ validate <- function(x) {
   setattr(x, "hash", new_hash)
 }
 
-summary.splfmt_rts_v1 <- function(object, ...) {
+summary.splfmt_rts_data_v1 <- function(object, ...) {
   validate(object)
   status <- attr(object, "status")
 
@@ -669,8 +669,23 @@ summary.splfmt_rts_v1 <- function(object, ...) {
   }
 }
 
+#' heal generic
+#'
+#' @param x An object
+#' @param var variable to hash
+#' @param ... Arguments passed to or from other methods
+#' @export
+hash_data_structure <- function(x, var, ...) {
+  UseMethod("hash_data_structure", x)
+}
 
-hash_structure <- function(x, var) {
+#' Hash
+#' @param x x
+#' @param var variable to hash
+#' @param ... Arguments passed to or from other methods
+#' @method hash_data_structure splfmt_rts_data_v1
+#' @export
+hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
   # var <-
   # Take in the data table
   # data <- data$cases
@@ -778,12 +793,27 @@ hash_structure <- function(x, var) {
     variable.name = "granularity_geo",
     value.name = "category"
   )
-  skeleton_long[, granularity_geo := factor(granularity_geo, levels = unique(spldata::norway_locations_names()$granularity_geo))]
-  skeleton_long[, category := factor(category, levels = c("structurally_missing", "only_na", "data_and_na", "only_data"))]
-  skeleton_long[, age := paste0("age=", age)]
-  skeleton_long[, sex := paste0("sex=", sex)]
 
-  q <- ggplot(skeleton_long, aes(x = granularity_geo, y = age, fill = category))
+  setattr(skeleton_long, "class", unique(c("splfmt_rts_data_structure_hash_v1", class(x))))
+
+  return(invisible(skeleton_long))
+}
+
+#' print
+#' @param x x
+#' @param y x
+#' @param ... dots
+#' @method plot splfmt_rts_data_structure_hash_v1
+#' @export
+plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
+  pd <- copy(x)
+  pd[, granularity_geo := factor(granularity_geo, levels = unique(spldata::norway_locations_names()$granularity_geo))]
+  pd[, category := factor(category, levels = c("structurally_missing", "only_na", "data_and_na", "only_data"))]
+
+  pd[, age := paste0("age=", age)]
+  pd[, sex := paste0("sex=", sex)]
+
+  q <- ggplot(pd, aes(x = granularity_geo, y = age, fill = category))
   q <- q + geom_tile(color = "black")
   q <- q + facet_grid(sex ~ granularity_time)
   # q <- q + facet_wrap(~granularity_time, scales = "free")
@@ -794,12 +824,3 @@ hash_structure <- function(x, var) {
   q
 }
 
-#' print
-#' @param x x
-#' @param y x
-#' @param ... dots
-#' @method plot splfmt_rts_v1
-#' @export
-plot.splfmt_rts_v1 <- function(x, y, ...) {
-
-}

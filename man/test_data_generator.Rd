@@ -4,14 +4,14 @@
 \alias{test_data_generator}
 \title{Test data generator}
 \usage{
-test_data_generator(fmt = "splfmt_rts_v1")
+test_data_generator(fmt = "splfmt_rts_data_v1")
 }
 \arguments{
-\item{fmt}{Format (splfmt_rts_v1)}
+\item{fmt}{Format (splfmt_rts_data_v1)}
 }
 \description{
 Test data generator
 }
 \examples{
-test_data_generator("splfmt_rts_v1")
+test_data_generator("splfmt_rts_data_v1")
 }

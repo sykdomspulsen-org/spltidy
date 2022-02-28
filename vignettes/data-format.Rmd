@@ -21,13 +21,11 @@ library(data.table)
 library(magrittr)
 ```
 
-## splfmt_rts_v1_mini / splfmt_rts_v1_max
+## splfmt_rts_data_v1
 
-This document presents the data format `splfmt_rts_v1_mini`.
+This document presents the data format `splfmt_rts_data_v1`.
 
-`splfmt_rts_v1_mini` is the data format that the Sykdomspulsen team recommends using for the real-time surveillance of infectious diseases.
-
-`splfmt_rts_v1_max` is the internal data format for the real-time analysis and disease surveillance framework Sykdomspulsen Core. `splfmt_rts_v1_max` is identical to `splfmt_rts_v1_mini`, except that it contains a few extra (superfluous) columns that make it easier to perform data selections on large datasets. It is easy to convert between `splfmt_rts_v1_mini` and `splfmt_rts_v1_max`.
+`splfmt_rts_data_v1` is the data format that the Sykdomspulsen team recommends using for the real-time surveillance of infectious diseases.
 
 ## Style
 
@@ -387,7 +385,7 @@ Missing sexes should be coded as `NA_character_`.
 
 ## Unified variables
 
-All datasets in the splverse format splfmt_rts_v1_mini will contain these 10 variables.
+All datasets in the splverse format splfmt_rts_data_v1_mini will contain these 10 variables.
 
 Time conversion functions can be found in package [spltime](https://docs.sykdomspulsen.no/spltime). 
 
@@ -460,7 +458,7 @@ gt::gt(d) %>%
   gt::cols_align(
     align = "left"
   ) %>%
-  gt::tab_header(title = "Unified variables (10) in the splverse format splfmt_rts_v1_mini") %>%
+  gt::tab_header(title = "Unified variables (10) in the splverse format splfmt_rts_data_v1_mini") %>%
   gt::cols_label(
     variable = "Variable",
     accepted_values = "Accepted values",
@@ -606,7 +604,7 @@ gt::gt(d) %>%
   gt::cols_align(
     align = "left"
   ) %>%
-  gt::tab_header(title = "Task-specific variables in the splverse format splfmt_rts_v1_mini") %>%
+  gt::tab_header(title = "Task-specific variables in the splverse format splfmt_rts_data_v1_mini") %>%
   gt::cols_label(
     x = "",
     examples = "Examples",
@@ -680,7 +678,7 @@ An example relating to vaccination:
 
 ```{r}
 d <- spltidy::test_data_generator()
-spltidy::set_splfmt_rts_v1(d)
+spltidy::set_splfmt_rts_data_v1(d)
 
 # Looking at the dataset
 d[]
@@ -712,16 +710,20 @@ d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_ti
   print()
 
 # Collapsing down to different levels, without healing the dataset and without
-# removing the class splfmt_rts_v1_mini (this is uncommon)
+# removing the class splfmt_rts_data_v1_mini (this is uncommon)
 d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
   print()
 
-# Collapsing to different levels, and removing the class splfmt_rts_v1_mini because
+# Collapsing to different levels, and removing the class splfmt_rts_data_v1_mini because
 # it is going to be used in new output/analyses
 d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
-  spltidy::remove_class_splfmt_rts() %>%
+  spltidy::remove_class_splfmt_rts_data() %>%
   print()
 
+
+d %>%
+  hash_data_structure("deaths_n") %>%
+  plot()
 ```
 
 ## Reference (Location)
