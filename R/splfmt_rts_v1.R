@@ -572,7 +572,7 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
       if (classes_wanted[[i]] == "Date") {
         x[, (i) := as.Date(get(i))]
       } else {
-        x[, (i) := as(get(i), classes_wanted[[i]])]
+        x[, (i) := methods::as(get(i), classes_wanted[[i]])]
       }
     }
   }
@@ -706,8 +706,8 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
   skeleton <- CJ(
     granularity_time = c("isoyear", "isoweek", "day"),
     granularity_geo = unique(spldata::norway_locations_names()$granularity_geo),
-    age = unique(d$age),
-    sex = unique(d$sex)
+    age = unique(x$age),
+    sex = unique(x$sex)
   )
   skeleton[
     summarized,
@@ -803,9 +803,18 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
 #' @param x x
 #' @param y x
 #' @param ... dots
+#' @examples
+#' x <- spltidy::test_data_generator() %>%
+#'   spltidy::set_splfmt_rts_data_v1() %>%
+#'   spltidy::hash_data_structure("deaths_n") %>%
+#'   plot
 #' @method plot splfmt_rts_data_structure_hash_v1
 #' @export
 plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
+  # x <- test_data_generator() %>%
+  #   set_splfmt_rts_data_v1() %>%
+  #   hash_data_structure("deaths_n")
+
   pd <- copy(x)
   pd[, granularity_geo := factor(granularity_geo, levels = unique(spldata::norway_locations_names()$granularity_geo))]
   pd[, category := factor(category, levels = c("structurally_missing", "only_na", "data_and_na", "only_data"))]
@@ -821,5 +830,6 @@ plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
   q <- q + scale_x_discrete(NULL)
   q <- q + scale_y_discrete(NULL)
   q <- q + splstyle::set_x_axis_vertical()
+  q <- q + theme(legend.position = "bottom", legend.direction = "horizontal")
   q
 }

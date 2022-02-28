@@ -16,3 +16,9 @@
 \description{
 print
 }
+\examples{
+x <- spltidy::test_data_generator() \%>\%
+  spltidy::set_splfmt_rts_data_v1() \%>\%
+  spltidy::hash_data_structure("deaths_n") \%>\%
+  plot
+}

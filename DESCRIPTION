@@ -20,7 +20,8 @@ Imports: data.table,
     spltime,
     crayon,
     digest,
-    stringr
+    stringr,
+    methods
 Suggests: testthat,
     knitr,
     rmarkdown,

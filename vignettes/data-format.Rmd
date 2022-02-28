@@ -776,7 +776,7 @@ gt::gt(d) %>%
   gt::tab_options(
     table.width = "750px"
   ) %>%
-  gt::tab_header(title = "Reference table of valid `location_code`s and `location_name_description_nb`s") %>%
+  gt::tab_header(title = "Reference table of location_code and location_name_description_nb") %>%
   gt::cols_label(
     location_order = "#"
   ) 
