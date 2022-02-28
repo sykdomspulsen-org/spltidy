@@ -385,7 +385,7 @@ Missing sexes should be coded as `NA_character_`.
 
 ## Unified variables
 
-All datasets in the splverse format splfmt_rts_data_v1_mini will contain these 10 variables.
+All datasets in the splverse format splfmt_rts_data_v1 will contain these 16 variables.
 
 Time conversion functions can be found in package [spltime](https://docs.sykdomspulsen.no/spltime). 
 
@@ -437,6 +437,31 @@ d <- rbind(
     definition = "Use function spltime::isoyearweek_c"
   ),
   data.frame(
+    variable = "season",
+    accepted_values = "\"YYYY/YYYY\"",
+    definition = "Seasons start in week 30 and finish in week 29."
+  ),
+  data.frame(
+    variable = "seasonweek",
+    accepted_values = "1, 2, ..., 23, 23.5, 24, ..., 52",
+    definition = "isoweek = 30 -> seasonweek = 1. isoweek = 52 -> seasonweek = 23. isoweek = 53 -> seasonweek = 23.5. isoweek = 1 -> seasonweek = 24. isoweek = 29 -> seasonweek = 52. This is used primarily for plotting/analysis reasons."
+  ),
+  data.frame(
+    variable = "calyear",
+    accepted_values = "..., 2020, 2021, ...",
+    definition = "Calendar years."
+  ),
+  data.frame(
+    variable = "calmonth",
+    accepted_values = "1, 2, ..., 11, 12",
+    definition = "Calendar months."
+  ),
+  data.frame(
+    variable = "calyearmonth",
+    accepted_values = "\"2021-M01\"",
+    definition = ""
+  ),
+  data.frame(
     variable = "date",
     accepted_values = "YYYY-MM-DD",
     definition = "Always corresponds to the last date in the time period. E.g. if granularity_time=='isoweek' then date is the Sunday of that week. If granularity_time == 'event_*_date1_to_9999_01_01' then date is 9999-01-01"
@@ -458,7 +483,7 @@ gt::gt(d) %>%
   gt::cols_align(
     align = "left"
   ) %>%
-  gt::tab_header(title = "Unified variables (10) in the splverse format splfmt_rts_data_v1_mini") %>%
+  gt::tab_header(title = "Unified variables (10) in the splverse format splfmt_rts_data_v1") %>%
   gt::cols_label(
     variable = "Variable",
     accepted_values = "Accepted values",
@@ -604,7 +629,7 @@ gt::gt(d) %>%
   gt::cols_align(
     align = "left"
   ) %>%
-  gt::tab_header(title = "Task-specific variables in the splverse format splfmt_rts_data_v1_mini") %>%
+  gt::tab_header(title = "Task-specific variables in the splverse format splfmt_rts_data_v1") %>%
   gt::cols_label(
     x = "",
     examples = "Examples",
@@ -710,11 +735,11 @@ d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_ti
   print()
 
 # Collapsing down to different levels, without healing the dataset and without
-# removing the class splfmt_rts_data_v1_mini (this is uncommon)
+# removing the class splfmt_rts_data_v1 (this is uncommon)
 d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
   print()
 
-# Collapsing to different levels, and removing the class splfmt_rts_data_v1_mini because
+# Collapsing to different levels, and removing the class splfmt_rts_data_v1 because
 # it is going to be used in new output/analyses
 d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
   spltidy::remove_class_splfmt_rts_data() %>%
