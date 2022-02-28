@@ -4,7 +4,7 @@
 \alias{create_unified_columns.splfmt_rts_v1}
 \title{create_unified_columns}
 \usage{
-\method{create_unified_columns}{splfmt_rts_v1}(x)
+\method{create_unified_columns}{splfmt_rts_v1}(x, ...)
 }
 \arguments{
 \item{x}{x}

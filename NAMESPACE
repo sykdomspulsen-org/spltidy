@@ -3,6 +3,7 @@
 S3method("[",splfmt_rts_v1)
 S3method(create_unified_columns,splfmt_rts_v1)
 S3method(heal,splfmt_rts_v1)
+S3method(plot,splfmt_rts_v1)
 S3method(print,splfmt_rts_v1)
 export(create_unified_columns)
 export(heal)

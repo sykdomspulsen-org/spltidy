@@ -719,7 +719,7 @@ d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_ti
 # Collapsing to different levels, and removing the class splfmt_rts_v1_mini because
 # it is going to be used in new output/analyses
 d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
-  spltidy::remove_class_splfmt_rts_v1_mini() %>%
+  spltidy::remove_class_splfmt_rts() %>%
   print()
 
 ```

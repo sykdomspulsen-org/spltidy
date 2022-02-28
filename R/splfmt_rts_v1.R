@@ -256,6 +256,16 @@ print.splfmt_rts_v1 <- function(x, ...) {
   # original call
   modified_call <- orig_call <- sys.calls()[[sys.nframe() - 1]]
   healing_calls <- list()
+  # print(orig_call)
+
+  # variable_in_sys_call <- orig_call[[2]]
+  # if(!variable_in_sys_call %in% ls(parent.frame(1:2))){
+  #   stop(glue::glue("{variable_in_sys_call} is not in parent.frame(1:2)"))
+  # }
+  # if(!is.data.table(get(variable_in_sys_call, envir = parent.frame(1:2)))){
+  #   stop(glue::glue("{variable_in_sys_call} is not data.table"))
+  #   x$.internal.selfref
+  # }
 
   # smart-assignment
   # try to find which part uses :=
@@ -432,65 +442,7 @@ print.splfmt_rts_v1 <- function(x, ...) {
   }
 }
 
-#' create_unified_columns generic
-#'
-#' @param x An object
-#' @param ... Arguments passed to or from other methods
-#' @export
-create_unified_columns <- function(x, ...) {
-  UseMethod("create_unified_columns", x)
-}
 
-#' create_unified_columns
-#' @param x x
-#' @param ... Arguments passed to or from other methods
-#' @method create_unified_columns splfmt_rts_v1
-#' @export
-create_unified_columns.splfmt_rts_v1 <- function(x) {
-  fmt <- attr(x, "format_unified")
-  for (i in names(fmt)) {
-    if (!i %in% names(x)) {
-      # create empty columns
-      x[, (i) := fmt[[i]]$NA_class]
-    }
-  }
-  setcolorder(x, names(fmt))
-
-  # allows us to print
-  data.table::shouldPrint(x)
-
-  return(invisible(x))
-}
-
-assert_classes <- function(x, ...) {
-  UseMethod("assert_classes", x)
-}
-
-assert_classes.splfmt_rts_v1 <- function(x) {
-  fmt <- attr(x, "format_unified")
-  classes_real <- lapply(x, class)
-  classes_wanted <- lapply(fmt, function(x) {
-    x$class
-  })
-  # just take the ones that are intersected
-  classes_wanted <- classes_wanted[names(classes_wanted) %in% names(classes_real)]
-  classes_real <- classes_real[names(classes_real) %in% names(classes_wanted)]
-  for (i in names(classes_real)) {
-    if (classes_real[[i]] != classes_wanted[[i]]) {
-      # force class
-      if (classes_wanted[[i]] == "Date") {
-        x[, (i) := as.Date(get(i))]
-      } else {
-        x[, (i) := as(get(i), classes_wanted[[i]])]
-      }
-    }
-  }
-
-  # allows us to print
-  data.table::shouldPrint(x)
-
-  return(invisible(x))
-}
 
 #' heal generic
 #'
@@ -558,7 +510,7 @@ heal.splfmt_rts_v1 <- function(x, ...) {
         x[!is.na({imputed_from}) & (is.na({paste0(to_be_imputed, collapse=")|is.na(")})), {imputed_from} := {imputed_from}]
         '
       )
-      eval(parse(text = txt), envir = parent.frame(1:2))
+      eval(parse(text = txt))
     }
   }
 
@@ -568,6 +520,68 @@ heal.splfmt_rts_v1 <- function(x, ...) {
   return(invisible(x))
 }
 
+#' create_unified_columns generic
+#'
+#' @param x An object
+#' @param ... Arguments passed to or from other methods
+#' @export
+create_unified_columns <- function(x, ...) {
+  UseMethod("create_unified_columns", x)
+}
+
+#' create_unified_columns
+#' @param x x
+#' @param ... Arguments passed to or from other methods
+#' @method create_unified_columns splfmt_rts_v1
+#' @export
+create_unified_columns.splfmt_rts_v1 <- function(x, ...) {
+  fmt <- attr(x, "format_unified")
+  for (i in names(fmt)) {
+    if (!i %in% names(x)) {
+      # create empty columns
+      x[, (i) := fmt[[i]]$NA_class]
+    }
+  }
+  setcolorder(x, names(fmt))
+
+  # heal it
+  heal.splfmt_rts_v1(x)
+
+  # allows us to print
+  data.table::shouldPrint(x)
+
+  return(invisible(x))
+}
+
+assert_classes <- function(x, ...) {
+  UseMethod("assert_classes", x)
+}
+
+assert_classes.splfmt_rts_v1 <- function(x) {
+  fmt <- attr(x, "format_unified")
+  classes_real <- lapply(x, class)
+  classes_wanted <- lapply(fmt, function(x) {
+    x$class
+  })
+  # just take the ones that are intersected
+  classes_wanted <- classes_wanted[names(classes_wanted) %in% names(classes_real)]
+  classes_real <- classes_real[names(classes_real) %in% names(classes_wanted)]
+  for (i in names(classes_real)) {
+    if (classes_real[[i]] != classes_wanted[[i]]) {
+      # force class
+      if (classes_wanted[[i]] == "Date") {
+        x[, (i) := as.Date(get(i))]
+      } else {
+        x[, (i) := as(get(i), classes_wanted[[i]])]
+      }
+    }
+  }
+
+  # allows us to print
+  data.table::shouldPrint(x)
+
+  return(invisible(x))
+}
 
 #' Set as splfmt_rts_v1
 #' @param x The data.table to be converted to splfmt_rts_v1
@@ -782,9 +796,10 @@ hash_structure <- function(x, var) {
 
 #' print
 #' @param x x
+#' @param y x
 #' @param ... dots
-#' @method print splfmt_rts_v1
+#' @method plot splfmt_rts_v1
 #' @export
-plot.splfmt_rts_v1 <- function(x, ...) {
+plot.splfmt_rts_v1 <- function(x, y, ...) {
 
 }

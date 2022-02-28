@@ -4,10 +4,12 @@
 \alias{plot.splfmt_rts_v1}
 \title{print}
 \usage{
-\method{print}{splfmt_rts_v1}(x, ...)
+\method{plot}{splfmt_rts_v1}(x, y, ...)
 }
 \arguments{
 \item{x}{x}
+
+\item{y}{x}
 
 \item{...}{dots}
 }
