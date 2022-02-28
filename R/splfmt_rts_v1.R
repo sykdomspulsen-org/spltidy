@@ -181,7 +181,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
 
   format_unified <- attr(to_print, "format_unified")
   variable_types <- rep("[context]", ncol(to_print))
-  for(i in seq_along(variable_types)){
+  for (i in seq_along(variable_types)) {
     pos <- which(names(format_unified) %in% names(to_print))
     # if(length(pos))
   }
@@ -353,7 +353,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
 
       if (!is.null(healing_options)) {
         healing_options <- healing_options[names(healing_options) %in% names(x)]
-        if(length(healing_options) > 0){
+        if (length(healing_options) > 0) {
           healing_calls[[length(healing_calls) + 1]] <- glue::glue(
             '{orig_call[[2]]}[!is.na(x_modified_timevar_97531),
             c("{paste0(names(healing_options), collapse="\\",\\"")}")
@@ -411,7 +411,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
 
       if (!is.null(healing_options)) {
         healing_options <- healing_options[names(healing_options) %in% names(x)]
-        if(length(healing_options) > 0){
+        if (length(healing_options) > 0) {
           healing_calls[[length(healing_calls) + 1]] <- glue::glue(
             '{orig_call[[2]]}[!is.na(x_modified_geovar_97531),
             c("{paste0(names(healing_options), collapse="\\",\\"")}")
@@ -499,12 +499,12 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
     )
   )
 
-  for(i in seq_along(imputing_vars)){
+  for (i in seq_along(imputing_vars)) {
     imputed_from <- names(imputing_vars)[i]
     to_be_imputed <- imputing_vars[[i]]
 
     to_be_imputed <- to_be_imputed[to_be_imputed %in% names(x)]
-    if(imputed_from %in% names(x) & length(to_be_imputed)>0){
+    if (imputed_from %in% names(x) & length(to_be_imputed) > 0) {
       txt <- glue::glue(
         '
         x[!is.na({imputed_from}) & (is.na({paste0(to_be_imputed, collapse=")|is.na(")})), {imputed_from} := {imputed_from}]
@@ -823,4 +823,3 @@ plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
   q <- q + splstyle::set_x_axis_vertical()
   q
 }
-

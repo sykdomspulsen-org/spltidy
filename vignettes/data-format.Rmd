@@ -722,7 +722,7 @@ d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_ti
 
 
 d %>%
-  hash_data_structure("deaths_n") %>%
+  spltidy::hash_data_structure("deaths_n") %>%
   plot()
 ```
 
