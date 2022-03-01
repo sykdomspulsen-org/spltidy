@@ -854,6 +854,42 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
 #' @param x x
 #' @param var variable to hash
 #' @param ... Arguments passed to or from other methods
+#' @export
+"hash_data_structure.tbl_Pool" <- function(x, var, ...) {
+  # var <-
+  # Take in the data table
+  # data <- data$cases
+  # data <- data$vax
+
+  summarized <- x %>%
+    dplyr::rename(var = !!var) %>%
+    dplyr::group_by(
+      granularity_time,
+      granularity_geo,
+      age,
+      sex
+    ) %>%
+    dplyr::summarize(
+      num_total = n(),
+      num_na = sum(as.numeric(is.na(var)))
+    ) %>%
+    dplyr::mutate(
+      num_valid = num_total - num_na
+    ) %>%
+    dplyr::select(-num_total) %>%
+    dplyr::collect() %>%
+    as.data.table()
+
+  hash_data_structure_internal(
+    summarized,
+    var
+  )
+}
+
+#' Hash
+#' @param x x
+#' @param var variable to hash
+#' @param ... Arguments passed to or from other methods
 #' @method hash_data_structure Schema_v8
 #' @export
 hash_data_structure.Schema_v8 <- function(x, var, ...) {
