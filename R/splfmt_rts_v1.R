@@ -679,35 +679,20 @@ hash_data_structure <- function(x, var, ...) {
   UseMethod("hash_data_structure", x)
 }
 
-#' Hash
-#' @param x x
-#' @param var variable to hash
-#' @param ... Arguments passed to or from other methods
-#' @method hash_data_structure splfmt_rts_data_v1
-#' @export
-hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
-  # var <-
-  # Take in the data table
-  # data <- data$cases
-  # data <- data$vax
-
-  summarized <- x[, .(
-    num_valid = sum(!is.na(get(var))),
-    num_na = sum(is.na(get(var)))
-  ),
-  keyby = .(
-    granularity_time,
-    granularity_geo,
-    age,
-    sex
-  )
-  ]
+hash_data_structure_internal <- function(summarized, var) {
+  # we expect a data.table with columns:
+  # - granularity_time
+  # - granularity_geo
+  # - age
+  # - sex
+  # - num_valid
+  # - num_na
 
   skeleton <- CJ(
     granularity_time = c("isoyear", "isoweek", "day"),
     granularity_geo = unique(spldata::norway_locations_names()$granularity_geo),
-    age = unique(x$age),
-    sex = unique(x$sex)
+    age = unique(summarized$age),
+    sex = unique(summarized$sex)
   )
   skeleton[
     summarized,
@@ -737,7 +722,7 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
     value.var = "category"
   )
 
-  equality <- diag(3)
+  equality <- diag(ncol(skeleton_wide)-3)
   colnames(equality) <- names(skeleton_wide)[4:ncol(skeleton_wide)]
   rownames(equality) <- names(skeleton_wide)[4:ncol(skeleton_wide)]
   for (i in 4:ncol(skeleton_wide)) {
@@ -794,9 +779,85 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
     value.name = "category"
   )
 
-  setattr(skeleton_long, "class", unique(c("splfmt_rts_data_structure_hash_v1", class(x))))
+  setattr(skeleton_long, "class", unique(c("splfmt_rts_data_structure_hash_v1", class(skeleton_long))))
 
   return(invisible(skeleton_long))
+}
+
+#' Hash
+#' @param x x
+#' @param var variable to hash
+#' @param ... Arguments passed to or from other methods
+#' @method hash_data_structure splfmt_rts_data_v1
+#' @export
+hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
+  # var <-
+  # Take in the data table
+  # data <- data$cases
+  # data <- data$vax
+
+  summarized <- x[, .(
+    num_valid = sum(!is.na(get(var))),
+    num_na = sum(is.na(get(var)))
+  ),
+  keyby = .(
+    granularity_time,
+    granularity_geo,
+    age,
+    sex
+  )
+  ]
+
+  hash_data_structure_internal(
+    summarized,
+    var
+  )
+}
+
+#' Hash
+#' @param x x
+#' @param var variable to hash
+#' @param ... Arguments passed to or from other methods
+#' @export
+"hash_data_structure.tbl_Microsoft SQL Server" <- function(x, var, ...) {
+  # var <-
+  # Take in the data table
+  # data <- data$cases
+  # data <- data$vax
+
+  summarized <- x %>%
+    dplyr::rename(var = !!var) %>%
+    dplyr::group_by(
+      granularity_time,
+      granularity_geo,
+      age,
+      sex
+    ) %>%
+    dplyr::summarize(
+      num_total = n(),
+      num_na = sum(as.numeric(is.na(var)))
+    ) %>%
+    dplyr::mutate(
+      num_valid = num_total - num_na
+    ) %>%
+    dplyr::select(-num_total) %>%
+    dplyr::collect() %>%
+    as.data.table()
+
+  hash_data_structure_internal(
+    summarized,
+    var
+  )
+}
+
+#' Hash
+#' @param x x
+#' @param var variable to hash
+#' @param ... Arguments passed to or from other methods
+#' @method hash_data_structure Schema_v8
+#' @export
+hash_data_structure.Schema_v8 <- function(x, var, ...) {
+  hash_data_structure(x$tbl(), var)
 }
 
 #' print

@@ -483,7 +483,7 @@ gt::gt(d) %>%
   gt::cols_align(
     align = "left"
   ) %>%
-  gt::tab_header(title = "Unified variables (10) in the splverse format splfmt_rts_data_v1") %>%
+  gt::tab_header(title = "Unified variables (16) in the splverse format splfmt_rts_data_v1") %>%
   gt::cols_label(
     variable = "Variable",
     accepted_values = "Accepted values",
