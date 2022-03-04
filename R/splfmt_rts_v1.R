@@ -153,10 +153,6 @@ test_data_generator <- function(fmt = "splfmt_rts_data_v1") {
   return(d)
 }
 
-#' print
-#' @param x x
-#' @param ... dots
-#' @method print splfmt_rts_data_v1
 #' @export
 print.splfmt_rts_data_v1 <- function(x, ...) {
   # https://cran.r-project.org/web/packages/data.table/vignettes/datatable-faq.html#ok-thanks.-what-was-so-difficult-about-the-result-of-dti-col-value-being-returned-invisibly
@@ -529,9 +525,6 @@ create_unified_columns <- function(x, ...) {
   UseMethod("create_unified_columns", x)
 }
 
-#' create_unified_columns
-#' @param x x
-#' @param ... Arguments passed to or from other methods
 #' @method create_unified_columns splfmt_rts_data_v1
 #' @export
 create_unified_columns.splfmt_rts_data_v1 <- function(x, ...) {
@@ -674,6 +667,11 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
 #' @param x An object
 #' @param var variable to hash
 #' @param ... Arguments passed to or from other methods
+#' @examples
+#' x <- spltidy::test_data_generator() %>%
+#'   spltidy::set_splfmt_rts_data_v1() %>%
+#'   spltidy::hash_data_structure("deaths_n") %>%
+#'   plot
 #' @export
 hash_data_structure <- function(x, var, ...) {
   UseMethod("hash_data_structure", x)
@@ -784,10 +782,6 @@ hash_data_structure_internal <- function(summarized, var) {
   return(invisible(skeleton_long))
 }
 
-#' Hash
-#' @param x x
-#' @param var variable to hash
-#' @param ... Arguments passed to or from other methods
 #' @method hash_data_structure splfmt_rts_data_v1
 #' @export
 hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
@@ -814,10 +808,6 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
   )
 }
 
-#' Hash
-#' @param x x
-#' @param var variable to hash
-#' @param ... Arguments passed to or from other methods
 #' @export
 "hash_data_structure.tbl_Microsoft SQL Server" <- function(x, var, ...) {
   # var <-
@@ -850,10 +840,6 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
   )
 }
 
-#' Hash
-#' @param x x
-#' @param var variable to hash
-#' @param ... Arguments passed to or from other methods
 #' @export
 "hash_data_structure.tbl_Pool" <- function(x, var, ...) {
   # var <-
@@ -886,25 +872,12 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
   )
 }
 
-#' Hash
-#' @param x x
-#' @param var variable to hash
-#' @param ... Arguments passed to or from other methods
 #' @method hash_data_structure Schema_v8
 #' @export
 hash_data_structure.Schema_v8 <- function(x, var, ...) {
   hash_data_structure(x$tbl(), var)
 }
 
-#' print
-#' @param x x
-#' @param y x
-#' @param ... dots
-#' @examples
-#' x <- spltidy::test_data_generator() %>%
-#'   spltidy::set_splfmt_rts_data_v1() %>%
-#'   spltidy::hash_data_structure("deaths_n") %>%
-#'   plot
 #' @method plot splfmt_rts_data_structure_hash_v1
 #' @export
 plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
