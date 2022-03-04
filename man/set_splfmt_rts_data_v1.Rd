@@ -14,7 +14,7 @@ set_splfmt_rts_data_v1(x, create_unified_columns = TRUE, heal = TRUE)
 \item{heal}{Do you want to \code{\link{heal}} on creation?}
 }
 \value{
-An extended \code{data.table} which is modified by reference and returned (invisibly).
+An extended \code{data.table}, which has been modified by reference and returned (invisibly).
 }
 \description{
 \code{set_splfmt_rts_data_v1} converts a \code{data.table} to \code{splfmt_rts_data_v1} by reference.
@@ -23,17 +23,34 @@ An extended \code{data.table} which is modified by reference and returned (invis
 For more details see the vignette:
 \code{vignette("splfmt_rts_data_v1", package = "spltidy")}
 }
+\section{Smart assignment}{
+
+\code{splfmt_rts_data_v1} contains the smart assignment feature for time and geography.
+}
+
 \examples{
+# Create some fake data as data.table
 d <- spltidy::test_data_generator(fmt = "splfmt_rts_data_v1")
+d <- d[1:5]
+
+# convert to splfmt_rts_data_v1 by reference
 spltidy::set_splfmt_rts_data_v1(d, create_unified_columns = TRUE)
+
+#
 d[1, isoyearweek := "2021-01"]
 d
 d[2, isoyear := 2019]
 d
-d[4:5, date := as.Date("2020-01-01")]
+d[3, date := as.Date("2020-01-01")]
 d
-d[10, c("isoyear", "isoyearweek") := .(2021, "2021-01")]
+d[4, c("isoyear", "isoyearweek") := .(2021, "2021-01")]
 d
-d[10, c("location_code") := .("norge")]
+d[5, c("location_code") := .("norge")]
 d
+
+# Investigating the data structure via hashing
+x <- spltidy::test_data_generator() \%>\%
+  spltidy::set_splfmt_rts_data_v1() \%>\%
+  spltidy::hash_data_structure("deaths_n") \%>\%
+  plot()
 }

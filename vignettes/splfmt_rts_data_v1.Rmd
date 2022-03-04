@@ -703,7 +703,7 @@ An example relating to vaccination:
 
 ```{r}
 d <- spltidy::test_data_generator()
-spltidy::splfmt_rts_data_v1(d)
+spltidy::set_splfmt_rts_data_v1(d)
 
 # Looking at the dataset
 d[]
