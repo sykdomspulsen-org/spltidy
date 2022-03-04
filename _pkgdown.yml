@@ -23,3 +23,13 @@ authors:
     roles: [aut, ctb, cph]
   before: "This package is proudly brought to you by:"
   after: "See the [changelog](news/index.html) for other contributors. :pray:"
+
+
+# reference:
+# - title: Data formats
+# - subtitle: Real time surveillance
+#   desc: Data formats that are useful for real-time surveillance
+# - contents:
+#   - has_concept("splfmt_rts_data")
+
+# pkgdown:::data_reference_index()

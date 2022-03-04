@@ -22,3 +22,11 @@ x <- spltidy::test_data_generator() \%>\%
   spltidy::hash_data_structure("deaths_n") \%>\%
   plot
 }
+\seealso{
+Other splfmt_rts_data: 
+\code{\link{create_unified_columns}()},
+\code{\link{heal}()},
+\code{\link{remove_class_splfmt_rts_data}()},
+\code{\link{set_splfmt_rts_data_v1}()}
+}
+\concept{splfmt_rts_data}

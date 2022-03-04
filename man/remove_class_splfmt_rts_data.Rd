@@ -2,7 +2,7 @@
 % Please edit documentation in R/splfmt_rts_v1.R
 \name{remove_class_splfmt_rts_data}
 \alias{remove_class_splfmt_rts_data}
-\title{remove class splfmt_rts_data_*}
+\title{Remove class splfmt_rts_data_*}
 \usage{
 remove_class_splfmt_rts_data(x)
 }
@@ -10,5 +10,13 @@ remove_class_splfmt_rts_data(x)
 \item{x}{data.table}
 }
 \description{
-remove class splfmt_rts_data_*
+Remove class splfmt_rts_data_*
 }
+\seealso{
+Other splfmt_rts_data: 
+\code{\link{create_unified_columns}()},
+\code{\link{hash_data_structure}()},
+\code{\link{heal}()},
+\code{\link{set_splfmt_rts_data_v1}()}
+}
+\concept{splfmt_rts_data}

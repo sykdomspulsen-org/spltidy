@@ -752,7 +752,7 @@ We need a way to easily summarize the data structure of a dataset.
 
 ```{r}
 d <- spltidy::test_data_generator()
-spltidy::splfmt_rts_data_v1(d)
+spltidy::set_splfmt_rts_data_v1(d)
 
 d %>%
   spltidy::hash_data_structure("deaths_n") %>%

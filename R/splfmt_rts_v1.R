@@ -113,8 +113,9 @@ formats$splfmt_rts_data_v1$unified$date <- list(
   class = "Date"
 )
 
-#' remove class splfmt_rts_data_*
+#' Remove class splfmt_rts_data_*
 #' @param x data.table
+#' @family splfmt_rts_data
 #' @export
 remove_class_splfmt_rts_data <- function(x) {
   classes <- class(x)
@@ -199,7 +200,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     rbind(nchar(variable_names)) %>%
     apply(2, max)
 
-  max_width <- getOption("width")
+  max_width <- getOption("width") - 5
   cum_width <- nchar(row_number_spacing) + cumsum(width_char + 3)
   breaks <- floor(cum_width / max_width)
 
@@ -243,9 +244,6 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
   }
 }
 
-#' assignment
-#' @param x x
-#' @param ... dots
 #' @method [ splfmt_rts_data_v1
 #' @export
 "[.splfmt_rts_data_v1" <- function(x, ...) {
@@ -438,12 +436,16 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
   }
 }
 
-
-
-#' heal generic
+#' Impute missing values
 #'
-#' @param x An object
-#' @param ... Arguments passed to or from other methods
+#' @description
+#' \code{\link{splfmt_rts_data_v1}} uses smart assignment for certain columns.
+#' e.g. if \code{location_code='norge'} then we know that \code{granularity_geo='nation'}.
+#' \code{heal} performs smart assignment on all columns that are missing data, to try and impute missing values.
+#'
+#' @param x An object of type \code{splfmt_rts_data_v1}
+#' @param ... Not used.
+#' @family splfmt_rts_data
 #' @export
 heal <- function(x, ...) {
   UseMethod("heal", x)
@@ -517,6 +519,7 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
 #'
 #' @param x An object
 #' @param ... Arguments passed to or from other methods
+#' @family splfmt_rts_data
 #' @export
 create_unified_columns <- function(x, ...) {
   UseMethod("create_unified_columns", x)
@@ -573,10 +576,11 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
   return(invisible(x))
 }
 
-#' Convert data.table to splfmt_rts_data_v1 by reference
+#' Convert data.table to splfmt_rts_data_v1
 #'
 #' @description
 #' \code{set_splfmt_rts_data_v1} converts a \code{data.table} to \code{splfmt_rts_data_v1} by reference.
+#' \code{splfmt_rts_data_v1} creates a new \code{splfmt_rts_data_v1} (not by reference) from either a \code{data.table} or \code{data.frame}.
 #'
 #' @section Smart assignment:
 #' \code{splfmt_rts_data_v1} contains the smart assignment feature for time and geography.
@@ -615,6 +619,7 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #'   spltidy::set_splfmt_rts_data_v1() %>%
 #'   spltidy::hash_data_structure("deaths_n") %>%
 #'   plot()
+#' @family splfmt_rts_data
 #' @export
 set_splfmt_rts_data_v1 <- function(x, create_unified_columns = TRUE, heal = TRUE) {
   if (!is.data.table(x)) {
@@ -634,6 +639,19 @@ set_splfmt_rts_data_v1 <- function(x, create_unified_columns = TRUE, heal = TRUE
   }
 
   return(invisible(x))
+}
+
+#' @rdname set_splfmt_rts_data_v1
+#' @export
+splfmt_rts_data_v1 <- function(x, create_unified_columns = TRUE, heal = TRUE) {
+  y <- copy(x)
+  set_splfmt_rts_data_v1(
+    y,
+    create_unified_columns,
+    heal
+  )
+
+  return(y)
 }
 
 validate <- function(x) {
@@ -694,6 +712,7 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
 #'   spltidy::set_splfmt_rts_data_v1() %>%
 #'   spltidy::hash_data_structure("deaths_n") %>%
 #'   plot
+#' @family splfmt_rts_data
 #' @export
 hash_data_structure <- function(x, var, ...) {
   UseMethod("hash_data_structure", x)

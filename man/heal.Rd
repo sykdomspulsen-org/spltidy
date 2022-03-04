@@ -2,15 +2,25 @@
 % Please edit documentation in R/splfmt_rts_v1.R
 \name{heal}
 \alias{heal}
-\title{heal generic}
+\title{Impute missing values}
 \usage{
 heal(x, ...)
 }
 \arguments{
-\item{x}{An object}
+\item{x}{An object of type \code{splfmt_rts_data_v1}}
 
-\item{...}{Arguments passed to or from other methods}
+\item{...}{Not used.}
 }
 \description{
-heal generic
+\code{\link{splfmt_rts_data_v1}} uses smart assignment for certain columns.
+e.g. if \code{location_code='norge'} then we know that \code{granularity_geo='nation'}.
+\code{heal} performs smart assignment on all columns that are missing data, to try and impute missing values.
 }
+\seealso{
+Other splfmt_rts_data: 
+\code{\link{create_unified_columns}()},
+\code{\link{hash_data_structure}()},
+\code{\link{remove_class_splfmt_rts_data}()},
+\code{\link{set_splfmt_rts_data_v1}()}
+}
+\concept{splfmt_rts_data}

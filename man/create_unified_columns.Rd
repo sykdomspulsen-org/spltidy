@@ -14,3 +14,11 @@ create_unified_columns(x, ...)
 \description{
 create_unified_columns generic
 }
+\seealso{
+Other splfmt_rts_data: 
+\code{\link{hash_data_structure}()},
+\code{\link{heal}()},
+\code{\link{remove_class_splfmt_rts_data}()},
+\code{\link{set_splfmt_rts_data_v1}()}
+}
+\concept{splfmt_rts_data}

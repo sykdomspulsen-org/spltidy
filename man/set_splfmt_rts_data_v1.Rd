@@ -2,9 +2,12 @@
 % Please edit documentation in R/splfmt_rts_v1.R
 \name{set_splfmt_rts_data_v1}
 \alias{set_splfmt_rts_data_v1}
-\title{Convert data.table to splfmt_rts_data_v1 by reference}
+\alias{splfmt_rts_data_v1}
+\title{Convert data.table to splfmt_rts_data_v1}
 \usage{
 set_splfmt_rts_data_v1(x, create_unified_columns = TRUE, heal = TRUE)
+
+splfmt_rts_data_v1(x, create_unified_columns = TRUE, heal = TRUE)
 }
 \arguments{
 \item{x}{The data.table to be converted to splfmt_rts_data_v1}
@@ -18,6 +21,7 @@ An extended \code{data.table}, which has been modified by reference and returned
 }
 \description{
 \code{set_splfmt_rts_data_v1} converts a \code{data.table} to \code{splfmt_rts_data_v1} by reference.
+\code{splfmt_rts_data_v1} creates a new \code{splfmt_rts_data_v1} (not by reference) from either a \code{data.table} or \code{data.frame}.
 }
 \details{
 For more details see the vignette:
@@ -54,3 +58,11 @@ x <- spltidy::test_data_generator() \%>\%
   spltidy::hash_data_structure("deaths_n") \%>\%
   plot()
 }
+\seealso{
+Other splfmt_rts_data: 
+\code{\link{create_unified_columns}()},
+\code{\link{hash_data_structure}()},
+\code{\link{heal}()},
+\code{\link{remove_class_splfmt_rts_data}()}
+}
+\concept{splfmt_rts_data}
