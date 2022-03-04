@@ -272,10 +272,10 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
   if (length(i) == 0) {
     # no assignment
     remove_class_splfmt_rts_data(x)
-    on.exit(set_splfmt_rts_data_v1(x, create_unified_variables = FALSE, heal = FALSE))
+    on.exit(set_splfmt_rts_data_v1(x, create_unified_columns = FALSE, heal = FALSE))
 
     y <- eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
-    set_splfmt_rts_data_v1(y, create_unified_variables = FALSE, heal = FALSE)
+    set_splfmt_rts_data_v1(y, create_unified_columns = FALSE, heal = FALSE)
     return(invisible(y))
   } else if (length(i) == 1) {
     # smart-assignment for time ----
@@ -427,7 +427,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     # print(healing_calls)
 
     remove_class_splfmt_rts_data(x)
-    on.exit(set_splfmt_rts_data_v1(x, create_unified_variables = FALSE, heal = FALSE))
+    on.exit(set_splfmt_rts_data_v1(x, create_unified_columns = FALSE, heal = FALSE))
 
     eval(parse(text = deparse(modified_call)), envir = parent.frame(1:2))
     for (i in seq_along(healing_calls)) {
@@ -449,9 +449,6 @@ heal <- function(x, ...) {
   UseMethod("heal", x)
 }
 
-#' Heal
-#' @param x x
-#' @param ... Arguments passed to or from other methods
 #' @method heal splfmt_rts_data_v1
 #' @export
 heal.splfmt_rts_data_v1 <- function(x, ...) {
@@ -576,13 +573,24 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
   return(invisible(x))
 }
 
-#' Set as splfmt_rts_data_v1
+#' Convert data.table to splfmt_rts_data_v1 by reference
+#'
+#' @description
+#' \code{set_splfmt_rts_data_v1} converts a \code{data.table} to \code{splfmt_rts_data_v1} by reference.
+#'
+#'
+#' @details
+#' For more details see the vignette:
+#' \code{vignette("splfmt_rts_data_v1", package = "spltidy")}
+#'
+#' @return An extended \code{data.table} which is modified by reference and returned (invisibly).
+#'
 #' @param x The data.table to be converted to splfmt_rts_data_v1
-#' @param create_unified_variables Do you want it to create all unified variables?
-#' @param heal Do you want to heal on creation?
+#' @param create_unified_columns Do you want it to \code{\link{create_unified_columns}}?
+#' @param heal Do you want to \code{\link{heal}} on creation?
 #' @examples
-#' d <- test_data_generator()
-#' set_splfmt_rts_data_v1(d, create_unified_variables = TRUE)
+#' d <- spltidy::test_data_generator(fmt = "splfmt_rts_data_v1")
+#' spltidy::set_splfmt_rts_data_v1(d, create_unified_columns = TRUE)
 #' d[1, isoyearweek := "2021-01"]
 #' d
 #' d[2, isoyear := 2019]
@@ -594,7 +602,7 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #' d[10, c("location_code") := .("norge")]
 #' d
 #' @export
-set_splfmt_rts_data_v1 <- function(x, create_unified_variables = TRUE, heal = TRUE) {
+set_splfmt_rts_data_v1 <- function(x, create_unified_columns = TRUE, heal = TRUE) {
   if (!is.data.table(x)) {
     stop("x must be data.table. Run setDT('x').")
   }
@@ -603,7 +611,7 @@ set_splfmt_rts_data_v1 <- function(x, create_unified_variables = TRUE, heal = TR
   setattr(x, "format_unified", fmt)
   setattr(x, "class", unique(c("splfmt_rts_data_v1", class(x))))
 
-  if (create_unified_variables) {
+  if (create_unified_columns) {
     create_unified_columns.splfmt_rts_data_v1(x)
   }
 

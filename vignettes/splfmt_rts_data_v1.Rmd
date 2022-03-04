@@ -1,10 +1,10 @@
 ---
-title: "Data format"
+title: "Data format (splfmt_rts_data_v1)"
 author: "Richard Aubrey White"
 date: "2022-01-19"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data format}
+  %\VignetteIndexEntry{Data format (splfmt_rts_data_v1)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -703,7 +703,7 @@ An example relating to vaccination:
 
 ```{r}
 d <- spltidy::test_data_generator()
-spltidy::set_splfmt_rts_data_v1(d)
+spltidy::splfmt_rts_data_v1(d)
 
 # Looking at the dataset
 d[]
@@ -752,7 +752,7 @@ We need a way to easily summarize the data structure of a dataset.
 
 ```{r}
 d <- spltidy::test_data_generator()
-spltidy::set_splfmt_rts_data_v1(d)
+spltidy::splfmt_rts_data_v1(d)
 
 d %>%
   spltidy::hash_data_structure("deaths_n") %>%

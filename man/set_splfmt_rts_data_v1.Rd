@@ -2,23 +2,30 @@
 % Please edit documentation in R/splfmt_rts_v1.R
 \name{set_splfmt_rts_data_v1}
 \alias{set_splfmt_rts_data_v1}
-\title{Set as splfmt_rts_data_v1}
+\title{Convert data.table to splfmt_rts_data_v1 by reference}
 \usage{
-set_splfmt_rts_data_v1(x, create_unified_variables = TRUE, heal = TRUE)
+set_splfmt_rts_data_v1(x, create_unified_columns = TRUE, heal = TRUE)
 }
 \arguments{
 \item{x}{The data.table to be converted to splfmt_rts_data_v1}
 
-\item{create_unified_variables}{Do you want it to create all unified variables?}
+\item{create_unified_columns}{Do you want it to \code{\link{create_unified_columns}}?}
 
-\item{heal}{Do you want to heal on creation?}
+\item{heal}{Do you want to \code{\link{heal}} on creation?}
+}
+\value{
+An extended \code{data.table} which is modified by reference and returned (invisibly).
 }
 \description{
-Set as splfmt_rts_data_v1
+\code{set_splfmt_rts_data_v1} converts a \code{data.table} to \code{splfmt_rts_data_v1} by reference.
+}
+\details{
+For more details see the vignette:
+\code{vignette("splfmt_rts_data_v1", package = "spltidy")}
 }
 \examples{
-d <- test_data_generator()
-set_splfmt_rts_data_v1(d, create_unified_variables = TRUE)
+d <- spltidy::test_data_generator(fmt = "splfmt_rts_data_v1")
+spltidy::set_splfmt_rts_data_v1(d, create_unified_columns = TRUE)
 d[1, isoyearweek := "2021-01"]
 d
 d[2, isoyear := 2019]

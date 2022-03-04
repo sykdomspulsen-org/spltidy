@@ -1,12 +1,12 @@
 d <- test_data_generator()
-set_splfmt_rts_data_v1(d, create_unified_variables = T)
+set_splfmt_rts_data_v1(d, create_unified_columns = T)
 d[1:4]
 
 d <- test_data_generator()
 d[]
-set_splfmt_rts_v1(d, create_unified_variables = F)
+set_splfmt_rts_v1(d, create_unified_columns = F)
 d[]
-set_splfmt_rts_v1(d, create_unified_variables = T)
+set_splfmt_rts_v1(d, create_unified_columns = T)
 d[]
 
 # Looking at the dataset
