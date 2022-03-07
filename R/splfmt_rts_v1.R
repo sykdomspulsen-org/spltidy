@@ -125,12 +125,16 @@ remove_class_splfmt_rts_data <- function(x) {
 }
 
 
-#' Test data generator
-#' @param fmt Format (splfmt_rts_data_v1)
+#' Generate test data
+#'
+#' @description
+#' Generates some test data
+#'
+#' @param fmt Data format (\code{splfmt_rts_data_v1})
 #' @examples
-#' test_data_generator("splfmt_rts_data_v1")
+#' spltidy::generate_test_data("splfmt_rts_data_v1")
 #' @export
-test_data_generator <- function(fmt = "splfmt_rts_data_v1") {
+generate_test_data <- function(fmt = "splfmt_rts_data_v1") {
   stopifnot(fmt %in% c("splfmt_rts_data_v1"))
 
   if (fmt == "splfmt_rts_data_v1") {
@@ -281,7 +285,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     lhs <- unlist(lapply(orig_call[[i]][[2]], function(x) {
       deparse(x)
     }))
-    time_vars <- c("isoyear", "isoyearweek", "date")
+    time_vars <- c("isoyear", "isoyearweek", "day")
     time_vars_with_quotes <- c(time_vars, paste0("\"", time_vars, "\""))
     time_var_modified_index <- which(lhs %in% time_vars_with_quotes)
 
@@ -439,11 +443,54 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
 #' Impute missing values
 #'
 #' @description
-#' \code{\link{splfmt_rts_data_v1}} uses smart assignment for certain columns.
-#' e.g. if \code{location_code='norge'} then we know that \code{granularity_geo='nation'}.
-#' \code{heal} performs smart assignment on all columns that are missing data, to try and impute missing values.
+#' Tries to impute missing values by performing smart assignment on all columns that are missing data.
+#' E.g. if \code{location_code='norge'} then we know that \code{granularity_geo='nation'}.
 #'
-#' @param x An object of type \code{splfmt_rts_data_v1}
+#' @section splfmt_rts_data_v1:
+#' The **variables in bold** will be used to impute the listed variables.
+#'
+#' **location_code**:
+#' - granularity_geo
+#' - country_iso3
+#'
+#' **isoyear** (when `granularity_time=="isoyear"`):
+#' - isoweek
+#' - isoyearweek
+#' - season
+#' - seasonweek
+#' - calyear
+#' - calmonth
+#' - calyearmonth
+#' - date
+#'
+#' **isoyearweek** (when `granularity_time=="isoweek"`):
+#' - granularity_time
+#' - isoyear
+#' - isoweek
+#' - season
+#' - seasonweek
+#' - calyear
+#' - calmonth
+#' - calyearmonth
+#' - date
+#'
+#' **date** (when `granularity_time=="day"`):
+#' - granularity_time
+#' - isoyear
+#' - isoweek
+#' - isoyearweek
+#' - season
+#' - seasonweek
+#' - calyear
+#' - calmonth
+#' - calyearmonth
+#'
+#' With regards to the time variables, `granularity_time` takes precedence over everything.
+#' If `granularity_time` is missing, then we try to impute `granularity_time` by seeing if
+#' there is only one time variable with non-missing data. Due to the multitude of time variables,
+#' `granularity_time` is an extremely important variable and should always be kept with valid values.
+#'
+#' @param x An object of type \code{\link{splfmt_rts_data_v1}}
 #' @param ... Not used.
 #' @family splfmt_rts_data
 #' @export
@@ -456,9 +503,61 @@ heal <- function(x, ...) {
 heal.splfmt_rts_data_v1 <- function(x, ...) {
   assert_classes.splfmt_rts_data_v1(x)
 
+  # making sure that granularity_time is taken care of
+  # if granularity_time doesn't exist, then make it exist
+  # and try to imput it straight away
+  # granularity_time is a special case because it is very
+  # difficult to identify which of the time-variables
+  # takes precedence over the others (without using granularity_time)
+  if(!"granularity_time" %in% names(x)){
+    x[, granularity_time := NA_character_]
+    on.exit(x[, granularity_time := NULL])
+  }
+  time_vars <- c(
+    "isoyear",
+    "isoweek",
+    "isoyearweek",
+    "season",
+    "seasonweek",
+    "calyear",
+    "calmonth",
+    "calyearmonth",
+    "date"
+  )
+  time_vars <- time_vars[time_vars %in% names(x)]
+  time_vars_to_loop_through <- time_vars[time_vars %in% c("isoyear","isoyearweek","date")]
+  for(i in time_vars_to_loop_through){
+    other_time_vars <- time_vars[time_vars != i]
+
+    if(i=="isoyearweek"){
+      time_var_as_granularity_geo <- "isoweek"
+    } else if(i=="date"){
+      time_var_as_granularity_geo <- "day"
+    } else {
+      time_var_as_granularity_geo <- i
+    }
+    if(length(other_time_vars)>=1){
+      txt <- glue::glue(
+        '
+            x[!is.na({i}) & is.na({paste0(other_time_vars, collapse=") & is.na(")}), granularity_time := "{time_var_as_granularity_geo}"]
+            '
+      )
+    } else {
+      txt <- glue::glue(
+        '
+            x[!is.na({i}), granularity_time := "{time_var_as_granularity_geo}"]
+            '
+      )
+    }
+    eval(parse(text = txt))
+  }
+
   # granularity_time = mandatory
-  imputing_vars <- list(
-    "location_code" = c("granularity_geo", "country_iso3"),
+  imputing_vars_geo <- list(
+    "location_code" = c("granularity_geo", "country_iso3")
+  )
+
+  imputing_vars_time <- list(
     "isoyear" = c(
       "granularity_time",
       "isoweek",
@@ -494,18 +593,38 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
     )
   )
 
-  for (i in seq_along(imputing_vars)) {
-    imputed_from <- names(imputing_vars)[i]
-    to_be_imputed <- imputing_vars[[i]]
+  for(type in c("geo", "time")){
+    if(type=="geo"){
+      imputing_vars <- imputing_vars_geo
+      extra_restriction <- ''
+    } else if(type=="time"){
+      imputing_vars <- imputing_vars_time
 
-    to_be_imputed <- to_be_imputed[to_be_imputed %in% names(x)]
-    if (imputed_from %in% names(x) & length(to_be_imputed) > 0) {
-      txt <- glue::glue(
-        '
-        x[!is.na({imputed_from}) & (is.na({paste0(to_be_imputed, collapse=")|is.na(")})), {imputed_from} := {imputed_from}]
-        '
-      )
-      eval(parse(text = txt))
+      if(i=="isoyearweek"){
+        time_var_as_granularity_geo <- "isoweek"
+      } else if(i=="date"){
+        time_var_as_granularity_geo <- "day"
+      } else {
+        time_var_as_granularity_geo <- i
+      }
+      extra_restriction <- 'granularity_geo=="{time_var_as_granularity_geo}" & '
+    } else {
+      stop("")
+    }
+
+    for (i in seq_along(imputing_vars)) {
+      imputed_from <- names(imputing_vars)[i]
+      to_be_imputed <- imputing_vars[[i]]
+      to_be_imputed <- to_be_imputed[to_be_imputed %in% names(x)]
+
+      if (imputed_from %in% names(x) & length(to_be_imputed) > 0) {
+        txt <- glue::glue(
+          '
+          x[{extra_restriction} !is.na({imputed_from}) & (is.na({paste0(to_be_imputed, collapse=")|is.na(")})), {imputed_from} := {imputed_from}]
+          '
+        )
+        eval(parse(text = txt))
+      }
     }
   }
 
@@ -596,7 +715,7 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #' @param heal Do you want to \code{\link{heal}} on creation?
 #' @examples
 #' # Create some fake data as data.table
-#' d <- spltidy::test_data_generator(fmt = "splfmt_rts_data_v1")
+#' d <- spltidy::generate_test_data(fmt = "splfmt_rts_data_v1")
 #' d <- d[1:5]
 #'
 #' # convert to splfmt_rts_data_v1 by reference
@@ -615,7 +734,7 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #' d
 #'
 #' # Investigating the data structure via hashing
-#' x <- spltidy::test_data_generator() %>%
+#' x <- spltidy::generate_test_data() %>%
 #'   spltidy::set_splfmt_rts_data_v1() %>%
 #'   spltidy::hash_data_structure("deaths_n") %>%
 #'   plot()
@@ -708,7 +827,7 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
 #' @param var variable to hash
 #' @param ... Arguments passed to or from other methods
 #' @examples
-#' x <- spltidy::test_data_generator() %>%
+#' x <- spltidy::generate_test_data() %>%
 #'   spltidy::set_splfmt_rts_data_v1() %>%
 #'   spltidy::hash_data_structure("deaths_n") %>%
 #'   plot
@@ -728,7 +847,7 @@ hash_data_structure_internal <- function(summarized, var) {
   # - num_na
 
   skeleton <- CJ(
-    granularity_time = c("isoyear", "isoweek", "day"),
+    granularity_time = c("isoyear", "isoweek", "date"),
     granularity_geo = unique(spldata::norway_locations_names()$granularity_geo),
     age = unique(summarized$age),
     sex = unique(summarized$sex)
@@ -922,7 +1041,7 @@ hash_data_structure.Schema_v8 <- function(x, var, ...) {
 #' @method plot splfmt_rts_data_structure_hash_v1
 #' @export
 plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
-  # x <- test_data_generator() %>%
+  # x <- generate_test_data() %>%
   #   set_splfmt_rts_data_v1() %>%
   #   hash_data_structure("deaths_n")
 

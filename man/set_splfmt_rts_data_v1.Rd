@@ -34,7 +34,7 @@ For more details see the vignette:
 
 \examples{
 # Create some fake data as data.table
-d <- spltidy::test_data_generator(fmt = "splfmt_rts_data_v1")
+d <- spltidy::generate_test_data(fmt = "splfmt_rts_data_v1")
 d <- d[1:5]
 
 # convert to splfmt_rts_data_v1 by reference
@@ -53,7 +53,7 @@ d[5, c("location_code") := .("norge")]
 d
 
 # Investigating the data structure via hashing
-x <- spltidy::test_data_generator() \%>\%
+x <- spltidy::generate_test_data() \%>\%
   spltidy::set_splfmt_rts_data_v1() \%>\%
   spltidy::hash_data_structure("deaths_n") \%>\%
   plot()

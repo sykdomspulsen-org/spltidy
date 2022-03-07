@@ -7,15 +7,68 @@
 heal(x, ...)
 }
 \arguments{
-\item{x}{An object of type \code{splfmt_rts_data_v1}}
+\item{x}{An object of type \code{\link{splfmt_rts_data_v1}}}
 
 \item{...}{Not used.}
 }
 \description{
-\code{\link{splfmt_rts_data_v1}} uses smart assignment for certain columns.
-e.g. if \code{location_code='norge'} then we know that \code{granularity_geo='nation'}.
-\code{heal} performs smart assignment on all columns that are missing data, to try and impute missing values.
+Tries to impute missing values by performing smart assignment on all columns that are missing data.
+E.g. if \code{location_code='norge'} then we know that \code{granularity_geo='nation'}.
 }
+\section{splfmt_rts_data_v1}{
+
+The \strong{variables in bold} will be used to impute the listed variables.
+
+\strong{location_code}:
+\itemize{
+\item granularity_geo
+\item country_iso3
+}
+
+\strong{isoyear} (when \code{granularity_time=="isoyear"}):
+\itemize{
+\item isoweek
+\item isoyearweek
+\item season
+\item seasonweek
+\item calyear
+\item calmonth
+\item calyearmonth
+\item date
+}
+
+\strong{isoyearweek} (when \code{granularity_time=="isoweek"}):
+\itemize{
+\item granularity_time
+\item isoyear
+\item isoweek
+\item season
+\item seasonweek
+\item calyear
+\item calmonth
+\item calyearmonth
+\item date
+}
+
+\strong{date} (when \code{granularity_time=="day"}):
+\itemize{
+\item granularity_time
+\item isoyear
+\item isoweek
+\item isoyearweek
+\item season
+\item seasonweek
+\item calyear
+\item calmonth
+\item calyearmonth
+}
+
+With regards to the time variables, \code{granularity_time} takes precedence over everything.
+If \code{granularity_time} is missing, then we try to impute \code{granularity_time} by seeing if
+there is only one time variable with non-missing data. Due to the multitude of time variables,
+\code{granularity_time} is an extremely important variable and should always be kept with valid values.
+}
+
 \seealso{
 Other splfmt_rts_data: 
 \code{\link{create_unified_columns}()},

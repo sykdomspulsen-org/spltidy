@@ -702,7 +702,7 @@ An example relating to vaccination:
 ## In action
 
 ```{r}
-d <- spltidy::test_data_generator()
+d <- spltidy::generate_test_data()
 spltidy::set_splfmt_rts_data_v1(d)
 
 # Looking at the dataset
@@ -751,7 +751,7 @@ d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_ti
 We need a way to easily summarize the data structure of a dataset.
 
 ```{r}
-d <- spltidy::test_data_generator()
+d <- spltidy::generate_test_data()
 spltidy::set_splfmt_rts_data_v1(d)
 
 d %>%

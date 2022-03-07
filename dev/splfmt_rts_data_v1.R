@@ -1,8 +1,8 @@
-d <- test_data_generator()
+d <- generate_test_data()
 set_splfmt_rts_data_v1(d, create_unified_columns = T)
 d[1:4]
 
-d <- test_data_generator()
+d <- generate_test_data()
 d[]
 set_splfmt_rts_v1(d, create_unified_columns = F)
 d[]
@@ -34,7 +34,7 @@ d[1, date := as.Date("2021-01-01")]
 
 
 
-d <- test_data_generator()
+d <- generate_test_data()
 set_splfmt_rts_v1(d)
 d[1,isoyearweek := "2021-01"]
 d[2,isoyear := 2019]
@@ -44,7 +44,7 @@ d[10,c("location_code") := .("norge")]
 
 
 
-d <- test_data_generator()
+d <- generate_test_data()
 set_splfmt_rts_v1(d)
 d[, .(deaths_n = sum(deaths_n), location_code = "norge", granularity_geo = NA, date = "2021-01-01"), keyby=.(granularity_time)] %>%
   create_unified_columns() %>%
