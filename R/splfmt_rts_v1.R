@@ -844,11 +844,15 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #' d[5, c("location_code") := .("norge")]
 #' d
 #'
-#' # Investigating the data structure via hashing
+#' # Investigating the data structure of one column inside a dataset
 #' spltidy::generate_test_data() %>%
 #'   spltidy::set_splfmt_rts_data_v1() %>%
 #'   spltidy::hash_data_structure("deaths_n") %>%
 #'   plot()
+#' # Investigating the data structure via summary
+#' spltidy::generate_test_data() %>%
+#'   spltidy::set_splfmt_rts_data_v1() %>%
+#'   summary()
 #' @family splfmt_rts_data
 #' @export
 set_splfmt_rts_data_v1 <- function(x, create_unified_columns = TRUE, heal = TRUE) {
@@ -920,7 +924,10 @@ validate <- function(x) {
   setattr(x, "hash", new_hash)
 }
 
+#' @method summary splfmt_rts_data_v1
+#' @export
 summary.splfmt_rts_data_v1 <- function(object, ...) {
+  # validate
   validate(object)
   status <- attr(object, "status")
 
@@ -930,6 +937,82 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
     cat("\n", crayon::underline(i), "\n", sep = "")
     cat(status_i$errors, "\n", sep = "")
   }
+
+  # details
+  for(i in seq_len(ncol(object))){
+    var <- names(object)[i]
+    details <- ""
+    if(
+      var %in% c(
+        "granularity_time",
+        "granularity_geo",
+        "country_iso3",
+        # "location_code",
+        "border",
+        "age",
+        "sex",
+
+        "isoyear",
+        #"isoweek",
+        #"isoyearweek",
+        "season"
+      ) |
+      stringr::str_detect(var, "_tag$") |
+      stringr::str_detect(var, "_status$")
+    ){
+      details <- object[, .(n=.N), keyby=.(get(var))] %>%
+        remove_class_splfmt_rts_data()
+      setnames(details, "get", "val")
+      details[is.na(val), val := "<NA>"]
+
+      # manually specify some ordering requirements
+      levels <- sort(details$val)
+      extra_levels <- c(
+        "nation",
+        "county",
+        "notmainlandcounty",
+        "missingcounty",
+        "municip",
+        "notmainlandmunicip",
+        "missingmunicip",
+        "wardoslo",
+        "wardbergen",
+        "wardstavanger",
+        "wardtrondheim",
+        "extrawardoslo",
+        "missingwardbergen",
+        "missingwardoslo",
+        "missingwardstavanger",
+        "missingwardtrondheim",
+        "baregion",
+        "region",
+        "faregion"
+      )
+      reordered_levels <- unique(c(extra_levels, levels))
+      reordered_levels <- reordered_levels[reordered_levels %in% levels]
+      details[, val := factor(val, levels = reordered_levels)]
+      setorder(details, val)
+
+      # create display (n + padding)
+      details[, len := stringr::str_length(val)]
+      details[, max_len := max(len)]
+      details[, val := stringr::str_pad(val, max_len, side = "right")]
+
+      details[, n := fhiplot::format_nor(n)]
+      details[, len := stringr::str_length(n)]
+      details[, max_len := max(len)]
+      details[, n := stringr::str_pad(n, max_len, side = "left")]
+
+      details[, display := paste0(val, " (n = ",n ,")")]
+      details <- details$display
+
+      for(j in seq_along(details)) details[j] <- paste0("\n\t- ",paste0(details[j], collapse = ""))
+      details <- paste0(details, collapse = "")
+      details <- paste0(":", details)
+    }
+    cat(names(object)[i], " (", class(object[[i]]),")", details, "\n", sep = "")
+  }
+  cat("\n")
 }
 
 #' Hash the data structure of a dataset for a given column

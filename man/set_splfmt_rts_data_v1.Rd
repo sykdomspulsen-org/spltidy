@@ -122,11 +122,15 @@ d
 d[5, c("location_code") := .("norge")]
 d
 
-# Investigating the data structure via hashing
+# Investigating the data structure of one column inside a dataset
 spltidy::generate_test_data() \%>\%
   spltidy::set_splfmt_rts_data_v1() \%>\%
   spltidy::hash_data_structure("deaths_n") \%>\%
   plot()
+# Investigating the data structure via summary
+spltidy::generate_test_data() \%>\%
+  spltidy::set_splfmt_rts_data_v1() \%>\%
+  summary()
 }
 \seealso{
 Other splfmt_rts_data: 
