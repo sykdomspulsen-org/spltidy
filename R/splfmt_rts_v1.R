@@ -470,7 +470,6 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
 #' - date
 #'
 #' **isoyearweek** (when `granularity_time=="isoweek"`):
-#' - granularity_time
 #' - isoyear
 #' - isoweek
 #' - season
@@ -481,7 +480,6 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
 #' - date
 #'
 #' **date** (when `granularity_time=="day"`):
-#' - granularity_time
 #' - isoyear
 #' - isoweek
 #' - isoyearweek
@@ -731,6 +729,45 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #'
 #' @section Smart assignment:
 #' \code{splfmt_rts_data_v1} contains the smart assignment feature for time and geography.
+#'
+#' When the **variables in bold** are assigned using `:=`, the listed variables will be automatically imputed.
+#'
+#' **location_code**:
+#' - granularity_geo
+#' - country_iso3
+#'
+#' **isoyear**:
+#' - granularity_time
+#' - isoweek
+#' - isoyearweek
+#' - season
+#' - seasonweek
+#' - calyear
+#' - calmonth
+#' - calyearmonth
+#' - date
+#'
+#' **isoyearweek**:
+#' - granularity_time
+#' - isoyear
+#' - isoweek
+#' - season
+#' - seasonweek
+#' - calyear
+#' - calmonth
+#' - calyearmonth
+#' - date
+#'
+#' **date**:
+#' - granularity_time
+#' - isoyear
+#' - isoweek
+#' - isoyearweek
+#' - season
+#' - seasonweek
+#' - calyear
+#' - calmonth
+#' - calyearmonth
 #'
 #' @section Unified columns:
 #' \code{splfmt_rts_data_v1} contains 16 unified columns:

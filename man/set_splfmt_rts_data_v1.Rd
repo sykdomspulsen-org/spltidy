@@ -30,6 +30,53 @@ For more details see the vignette:
 \section{Smart assignment}{
 
 \code{splfmt_rts_data_v1} contains the smart assignment feature for time and geography.
+
+When the \strong{variables in bold} are assigned using \verb{:=}, the listed variables will be automatically imputed.
+
+\strong{location_code}:
+\itemize{
+\item granularity_geo
+\item country_iso3
+}
+
+\strong{isoyear}:
+\itemize{
+\item granularity_time
+\item isoweek
+\item isoyearweek
+\item season
+\item seasonweek
+\item calyear
+\item calmonth
+\item calyearmonth
+\item date
+}
+
+\strong{isoyearweek}:
+\itemize{
+\item granularity_time
+\item isoyear
+\item isoweek
+\item season
+\item seasonweek
+\item calyear
+\item calmonth
+\item calyearmonth
+\item date
+}
+
+\strong{date}:
+\itemize{
+\item granularity_time
+\item isoyear
+\item isoweek
+\item isoyearweek
+\item season
+\item seasonweek
+\item calyear
+\item calmonth
+\item calyearmonth
+}
 }
 
 \section{Unified columns}{
