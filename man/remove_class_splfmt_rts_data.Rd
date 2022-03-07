@@ -12,6 +12,13 @@ remove_class_splfmt_rts_data(x)
 \description{
 Remove class splfmt_rts_data_*
 }
+\examples{
+x <- spltidy::generate_test_data() \%>\%
+  spltidy::set_splfmt_rts_data_v1()
+class(x)
+spltidy::remote_class_splfmt_rts_data(x)
+class(x)
+}
 \seealso{
 Other splfmt_rts_data: 
 \code{\link{create_unified_columns}()},

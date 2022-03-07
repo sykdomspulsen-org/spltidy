@@ -1,7 +1,7 @@
 ---
 title: "Data format (splfmt_rts_data_v1)"
 author: "Richard Aubrey White"
-date: "2022-01-19"
+date: "2022-03-07"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Data format (splfmt_rts_data_v1)}
@@ -383,9 +383,9 @@ gt::gt(d) %>%
 
 Missing sexes should be coded as `NA_character_`.
 
-## Unified variables
+## Unified columns
 
-All datasets in the splverse format splfmt_rts_data_v1 will contain these 16 variables.
+All datasets in the splverse format splfmt_rts_data_v1 will contain these 16 columns.
 
 Time conversion functions can be found in package [spltime](https://docs.sykdomspulsen.no/spltime). 
 
@@ -430,6 +430,11 @@ d <- rbind(
     variable = "isoyear",
     accepted_values = "YYYY",
     definition = "Use function spltime::isoyear_n"
+  ),
+  data.frame(
+    variable = "isoweek",
+    accepted_values = "1, 2, ..., 53",
+    definition = "Use functions spltime::*_to_isoweek_n"
   ),
   data.frame(
     variable = "isoyearweek",
@@ -483,7 +488,7 @@ gt::gt(d) %>%
   gt::cols_align(
     align = "left"
   ) %>%
-  gt::tab_header(title = "Unified variables (16) in the splverse format splfmt_rts_data_v1") %>%
+  gt::tab_header(title = "Unified columns (16) in the splverse format splfmt_rts_data_v1") %>%
   gt::cols_label(
     variable = "Variable",
     accepted_values = "Accepted values",
@@ -491,9 +496,9 @@ gt::gt(d) %>%
   )
 ```
 
-## Context-specific variables 
+## Context-specific columns 
 
-Variable names that are not part of the [unified variables](#unified-variables) are called context-specific variables, and are made up of 2 mandatory (description, format) and 3 optional (time, statistics, censor/status) sections, separated by underscores.
+Variable names that are not part of the [unified columns](#unified-columns) are called context-specific columns, and are made up of 2 mandatory (description, format) and 3 optional (time, statistics, censor/status) sections, separated by underscores.
 
 The format is as follows:
 
@@ -572,7 +577,7 @@ d <- rbind(
   data.frame(
     x = "",
     examples = "id/tag",
-    definition = "Used when data is in long format, to indicate an id variable. Frequently combined with descriptions of 'outcome', 'exposure', 'model'. id is used for numeric variables. tag is used for character variables."
+    definition = "Used when data is in long format, to indicate an id variable. Frequently combined with descriptions of 'outcome', 'exposure', 'model'. id is used for numeric columns. tag is used for character columns."
   ),
   data.frame(
     x = "",
@@ -629,7 +634,7 @@ gt::gt(d) %>%
   gt::cols_align(
     align = "left"
   ) %>%
-  gt::tab_header(title = "Task-specific variables in the splverse format splfmt_rts_data_v1") %>%
+  gt::tab_header(title = "Context-specific columns in the splverse format splfmt_rts_data_v1") %>%
   gt::cols_label(
     x = "",
     examples = "Examples",
@@ -708,23 +713,23 @@ spltidy::set_splfmt_rts_data_v1(d)
 # Looking at the dataset
 d[]
 
-# Smart assignment of time variables (note how granularity_time, isoyear, isoyearweek, date all change)
+# Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
 d[1,isoyearweek := "2021-01"]
 d
 
-# Smart assignment of time variables (note how granularity_time, isoyear, isoyearweek, date all change)
+# Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
 d[2,isoyear := 2019]
 d
 
-# Smart assignment of time variables (note how granularity_time, isoyear, isoyearweek, date all change)
+# Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
 d[4:5,date := as.Date("2020-01-01")]
 d
 
-# Smart assignment fails when multiple time variables are set
+# Smart assignment fails when multiple time columns are set
 d[10,c("isoyear","isoyearweek") := .(2021,"2021-01")]
 d
 
-# Smart assignment of geo variables
+# Smart assignment of geo columns
 d[10,c("location_code") := .("norge")]
 d
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/splfmt_rts_v1.R
 \name{create_unified_columns}
 \alias{create_unified_columns}
-\title{create_unified_columns generic}
+\title{Create unified columns}
 \usage{
 create_unified_columns(x, ...)
 }
@@ -12,8 +12,31 @@ create_unified_columns(x, ...)
 \item{...}{Arguments passed to or from other methods}
 }
 \description{
-create_unified_columns generic
+Creates the pre-specified unified columns for some data formats.
 }
+\section{splfmt_rts_data_v1}{
+
+\code{splfmt_rts_data_v1} contains 16 unified columns:
+\itemize{
+\item granularity_time
+\item granularity_geo
+\item country_iso3
+\item location_code
+\item border
+\item age
+\item sex
+\item isoyear
+\item isoweek
+\item isoyearweek
+\item season
+\item seasonweek
+\item calyear
+\item calmonth
+\item calyearmonth
+\item date
+}
+}
+
 \seealso{
 Other splfmt_rts_data: 
 \code{\link{hash_data_structure}()},

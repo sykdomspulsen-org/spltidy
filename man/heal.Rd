@@ -17,7 +17,7 @@ E.g. if \code{location_code='norge'} then we know that \code{granularity_geo='na
 }
 \section{splfmt_rts_data_v1}{
 
-The \strong{variables in bold} will be used to impute the listed variables.
+The \strong{columns in bold} will be used to impute the listed columns.
 
 \strong{location_code}:
 \itemize{
@@ -63,10 +63,10 @@ The \strong{variables in bold} will be used to impute the listed variables.
 \item calyearmonth
 }
 
-With regards to the time variables, \code{granularity_time} takes precedence over everything.
+With regards to the time columns, \code{granularity_time} takes precedence over everything.
 If \code{granularity_time} is missing, then we try to impute \code{granularity_time} by seeing if
-there is only one time variable with non-missing data. Due to the multitude of time variables,
-\code{granularity_time} is an extremely important variable and should always be kept with valid values.
+there is only one time column with non-missing data. Due to the multitude of time columns,
+\code{granularity_time} is an extremely important column and should always be kept with valid values.
 }
 
 \seealso{

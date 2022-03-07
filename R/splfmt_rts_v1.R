@@ -115,6 +115,12 @@ formats$splfmt_rts_data_v1$unified$date <- list(
 
 #' Remove class splfmt_rts_data_*
 #' @param x data.table
+#' @examples
+#' x <- spltidy::generate_test_data() %>%
+#'   spltidy::set_splfmt_rts_data_v1()
+#' class(x)
+#' spltidy::remote_class_splfmt_rts_data(x)
+#' class(x)
 #' @family splfmt_rts_data
 #' @export
 remove_class_splfmt_rts_data <- function(x) {
@@ -447,7 +453,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
 #' E.g. if \code{location_code='norge'} then we know that \code{granularity_geo='nation'}.
 #'
 #' @section splfmt_rts_data_v1:
-#' The **variables in bold** will be used to impute the listed variables.
+#' The **columns in bold** will be used to impute the listed columns.
 #'
 #' **location_code**:
 #' - granularity_geo
@@ -485,10 +491,10 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
 #' - calmonth
 #' - calyearmonth
 #'
-#' With regards to the time variables, `granularity_time` takes precedence over everything.
+#' With regards to the time columns, `granularity_time` takes precedence over everything.
 #' If `granularity_time` is missing, then we try to impute `granularity_time` by seeing if
-#' there is only one time variable with non-missing data. Due to the multitude of time variables,
-#' `granularity_time` is an extremely important variable and should always be kept with valid values.
+#' there is only one time column with non-missing data. Due to the multitude of time columns,
+#' `granularity_time` is an extremely important column and should always be kept with valid values.
 #'
 #' @param x An object of type \code{\link{splfmt_rts_data_v1}}
 #' @param ... Not used.
@@ -634,7 +640,29 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
   return(invisible(x))
 }
 
-#' create_unified_columns generic
+#' Create unified columns
+#'
+#' @description
+#' Creates the pre-specified unified columns for some data formats.
+#'
+#' @section splfmt_rts_data_v1:
+#' \code{splfmt_rts_data_v1} contains 16 unified columns:
+#' - granularity_time
+#' - granularity_geo
+#' - country_iso3
+#' - location_code
+#' - border
+#' - age
+#' - sex
+#' - isoyear
+#' - isoweek
+#' - isoyearweek
+#' - season
+#' - seasonweek
+#' - calyear
+#' - calmonth
+#' - calyearmonth
+#' - date
 #'
 #' @param x An object
 #' @param ... Arguments passed to or from other methods
@@ -704,6 +732,25 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #' @section Smart assignment:
 #' \code{splfmt_rts_data_v1} contains the smart assignment feature for time and geography.
 #'
+#' @section Unified columns:
+#' \code{splfmt_rts_data_v1} contains 16 unified columns:
+#' - granularity_time
+#' - granularity_geo
+#' - country_iso3
+#' - location_code
+#' - border
+#' - age
+#' - sex
+#' - isoyear
+#' - isoweek
+#' - isoyearweek
+#' - season
+#' - seasonweek
+#' - calyear
+#' - calmonth
+#' - calyearmonth
+#' - date
+#'
 #' @details
 #' For more details see the vignette:
 #' \code{vignette("splfmt_rts_data_v1", package = "spltidy")}
@@ -734,7 +781,7 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #' d
 #'
 #' # Investigating the data structure via hashing
-#' x <- spltidy::generate_test_data() %>%
+#' spltidy::generate_test_data() %>%
 #'   spltidy::set_splfmt_rts_data_v1() %>%
 #'   spltidy::hash_data_structure("deaths_n") %>%
 #'   plot()
@@ -821,23 +868,23 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
   }
 }
 
-#' heal generic
+#' Hash the data structure of a data set for a given column
 #'
 #' @param x An object
-#' @param var variable to hash
+#' @param col Column name to hash
 #' @param ... Arguments passed to or from other methods
 #' @examples
-#' x <- spltidy::generate_test_data() %>%
+#' spltidy::generate_test_data() %>%
 #'   spltidy::set_splfmt_rts_data_v1() %>%
 #'   spltidy::hash_data_structure("deaths_n") %>%
-#'   plot
+#'   plot()
 #' @family splfmt_rts_data
 #' @export
-hash_data_structure <- function(x, var, ...) {
+hash_data_structure <- function(x, col, ...) {
   UseMethod("hash_data_structure", x)
 }
 
-hash_data_structure_internal <- function(summarized, var) {
+hash_data_structure_internal <- function(summarized, col) {
   # we expect a data.table with columns:
   # - granularity_time
   # - granularity_geo
@@ -944,15 +991,15 @@ hash_data_structure_internal <- function(summarized, var) {
 
 #' @method hash_data_structure splfmt_rts_data_v1
 #' @export
-hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
-  # var <-
+hash_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
+  # col <-
   # Take in the data table
   # data <- data$cases
   # data <- data$vax
 
   summarized <- x[, .(
-    num_valid = sum(!is.na(get(var))),
-    num_na = sum(is.na(get(var)))
+    num_valid = sum(!is.na(get(col))),
+    num_na = sum(is.na(get(col)))
   ),
   keyby = .(
     granularity_time,
@@ -969,14 +1016,14 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
 }
 
 #' @export
-"hash_data_structure.tbl_Microsoft SQL Server" <- function(x, var, ...) {
-  # var <-
+"hash_data_structure.tbl_Microsoft SQL Server" <- function(x, col, ...) {
+  # col <-
   # Take in the data table
   # data <- data$cases
   # data <- data$vax
 
   summarized <- x %>%
-    dplyr::rename(var = !!var) %>%
+    dplyr::rename(col = !!col) %>%
     dplyr::group_by(
       granularity_time,
       granularity_geo,
@@ -985,7 +1032,7 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
     ) %>%
     dplyr::summarize(
       num_total = n(),
-      num_na = sum(as.numeric(is.na(var)))
+      num_na = sum(as.numeric(is.na(col)))
     ) %>%
     dplyr::mutate(
       num_valid = num_total - num_na
@@ -996,19 +1043,19 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
 
   hash_data_structure_internal(
     summarized,
-    var
+    col
   )
 }
 
 #' @export
-"hash_data_structure.tbl_Pool" <- function(x, var, ...) {
-  # var <-
+"hash_data_structure.tbl_Pool" <- function(x, col, ...) {
+  # col <-
   # Take in the data table
   # data <- data$cases
   # data <- data$vax
 
   summarized <- x %>%
-    dplyr::rename(var = !!var) %>%
+    dplyr::rename(col = !!col) %>%
     dplyr::group_by(
       granularity_time,
       granularity_geo,
@@ -1017,7 +1064,7 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
     ) %>%
     dplyr::summarize(
       num_total = n(),
-      num_na = sum(as.numeric(is.na(var)))
+      num_na = sum(as.numeric(is.na(col)))
     ) %>%
     dplyr::mutate(
       num_valid = num_total - num_na
@@ -1028,14 +1075,14 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, var, ...) {
 
   hash_data_structure_internal(
     summarized,
-    var
+    col
   )
 }
 
 #' @method hash_data_structure Schema_v8
 #' @export
-hash_data_structure.Schema_v8 <- function(x, var, ...) {
-  hash_data_structure(x$tbl(), var)
+hash_data_structure.Schema_v8 <- function(x, col, ...) {
+  hash_data_structure(x$tbl(), col)
 }
 
 #' @method plot splfmt_rts_data_structure_hash_v1

@@ -32,6 +32,29 @@ For more details see the vignette:
 \code{splfmt_rts_data_v1} contains the smart assignment feature for time and geography.
 }
 
+\section{Unified columns}{
+
+\code{splfmt_rts_data_v1} contains 16 unified columns:
+\itemize{
+\item granularity_time
+\item granularity_geo
+\item country_iso3
+\item location_code
+\item border
+\item age
+\item sex
+\item isoyear
+\item isoweek
+\item isoyearweek
+\item season
+\item seasonweek
+\item calyear
+\item calmonth
+\item calyearmonth
+\item date
+}
+}
+
 \examples{
 # Create some fake data as data.table
 d <- spltidy::generate_test_data(fmt = "splfmt_rts_data_v1")
@@ -53,7 +76,7 @@ d[5, c("location_code") := .("norge")]
 d
 
 # Investigating the data structure via hashing
-x <- spltidy::generate_test_data() \%>\%
+spltidy::generate_test_data() \%>\%
   spltidy::set_splfmt_rts_data_v1() \%>\%
   spltidy::hash_data_structure("deaths_n") \%>\%
   plot()

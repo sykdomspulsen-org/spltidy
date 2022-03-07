@@ -2,25 +2,25 @@
 % Please edit documentation in R/splfmt_rts_v1.R
 \name{hash_data_structure}
 \alias{hash_data_structure}
-\title{heal generic}
+\title{Hash the data structure of a data set for a given column}
 \usage{
-hash_data_structure(x, var, ...)
+hash_data_structure(x, col, ...)
 }
 \arguments{
 \item{x}{An object}
 
-\item{var}{variable to hash}
+\item{col}{Column name to hash}
 
 \item{...}{Arguments passed to or from other methods}
 }
 \description{
-heal generic
+Hash the data structure of a data set for a given column
 }
 \examples{
-x <- spltidy::generate_test_data() \%>\%
+spltidy::generate_test_data() \%>\%
   spltidy::set_splfmt_rts_data_v1() \%>\%
   spltidy::hash_data_structure("deaths_n") \%>\%
-  plot
+  plot()
 }
 \seealso{
 Other splfmt_rts_data: 
