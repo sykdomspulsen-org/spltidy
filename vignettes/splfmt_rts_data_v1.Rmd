@@ -754,7 +754,7 @@ An example relating to vaccination:
 ## In action
 
 ```{r}
-d <- spltidy::generate_test_data()
+d <- spltidy::generate_test_data()[1:5]
 spltidy::set_splfmt_rts_data_v1(d)
 
 # Looking at the dataset
@@ -773,11 +773,11 @@ d[4:5,date := as.Date("2020-01-01")]
 d
 
 # Smart assignment fails when multiple time columns are set
-d[10,c("isoyear","isoyearweek") := .(2021,"2021-01")]
+d[1,c("isoyear","isoyearweek") := .(2021,"2021-01")]
 d
 
 # Smart assignment of geo columns
-d[10,c("location_code") := .("norge")]
+d[1,c("location_code") := .("norge")]
 d
 
 # Collapsing down to different levels, and healing the dataset 

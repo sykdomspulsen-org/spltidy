@@ -21,7 +21,7 @@ library(data.table)
 library(magrittr)
 ```
 
-## splfmt_rts_data_v1
+# splfmt_rts_data_v1
 
 splfmt_rts_data_v1 (`vignette("splfmt_rts_data_v1", package = "spltidy")`) is a data format for real-time surveillance.
 
@@ -33,7 +33,7 @@ spltidy::set_splfmt_rts_data_v1(d)
 d[]
 ```
 
-### Smart assignment
+## Smart assignment
 
 `splfmt_rts_data_v1` does smart assignment for time and geography.
 
@@ -81,7 +81,7 @@ When the **variables in bold** are assigned using `:=`, the listed variables wil
 - calyearmonth
 
 ```{r}
-d <- spltidy::generate_test_data()
+d <- spltidy::generate_test_data()[1:5]
 spltidy::set_splfmt_rts_data_v1(d)
 
 # Looking at the dataset
@@ -100,7 +100,7 @@ d[4:5,date := as.Date("2020-01-01")]
 d
 
 # Smart assignment fails when multiple time columns are set
-d[10,c("isoyear","isoyearweek") := .(2021,"2021-01")]
+d[1,c("isoyear","isoyearweek") := .(2021,"2021-01")]
 d
 
 # Smart assignment of geo columns
@@ -125,7 +125,7 @@ d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_ti
   print()
 ```
 
-### Hashing data structures
+## Hashing data structures
 
 We need a way to easily summarize the data structure of a dataset.
 

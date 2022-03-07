@@ -585,7 +585,6 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
 
   imputing_vars_time <- list(
     "isoyear" = c(
-      "granularity_time",
       "isoweek",
       "isoyearweek",
       "season",
@@ -596,7 +595,6 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
       "date"
     ),
     "isoyearweek" = c(
-      "granularity_time",
       "isoyear",
       "isoweek",
       "season",
@@ -607,7 +605,6 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
       "date"
     ),
     "date" = c(
-      "granularity_time",
       "isoyear",
       "isoweek",
       "isoyearweek",
@@ -622,18 +619,8 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
   for(type in c("geo", "time")){
     if(type=="geo"){
       imputing_vars <- imputing_vars_geo
-      extra_restriction <- ''
     } else if(type=="time"){
       imputing_vars <- imputing_vars_time
-
-      if(i=="isoyearweek"){
-        time_var_as_granularity_geo <- "isoweek"
-      } else if(i=="date"){
-        time_var_as_granularity_geo <- "day"
-      } else {
-        time_var_as_granularity_geo <- i
-      }
-      extra_restriction <- 'granularity_geo=="{time_var_as_granularity_geo}" & '
     } else {
       stop("")
     }
@@ -642,6 +629,21 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
       imputed_from <- names(imputing_vars)[i]
       to_be_imputed <- imputing_vars[[i]]
       to_be_imputed <- to_be_imputed[to_be_imputed %in% names(x)]
+
+      if(type=="geo"){
+        extra_restriction <- ''
+      } else if(type=="time"){
+        if(imputed_from=="isoyearweek"){
+          time_var_as_granularity_time <- "isoweek"
+        } else if(imputed_from=="date"){
+          time_var_as_granularity_time <- "day"
+        } else {
+          time_var_as_granularity_time <- imputed_from
+        }
+        extra_restriction <- glue::glue('granularity_time==\"{time_var_as_granularity_time}" &')
+      } else {
+        stop("")
+      }
 
       if (imputed_from %in% names(x) & length(to_be_imputed) > 0) {
         txt <- glue::glue(
