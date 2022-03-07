@@ -291,7 +291,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     lhs <- unlist(lapply(orig_call[[i]][[2]], function(x) {
       deparse(x)
     }))
-    time_vars <- c("isoyear", "isoyearweek", "day")
+    time_vars <- c("isoyear", "isoyearweek", "date")
     time_vars_with_quotes <- c(time_vars, paste0("\"", time_vars, "\""))
     time_var_modified_index <- which(lhs %in% time_vars_with_quotes)
 
