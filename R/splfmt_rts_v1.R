@@ -998,7 +998,7 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
       details[, max_len := max(len)]
       details[, val := stringr::str_pad(val, max_len, side = "right")]
 
-      details[, n := fhiplot::format_nor(n)]
+      details[, n := splstyle::format_nor(n)]
       details[, len := stringr::str_length(n)]
       details[, max_len := max(len)]
       details[, n := stringr::str_pad(n, max_len, side = "left")]
