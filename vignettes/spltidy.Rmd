@@ -16,6 +16,11 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo=FALSE, include=FALSE}
+library(data.table)
+library(magrittr)
+```
+
 ## splfmt_rts_data_v1
 
 splfmt_rts_data_v1 (`vignette("splfmt_rts_data_v1", package = "spltidy")`) is a data format for real-time surveillance.

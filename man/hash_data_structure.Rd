@@ -2,7 +2,7 @@
 % Please edit documentation in R/splfmt_rts_v1.R
 \name{hash_data_structure}
 \alias{hash_data_structure}
-\title{Hash the data structure of a data set for a given column}
+\title{Hash the data structure of a dataset for a given column}
 \usage{
 hash_data_structure(x, col, ...)
 }
@@ -14,7 +14,7 @@ hash_data_structure(x, col, ...)
 \item{...}{Arguments passed to or from other methods}
 }
 \description{
-Hash the data structure of a data set for a given column
+Reduces the data structure of a column inside a dataset into something that describes
 }
 \examples{
 spltidy::generate_test_data() \%>\%

@@ -930,7 +930,10 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
   }
 }
 
-#' Hash the data structure of a data set for a given column
+#' Hash the data structure of a dataset for a given column
+#'
+#' @description
+#' Reduces the data structure of a column inside a dataset into something that describes
 #'
 #' @param x An object
 #' @param col Column name to hash
