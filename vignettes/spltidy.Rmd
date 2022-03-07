@@ -104,7 +104,7 @@ d[1,c("isoyear","isoyearweek") := .(2021,"2021-01")]
 d
 
 # Smart assignment of geo columns
-d[10,c("location_code") := .("norge")]
+d[1,c("location_code") := .("norge")]
 d
 
 # Collapsing down to different levels, and healing the dataset 
