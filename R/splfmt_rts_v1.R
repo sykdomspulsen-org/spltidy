@@ -119,7 +119,7 @@ formats$splfmt_rts_data_v1$unified$date <- list(
 #' x <- spltidy::generate_test_data() %>%
 #'   spltidy::set_splfmt_rts_data_v1()
 #' class(x)
-#' spltidy::remote_class_splfmt_rts_data(x)
+#' spltidy::remove_class_splfmt_rts_data(x)
 #' class(x)
 #' @family splfmt_rts_data
 #' @export
@@ -186,6 +186,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     to_print <- copy(x)
   }
 
+  # unified vs context
   format_unified <- attr(to_print, "format_unified")
   variable_types <- rep("[context]", ncol(to_print))
   for (i in seq_along(variable_types)) {
@@ -198,15 +199,30 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     names(to_print) %in% names(format_unified) ~ "[unified]",
     TRUE ~ "[context]"
   )
+
+  # classes
   variable_classes <- paste0("<", unlist(lapply(to_print, class)), ">")
   variable_names <- names(to_print)
   row_numbers <- formatC(row_numbers, width = max(nchar(row_numbers))) %>%
     paste0(":", sep = "")
   row_number_spacing <- formatC("", width = max(nchar(row_numbers)))
 
+  # missing
+  na_percent <- rep("X", ncol(to_print))
+  na_percent_red <- rep(FALSE, ncol(to_print))
+  for(i in seq_along(na_percent)){
+    var = names(x)[i]
+    val <- x[,.(val = mean(is.na(get(var))))]$val
+    na_percent[i] <- glue::glue("NA={splstyle::format_nor_perc_0(val*100)}")
+    if(val>0){
+      na_percent_red[i] <- TRUE
+    }
+  }
+
   width_char <- apply(to_print, 2, nchar, keepNA = F) %>%
     rbind(nchar(variable_types)) %>%
     rbind(nchar(variable_classes)) %>%
+    rbind(nchar(na_percent)) %>%
     rbind(nchar(variable_names)) %>%
     apply(2, max)
 
@@ -224,7 +240,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     return(invisible(x))
   } else {
     # we are in the recursive level, so we actually print things!
-    for (i in -2:nrow(to_print)) {
+    for (i in -3:nrow(to_print)) {
       if (i == print_dots_before_row) {
         for (j in seq_len(max(cum_width))) cat(".")
         cat("\n")
@@ -238,10 +254,16 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
       for (j in 1:ncol(to_print)) {
         cat("   ")
 
-        if (i == -2) {
+        if (i == -3) {
           cat(formatC(variable_types[j], width = width_char[j]))
-        } else if (i == -1) {
+        } else if (i == -2) {
           cat(formatC(variable_classes[j], width = width_char[j]))
+        } else if (i == -1) {
+          if(na_percent_red[j] == TRUE){
+            cat(crayon::red(formatC(na_percent[j], width = width_char[j])))
+          } else {
+            cat(formatC(na_percent[j], width = width_char[j]))
+          }
         } else if (i == 0) {
           cat(crayon::bold(formatC(variable_names[j], width = width_char[j])))
         } else {

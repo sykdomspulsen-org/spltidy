@@ -16,7 +16,7 @@ Remove class splfmt_rts_data_*
 x <- spltidy::generate_test_data() \%>\%
   spltidy::set_splfmt_rts_data_v1()
 class(x)
-spltidy::remote_class_splfmt_rts_data(x)
+spltidy::remove_class_splfmt_rts_data(x)
 class(x)
 }
 \seealso{

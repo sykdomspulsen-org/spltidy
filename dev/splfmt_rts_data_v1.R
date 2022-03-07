@@ -35,7 +35,7 @@ d[1, date := as.Date("2021-01-01")]
 
 
 d <- generate_test_data()
-set_splfmt_rts_v1(d)
+set_splfmt_rts_data_v1(d)
 d[1,isoyearweek := "2021-01"]
 d[2,isoyear := 2019]
 d[4:5,date := as.Date("2020-01-01")]
