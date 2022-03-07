@@ -496,6 +496,53 @@ gt::gt(d) %>%
   )
 ```
 
+### Smart assignment
+
+`splfmt_rts_data_v1` does smart assignment for time and geography.
+
+When the **variables in bold** are assigned using `:=`, the listed variables will be automatically imputed.
+
+**location_code**:
+
+- granularity_geo
+- country_iso3
+
+**isoyear**:
+
+- granularity_time
+- isoweek
+- isoyearweek
+- season
+- seasonweek
+- calyear
+- calmonth
+- calyearmonth
+- date
+
+**isoyearweek**:
+
+- granularity_time
+- isoyear
+- isoweek
+- season
+- seasonweek
+- calyear
+- calmonth
+- calyearmonth
+- date
+
+**date**:
+
+- granularity_time
+- isoyear
+- isoweek
+- isoyearweek
+- season
+- seasonweek
+- calyear
+- calmonth
+- calyearmonth
+
 ## Context-specific columns 
 
 Variable names that are not part of the [unified columns](#unified-columns) are called context-specific columns, and are made up of 2 mandatory (description, format) and 3 optional (time, statistics, censor/status) sections, separated by underscores.

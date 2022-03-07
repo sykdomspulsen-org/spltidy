@@ -684,7 +684,10 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
 #' - calyearmonth
 #' - date
 #'
-#' @param x An object
+#' For more details see the vignette:
+#' \code{vignette("splfmt_rts_data_v1", package = "spltidy")}
+#'
+#' @param x An object of type \code{\link{splfmt_rts_data_v1}}
 #' @param ... Arguments passed to or from other methods
 #' @family splfmt_rts_data
 #' @export

@@ -7,7 +7,7 @@
 create_unified_columns(x, ...)
 }
 \arguments{
-\item{x}{An object}
+\item{x}{An object of type \code{\link{splfmt_rts_data_v1}}}
 
 \item{...}{Arguments passed to or from other methods}
 }
@@ -35,6 +35,9 @@ Creates the pre-specified unified columns for some data formats.
 \item calyearmonth
 \item date
 }
+
+For more details see the vignette:
+\code{vignette("splfmt_rts_data_v1", package = "spltidy")}
 }
 
 \seealso{

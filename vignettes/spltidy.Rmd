@@ -1,7 +1,7 @@
 ---
 title: "Introduction to spltidy"
 author: "Richard White"
-date: "2020-02-17"
+date: "2022-03-07"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to spltidy}
@@ -16,4 +16,120 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Concept 
+## splfmt_rts_data_v1
+
+splfmt_rts_data_v1 (`vignette("splfmt_rts_data_v1", package = "spltidy")`) is a data format for real-time surveillance.
+
+```{r}
+d <- spltidy::generate_test_data()
+spltidy::set_splfmt_rts_data_v1(d)
+
+# Looking at the dataset
+d[]
+```
+
+### Smart assignment
+
+`splfmt_rts_data_v1` does smart assignment for time and geography.
+
+When the **variables in bold** are assigned using `:=`, the listed variables will be automatically imputed.
+
+**location_code**:
+
+- granularity_geo
+- country_iso3
+
+**isoyear**:
+
+- granularity_time
+- isoweek
+- isoyearweek
+- season
+- seasonweek
+- calyear
+- calmonth
+- calyearmonth
+- date
+
+**isoyearweek**:
+
+- granularity_time
+- isoyear
+- isoweek
+- season
+- seasonweek
+- calyear
+- calmonth
+- calyearmonth
+- date
+
+**date**:
+
+- granularity_time
+- isoyear
+- isoweek
+- isoyearweek
+- season
+- seasonweek
+- calyear
+- calmonth
+- calyearmonth
+
+```{r}
+d <- spltidy::generate_test_data()
+spltidy::set_splfmt_rts_data_v1(d)
+
+# Looking at the dataset
+d[]
+
+# Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
+d[1,isoyearweek := "2021-01"]
+d
+
+# Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
+d[2,isoyear := 2019]
+d
+
+# Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
+d[4:5,date := as.Date("2020-01-01")]
+d
+
+# Smart assignment fails when multiple time columns are set
+d[10,c("isoyear","isoyearweek") := .(2021,"2021-01")]
+d
+
+# Smart assignment of geo columns
+d[10,c("location_code") := .("norge")]
+d
+
+# Collapsing down to different levels, and healing the dataset 
+# (so that it can be worked on further with regards to real time surveillance)
+d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
+  spltidy::create_unified_columns() %>%
+  print()
+
+# Collapsing down to different levels, without healing the dataset and without
+# removing the class splfmt_rts_data_v1 (this is uncommon)
+d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
+  print()
+
+# Collapsing to different levels, and removing the class splfmt_rts_data_v1 because
+# it is going to be used in new output/analyses
+d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
+  spltidy::remove_class_splfmt_rts_data() %>%
+  print()
+```
+
+### Hashing data structures
+
+We need a way to easily summarize the data structure of a dataset.
+
+```{r}
+d <- spltidy::generate_test_data()
+spltidy::set_splfmt_rts_data_v1(d)
+
+d %>%
+  spltidy::hash_data_structure("deaths_n") %>%
+  plot()
+```
+
