@@ -1229,12 +1229,6 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
   )
 }
 
-#' @method hash_data_structure Schema_v8
-#' @export
-hash_data_structure.Schema_v8 <- function(x, col, ...) {
-  hash_data_structure(x$tbl(), col)
-}
-
 #' @method plot splfmt_rts_data_structure_hash_v1
 #' @export
 plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {

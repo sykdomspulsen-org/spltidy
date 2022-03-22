@@ -18,19 +18,20 @@ d[1,isoyearweek := "2021-01"]
 d
 
 d[1, date := as.Date("2021-01-01")]
+d[1, location_code := "norge"]
+heal(d)
 
 
 
 
+heal()
+sc::fill_in_missing_v8
 
 
 
+summary(d)
 
-
-
-
-
-
+hash_data_structure(d, "deaths_n") %>% plot()
 
 
 
@@ -133,6 +134,49 @@ keyby = .(
   sex
 )
 ]
+
+#### skeleton
+d <- generate_test_data()[c(1,4,10:.N)]
+d[]
+set_splfmt_rts_data_v1(d)
+d[]
+
+
+make_skeleton_isoweek.splfmt_rts_data_v1 <- function(
+  isoyearweek_min = NULL,
+  isoyearweek_max = NULL,
+  granularity_geo = "all",
+  location_reference = spldata::norway_locations_names(),
+  ...) {
+
+  if(yrwk_min==yrwk_max){
+    yrwks <- isoyearweek_min
+  } else {
+    isoyearweek_min <- which(spltime::dates_by_isoyearweek$isoyearweek==isoyearweek_min)
+    isoyearweek_max <- which(spltime::dates_by_isoyearweek$isoyearweek==isoyearweek_max)
+    yrwks <- fhidata::world_dates_isoyearweek[yrwk_min:yrwk_max,yrwk]
+  }
+
+  locs <- NULL
+  if ("all" %in% granularity_geo) {
+    locs <- location_reference$location_code
+  } else {
+    x_gran <- granularity_geo
+    locs <- location_reference[granularity_geo %in% x_gran]$location_code
+  }
+  retval <- expand.grid(
+    ...,
+    isoyearweek = yrwks,
+    location_code = locs,
+    stringsAsFactors = FALSE
+  )
+  setDT(retval)
+  retval[, granularity_time := "isoweek"]
+  retval[, granularity_geo := fhidata::get_granularity_geo(location_code, location_reference = location_reference)]
+  setcolorder(retval, c("granularity_time","isoyearweek", "granularity_geo","location_code"))
+  setorderv(retval, names(retval))
+  return(retval)
+}
 
 
 
