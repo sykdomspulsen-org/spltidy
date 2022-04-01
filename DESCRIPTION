@@ -21,7 +21,8 @@ Imports: data.table,
     crayon,
     digest,
     stringr,
-    methods
+    methods,
+    tidyr
 Suggests: testthat,
     knitr,
     rmarkdown,

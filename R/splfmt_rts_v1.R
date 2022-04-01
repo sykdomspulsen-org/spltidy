@@ -1197,6 +1197,7 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
   )
 }
 
+#' @method hash_data_structure tbl_Pool
 #' @export
 "hash_data_structure.tbl_Pool" <- function(x, col, ...) {
   # col <-
