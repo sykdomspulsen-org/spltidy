@@ -42,9 +42,10 @@ For more details see the vignette:
 
 \seealso{
 Other splfmt_rts_data: 
-\code{\link{hash_data_structure}()},
 \code{\link{heal}()},
+\code{\link{identify_data_structure}()},
 \code{\link{remove_class_splfmt_rts_data}()},
-\code{\link{set_splfmt_rts_data_v1}()}
+\code{\link{set_splfmt_rts_data_v1}()},
+\code{\link{unique_time_series}()}
 }
 \concept{splfmt_rts_data}

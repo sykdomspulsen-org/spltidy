@@ -31,7 +31,7 @@ sc::fill_in_missing_v8
 
 summary(d)
 
-hash_data_structure(d, "deaths_n") %>% plot()
+identify_data_structure(d, "deaths_n") %>% plot()
 
 
 
@@ -67,7 +67,7 @@ conn <- DBI::dbConnect(
 
 sc::use_db(conn, Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_DB_ANON"))
 
-conn %>% dplyr::tbl("anon_weather_rawdata") |> spltidy::hash_data_structure("temperature_min_n") |> plot()
+conn %>% dplyr::tbl("anon_weather_rawdata") |> spltidy::identify_data_structure("temperature_min_n") |> plot()
 
 conn %>% dplyr::tbl("anon_weather_rawdata") |> class()
 

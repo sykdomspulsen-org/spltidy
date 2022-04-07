@@ -309,7 +309,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     return(invisible(y))
   } else if (length(i) == 1) {
     # smart-assignment for time ----
-    # identify if a time variable is mentioned
+    # identify_data_structure if a time variable is mentioned
     lhs <- unlist(lapply(orig_call[[i]][[2]], function(x) {
       deparse(x)
     }))
@@ -398,7 +398,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     # smart-assignment for geo ----
     # our smart-assignment code always starts off with orig_call = modified_code
     orig_call <- modified_call
-    # identify if a geo variable is mentioned
+    # identify_data_structure if a geo variable is mentioned
     lhs <- unlist(lapply(orig_call[[i]][[2]], function(x) {
       deparse(x)
     }))
@@ -533,7 +533,7 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
   # if granularity_time doesn't exist, then make it exist
   # and try to imput it straight away
   # granularity_time is a special case because it is very
-  # difficult to identify which of the time-variables
+  # difficult to identify_data_structure which of the time-variables
   # takes precedence over the others (without using granularity_time)
   if(!"granularity_time" %in% names(x)){
     x[, granularity_time := NA_character_]
@@ -847,7 +847,7 @@ assert_classes.splfmt_rts_data_v1 <- function(x) {
 #' # Investigating the data structure of one column inside a dataset
 #' spltidy::generate_test_data() %>%
 #'   spltidy::set_splfmt_rts_data_v1() %>%
-#'   spltidy::hash_data_structure("deaths_n") %>%
+#'   spltidy::identify_data_structure("deaths_n") %>%
 #'   plot()
 #' # Investigating the data structure via summary
 #' spltidy::generate_test_data() %>%
@@ -1026,15 +1026,15 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
 #' @examples
 #' spltidy::generate_test_data() %>%
 #'   spltidy::set_splfmt_rts_data_v1() %>%
-#'   spltidy::hash_data_structure("deaths_n") %>%
+#'   spltidy::identify_data_structure("deaths_n") %>%
 #'   plot()
 #' @family splfmt_rts_data
 #' @export
-hash_data_structure <- function(x, col, ...) {
-  UseMethod("hash_data_structure", x)
+identify_data_structure <- function(x, col, ...) {
+  UseMethod("identify_data_structure", x)
 }
 
-hash_data_structure_internal <- function(summarized, col) {
+identify_data_structure_internal <- function(summarized, col) {
   # we expect a data.table with columns:
   # - granularity_time
   # - granularity_geo
@@ -1139,9 +1139,9 @@ hash_data_structure_internal <- function(summarized, col) {
   return(invisible(skeleton_long))
 }
 
-#' @method hash_data_structure splfmt_rts_data_v1
+#' @method identify_data_structure splfmt_rts_data_v1
 #' @export
-hash_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
+identify_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
   # col <-
   # Take in the data table
   # data <- data$cases
@@ -1159,14 +1159,14 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
   )
   ]
 
-  hash_data_structure_internal(
+  identify_data_structure_internal(
     summarized,
     var
   )
 }
 
 #' @export
-"hash_data_structure.tbl_Microsoft SQL Server" <- function(x, col, ...) {
+"identify_data_structure.tbl_Microsoft SQL Server" <- function(x, col, ...) {
   # col <-
   # Take in the data table
   # data <- data$cases
@@ -1191,15 +1191,15 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
     dplyr::collect() %>%
     as.data.table()
 
-  hash_data_structure_internal(
+  identify_data_structure_internal(
     summarized,
     col
   )
 }
 
-#' @method hash_data_structure tbl_Pool
+#' @method identify_data_structure tbl_Pool
 #' @export
-"hash_data_structure.tbl_Pool" <- function(x, col, ...) {
+"identify_data_structure.tbl_Pool" <- function(x, col, ...) {
   # col <-
   # Take in the data table
   # data <- data$cases
@@ -1224,7 +1224,7 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
     dplyr::collect() %>%
     as.data.table()
 
-  hash_data_structure_internal(
+  identify_data_structure_internal(
     summarized,
     col
   )
@@ -1235,7 +1235,7 @@ hash_data_structure.splfmt_rts_data_v1 <- function(x, col, ...) {
 plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
   # x <- generate_test_data() %>%
   #   set_splfmt_rts_data_v1() %>%
-  #   hash_data_structure("deaths_n")
+  #   identify_data_structure("deaths_n")
 
   pd <- copy(x)
   pd[, granularity_geo := factor(granularity_geo, levels = unique(spldata::norway_locations_names()$granularity_geo))]
@@ -1255,3 +1255,69 @@ plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
   q <- q + theme(legend.position = "bottom", legend.direction = "horizontal")
   q
 }
+
+
+
+#' Unique time series
+#'
+#' @description
+#' Attempts to identify the unique time series that exist in this dataset.
+#'
+#' A time series is defined as a unique combination of:
+#' - granularity_time
+#' - granularity_geo
+#' - country_iso3
+#' - location_code
+#' - border
+#' - age
+#' - sex
+#' - *_id
+#' - *_tag
+#'
+#' @param x An object of type \code{\link{splfmt_rts_data_v1}}
+#' @param set_time_series_id If TRUE, then `x` will have a new column called 'time_series_id'
+#' @param ... Not used.
+#' @family splfmt_rts_data
+#' @export
+unique_time_series <- function(x, set_time_series_id = FALSE, ...) {
+  UseMethod("unique_time_series", x)
+}
+
+#' @method heal splfmt_rts_data_v1
+#' @export
+unique_time_series.splfmt_rts_data_v1 <- function(x, set_time_series_id = FALSE, ...) {
+  ids <- unique(
+    c(
+      "granularity_time",
+      "granularity_geo",
+      "country_iso3",
+      "location_code",
+      "border",
+      "age",
+      "sex",
+      stringr::str_subset(names(x), c("_id$")),
+      stringr::str_subset(names(x), c("_tag$"))
+    )
+  )
+  ids <- ids[ids %in% names(x)]
+  unique_time_series <- x[, ids, with=F] %>%
+    unique()
+  unique_time_series[, time_series_id := 1:.N]
+
+  if(set_time_series_id){
+    x[unique_time_series, on = ids, time_series_id := time_series_id]
+  }
+
+  # allows us to print
+  data.table::shouldPrint(x)
+
+  return(unique_time_series)
+}
+
+
+
+
+
+
+
+

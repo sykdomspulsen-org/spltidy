@@ -135,13 +135,13 @@ spltidy::generate_test_data() %>%
   summary()
 ```
 
-## Hashing data structure of one column
+## Identifying data structure of one column
 
 We need a way to easily summarize the data structure of one column inside a dataset.
 
 ```{r}
 spltidy::generate_test_data() %>%
   spltidy::set_splfmt_rts_data_v1() %>%
-  spltidy::hash_data_structure("deaths_n") %>%
+  spltidy::identify_data_structure("deaths_n") %>%
   plot()
 ```
