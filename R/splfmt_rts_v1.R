@@ -1301,7 +1301,8 @@ unique_time_series.splfmt_rts_data_v1 <- function(x, set_time_series_id = FALSE,
   )
   ids <- ids[ids %in% names(x)]
   unique_time_series <- x[, ids, with=F] %>%
-    unique()
+    unique() %>%
+    remove_class_splfmt_rts_data()
   unique_time_series[, time_series_id := 1:.N]
 
   if(set_time_series_id){

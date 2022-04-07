@@ -1,3 +1,3 @@
-# spltidy 2020.2.17
+# spltidy 2022.4.7
 
-- Package is created
+- unique_time_series function added.
