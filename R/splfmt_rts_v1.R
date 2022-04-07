@@ -1283,7 +1283,7 @@ unique_time_series <- function(x, set_time_series_id = FALSE, ...) {
   UseMethod("unique_time_series", x)
 }
 
-#' @method heal splfmt_rts_data_v1
+#' @method unique_time_series splfmt_rts_data_v1
 #' @export
 unique_time_series.splfmt_rts_data_v1 <- function(x, set_time_series_id = FALSE, ...) {
   ids <- unique(
