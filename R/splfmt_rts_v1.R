@@ -1300,19 +1300,19 @@ unique_time_series.splfmt_rts_data_v1 <- function(x, set_time_series_id = FALSE,
     )
   )
   ids <- ids[ids %in% names(x)]
-  unique_time_series <- x[, ids, with=F] %>%
+  retval <- x[, ids, with=F] %>%
     unique() %>%
     remove_class_splfmt_rts_data()
-  unique_time_series[, time_series_id := 1:.N]
+  retval[, time_series_id := 1:.N]
 
   if(set_time_series_id){
-    x[unique_time_series, on = ids, time_series_id := time_series_id]
+    x[retval, on = ids, time_series_id := time_series_id]
   }
 
   # allows us to print
   data.table::shouldPrint(x)
 
-  return(unique_time_series)
+  return(retval)
 }
 
 

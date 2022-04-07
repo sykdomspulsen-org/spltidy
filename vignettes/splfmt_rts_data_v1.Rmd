@@ -805,7 +805,7 @@ We might also need to identify how many time series are in one dataset.
 ```{r}
 spltidy::generate_test_data() %>%
   spltidy::set_splfmt_rts_data_v1() %>%
-  unique_time_series()
+  spltidy::unique_time_series()
 ```
 
 ## Summary
