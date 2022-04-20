@@ -1,7 +1,7 @@
 ---
 title: "Data format (splfmt_rts_data_v1)"
 author: "Richard Aubrey White"
-date: "2022-03-07"
+date: "2022-04-20"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Data format (splfmt_rts_data_v1)}

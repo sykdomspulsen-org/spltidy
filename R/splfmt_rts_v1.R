@@ -1403,8 +1403,8 @@ expand_time_to_max_isoyear.splfmt_rts_data_v1 <- function(x, max_isoyear = NULL,
   setorder(x, time_series_id, date)
 
   if(flag_to_remove_time_series_id) x[, time_series_id := NULL]
-  x[, max_current_isoyear := NULL]
-  x[, max_isoyear := NULL]
+  if("max_current_isoyear" %in% names(x)) x[, max_current_isoyear := NULL]
+  if("max_isoyear" %in% names(x)) x[, max_isoyear := NULL]
 
   # allows us to print
   data.table::shouldPrint(x)
@@ -1451,8 +1451,8 @@ expand_time_to_max_isoyearweek.splfmt_rts_data_v1 <- function(x, max_isoyearweek
   setorder(x, time_series_id, date)
 
   if(flag_to_remove_time_series_id) x[, time_series_id := NULL]
-  x[, max_current_isoyearweek := NULL]
-  x[, max_isoyearweek := NULL]
+  if("max_current_isoyearweek" %in% names(x)) x[, max_current_isoyearweek := NULL]
+  if("max_isoyearweek" %in% names(x)) x[, max_isoyearweek := NULL]
 
   # allows us to print
   data.table::shouldPrint(x)
@@ -1497,8 +1497,8 @@ expand_time_to_max_date.splfmt_rts_data_v1 <- function(x, max_date = NULL, ...) 
   setorder(x, time_series_id, date)
 
   if(flag_to_remove_time_series_id) x[, time_series_id := NULL]
-  x[, max_current_date := NULL]
-  x[, max_date := NULL]
+  if("max_current_date" %in% names(x)) x[, max_current_date := NULL]
+  if("max_date" %in% names(x)) x[, max_date := NULL]
 
   # allows us to print
   data.table::shouldPrint(x)
