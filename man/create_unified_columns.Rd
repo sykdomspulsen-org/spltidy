@@ -42,6 +42,7 @@ For more details see the vignette:
 
 \seealso{
 Other splfmt_rts_data: 
+\code{\link{expand_time_to}()},
 \code{\link{heal}()},
 \code{\link{identify_data_structure}()},
 \code{\link{remove_class_splfmt_rts_data}()},

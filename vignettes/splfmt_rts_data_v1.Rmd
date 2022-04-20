@@ -130,7 +130,7 @@ gt::gt(d) %>%
   gt::tab_style(
     style = list(
       gt::cell_text(decorate = "line-through")
-      ),
+    ),
     locations = gt::cells_body(
       columns = gt::everything(),
       rows = stringr::str_detect(granularity_time, "character")
@@ -143,7 +143,7 @@ gt::gt(d) %>%
       rows = granularity_time == "isoweek (numeric)"
     )
   ) %>%
-    gt::tab_footnote(
+  gt::tab_footnote(
     footnote = "isoweek (character) is only used internally within isoyearweek. Internal use is demarcated by a line through the text.",
     locations = gt::cells_body(
       columns = granularity_time,
@@ -157,14 +157,14 @@ gt::gt(d) %>%
       rows = granularity_time == "isoyear (numeric)"
     )
   ) %>%
-    gt::tab_footnote(
+  gt::tab_footnote(
     footnote = "isoyear (character) is only used internally within isoyearweek. Internal use is demarcated by a line through the text.",
     locations = gt::cells_body(
       columns = granularity_time,
       rows = granularity_time == "isoyear (character)"
     )
   ) %>%
-    gt::tab_footnote(
+  gt::tab_footnote(
     footnote = "If the event is ongoing, then the 'to' date should be 9999_01_01.",
     locations = gt::cells_body(
       columns = granularity_time,
@@ -208,16 +208,16 @@ gt::gt(d) %>%
 Locations can be obtained from [spldata](/spldata). Valid locations (and location types) are available in `spldata::norway_locations_names()`.  Uncommon/internal use is demarcated by a line through the text.
 
 ```{r echo=FALSE, results='asis'}
-d <- spldata::norway_locations_names()[,.(
-  n=.N, 
+d <- spldata::norway_locations_names()[, .(
+  n = .N,
   location_code = location_code[1],
   location_name = location_name[1],
   location_name_description_nb = location_name_description_nb[1],
   location_name_file_nb_utf = location_name_file_nb_utf[1],
   location_name_file_nb_ascii = location_name_file_nb_ascii[1]
-  ),
-  by=.(granularity_geo)
-  ]
+),
+by = .(granularity_geo)
+]
 
 gt::gt(d) %>%
   gt::tab_options(
@@ -253,7 +253,7 @@ gt::gt(d) %>%
   gt::tab_style(
     style = list(
       gt::cell_text(decorate = "line-through")
-      ),
+    ),
     locations = gt::cells_body(
       columns = location_name,
       rows = gt::everything()
@@ -277,20 +277,20 @@ gt::gt(d) %>%
       columns = location_name_file_nb_ascii
     )
   ) %>%
-    gt::tab_footnote(
+  gt::tab_footnote(
     footnote = "Bo- og arbeidsmarkedsregioner. Housing and labor market regions.",
     locations = gt::cells_body(
       columns = granularity_geo,
       rows = granularity_geo == "baregion"
     )
   ) %>%
-    gt::tab_footnote(
+  gt::tab_footnote(
     footnote = "Mattilsynet-regioner. Food authority regions.",
     locations = gt::cells_body(
       columns = granularity_geo,
       rows = granularity_geo == "faregion"
     )
-  ) 
+  )
 ```
 
 ## Ages
@@ -398,7 +398,7 @@ d <- rbind(
   ),
   data.frame(
     variable = "granularity_geo",
-    accepted_values = paste0("\"",paste0(unique(spldata::norway_locations_names()$granularity_geo), collapse="\", \""),"\""),
+    accepted_values = paste0("\"", paste0(unique(spldata::norway_locations_names()$granularity_geo), collapse = "\", \""), "\""),
     definition = "Granularity of geography"
   ),
   data.frame(
@@ -545,12 +545,12 @@ When the **variables in bold** are assigned using `:=`, the listed variables wil
 
 ## Context-specific columns 
 
-Variable names that are not part of the [unified columns](#unified-columns) are called context-specific columns, and are made up of 2 mandatory (description, format) and 3 optional (time, statistics, censor/status) sections, separated by underscores.
+Variable names that are not part of the [unified columns](#unified-columns) are called context-specific columns, and are made up of 2 mandatory (description, format) and 5 optional (time, statistics, forecast, censored/status, formatted) sections, separated by underscores.
 
 The format is as follows:
 
 ```{yaml}
-description[_time][_statistics]_format[_censor/status]
+description[_time][_statistics]_format[_forecast][_censored/status][_formatted]
 ```
 
 Where `[blah]` indicates an optional argument. It is rare that all of the optional arguments will be used at the same time.
@@ -578,7 +578,6 @@ d <- rbind(
     examples = "outcome, exposure, model",
     definition = "Generally used in conjunction with 'tag' (see 'Format')."
   ),
-  
   data.frame(
     x = "",
     examples = "sum0_13",
@@ -599,7 +598,6 @@ d <- rbind(
     examples = "isoweekmean0_13",
     definition = "The mean of all the weekly observations for the given date and the previous 13 days (i.e. the last 2 weeks)."
   ),
-  
   data.frame(
     x = "",
     examples = "predinterval_q02x5",
@@ -620,7 +618,6 @@ d <- rbind(
     examples = "*interval*_q50x0",
     definition = "Generally speaking, the 50th percentile is the expected value."
   ),
-  
   data.frame(
     x = "",
     examples = "id/tag",
@@ -656,7 +653,11 @@ d <- rbind(
     examples = "bool",
     definition = "TRUE/FALSE"
   ),
-  
+  data.frame(
+    x = "",
+    examples = "forecast",
+    definition = "TRUE/FALSE. Only used when a column contains both forecasted and non-forecasted data."
+  ),
   data.frame(
     x = "",
     examples = "censored",
@@ -688,8 +689,12 @@ gt::gt(d) %>%
     definition = "Definition"
   ) %>%
   gt::tab_row_group(
-    label = "Censor/Status (optional)",
-    rows = 20:nrow(d)
+    label = "Censored/Status (optional)",
+    rows = 21:nrow(d)
+  ) %>%
+  gt::tab_row_group(
+    label = "Forecast (optional)",
+    rows = 20
   ) %>%
   gt::tab_row_group(
     label = "Format (mandatory)",
@@ -717,6 +722,7 @@ An example relating to death and nowcasting:
 
 - **deaths_registered/\_n**: Number of registered deaths.
 - **deaths_nowcasted/\_n**: Number of registered deaths, corrected for registration delay (nowcasting).
+- **deaths_nowcasted/\_n\_forecast**: Has 'deaths_nowcasted_n' been forecasted (i.e. nowcasted)?
 - **deaths_nowcasted/\_n/\_censored**: Has 'deaths_nowcasted_n' been censored?
 - **deaths_nowcasted/\_n/\_status**: Status of 'deaths_nowcasted_n' in relation to 'deaths_nowcasted_baseline_credintervalobs_q\*_n'.
 - **deaths_nowcasted/\_credintervalobs_q02x5/\_n**: The 2.5th quantile of where we expect the real number of registered deaths (Bayesian).
@@ -761,40 +767,52 @@ spltidy::set_splfmt_rts_data_v1(d)
 d[]
 
 # Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
-d[1,isoyearweek := "2021-01"]
+d[1, isoyearweek := "2021-01"]
 d
 
 # Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
-d[2,isoyear := 2019]
+d[2, isoyear := 2019]
 d
 
 # Smart assignment of time columns (note how granularity_time, isoyear, isoyearweek, date all change)
-d[4:5,date := as.Date("2020-01-01")]
+d[4:5, date := as.Date("2020-01-01")]
 d
 
 # Smart assignment fails when multiple time columns are set
-d[1,c("isoyear","isoyearweek") := .(2021,"2021-01")]
+d[1, c("isoyear", "isoyearweek") := .(2021, "2021-01")]
 d
 
 # Smart assignment of geo columns
-d[1,c("location_code") := .("norge")]
+d[1, c("location_code") := .("norge")]
 d
 
-# Collapsing down to different levels, and healing the dataset 
+# Collapsing down to different levels, and healing the dataset
 # (so that it can be worked on further with regards to real time surveillance)
-d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
+d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby = .(granularity_time)] %>%
   spltidy::create_unified_columns() %>%
   print()
 
 # Collapsing down to different levels, without healing the dataset and without
 # removing the class splfmt_rts_data_v1 (this is uncommon)
-d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
+d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby = .(granularity_time)] %>%
   print()
 
 # Collapsing to different levels, and removing the class splfmt_rts_data_v1 because
 # it is going to be used in new output/analyses
-d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby=.(granularity_time)] %>%
+d[, .(deaths_n = sum(deaths_n), location_code = "norge"), keyby = .(granularity_time)] %>%
   spltidy::remove_class_splfmt_rts_data() %>%
+  print()
+```
+
+## Expand time to
+
+Sometimes you need to expand the number of rows in a dataset to a future time.
+
+```{r}
+spltidy::generate_test_data() %>%
+  spltidy::set_splfmt_rts_data_v1() %>%
+  dplyr::filter(location_code == "county03") %>%
+  spltidy::expand_time_to(max_isoyearweek = "2022-08") %>%
   print()
 ```
 
@@ -836,7 +854,7 @@ Locations can be obtained from [spldata](/spldata). Valid locations (and locatio
 Here we list as a reference table the valid `location_code`s and `location_name_description_nb`s (the two most commonly used locations).
 
 ```{r echo=FALSE, results='asis'}
-d <- spldata::norway_locations_names()[,.(
+d <- spldata::norway_locations_names()[, .(
   location_order = paste0("#", location_order),
   location_code,
   location_name_description_nb
@@ -849,6 +867,5 @@ gt::gt(d) %>%
   gt::tab_header(title = "Reference table of location_code and location_name_description_nb") %>%
   gt::cols_label(
     location_order = "#"
-  ) 
+  )
 ```
-

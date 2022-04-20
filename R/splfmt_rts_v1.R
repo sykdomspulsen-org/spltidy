@@ -1315,6 +1315,199 @@ unique_time_series.splfmt_rts_data_v1 <- function(x, set_time_series_id = FALSE,
   return(retval)
 }
 
+#' Expand time to
+#'
+#' @description
+#' Attempts to expand the dataset to include more time
+#'
+#' A time series is defined as a unique combination of:
+#' - granularity_time
+#' - granularity_geo
+#' - country_iso3
+#' - location_code
+#' - border
+#' - age
+#' - sex
+#' - *_id
+#' - *_tag
+#'
+#' @param x An object of type \code{\link{splfmt_rts_data_v1}}
+#' @param max_isoyear Maximum isoyear
+#' @param max_isoyearweek Maximum isoyearweek
+#' @param max_date Maximum date
+#' @param ... Not used.
+#' @family splfmt_rts_data
+#' @export
+expand_time_to <- function(x, max_isoyear = NULL, max_isoyearweek = NULL, max_date = NULL, ...) {
+  UseMethod("expand_time_to", x)
+}
+
+#' @method expand_time_to splfmt_rts_data_v1
+#' @export
+expand_time_to.splfmt_rts_data_v1 <- function(x, max_isoyear = NULL, max_isoyearweek = NULL, max_date = NULL, ...) {
+  if(is.null(max_isoyear) & is.null(max_isoyearweek) & is.null(max_date)){
+    stop("At least one of max_isoyear, max_isoyearweek, max_date must be used")
+  }
+  d1 <- d2 <- d3 <- NULL
+  if(!is.null(max_isoyear)){
+    d1 <- expand_time_to_max_isoyear.splfmt_rts_data_v1(x, max_isoyear = max_isoyear)
+  }
+  if(!is.null(max_isoyearweek)){
+    d2 <- expand_time_to_max_isoyearweek.splfmt_rts_data_v1(x, max_isoyearweek = max_isoyearweek)
+  }
+  if(!is.null(max_date)){
+    d3 <- expand_time_to_max_date.splfmt_rts_data_v1(x, max_date = max_date)
+  }
+  retval <- rbindlist(list(d1,d2,d3), fill = T)
+
+  # allows us to print
+  data.table::shouldPrint(retval)
+
+  return(retval)
+}
+
+expand_time_to_max_isoyear <- function(x, max_isoyear = NULL, ...) {
+  UseMethod("expand_time_to_max_isoyear", x)
+}
+
+expand_time_to_max_isoyear.splfmt_rts_data_v1 <- function(x, max_isoyear = NULL, ...) {
+  d <- copy(x[granularity_time=="isoyear"])
+  if(nrow(d) == 0) return(d)
+
+  if(!"time_series_id" %in% names(d)){
+    on.exit(d[, time_series_id := NULL])
+    flag_to_remove_time_series_id <- TRUE
+  } else {
+    flag_to_remove_time_series_id <- FALSE
+  }
+  ids <- unique_time_series(d, set_time_series_id = TRUE)
+
+  max_vals <- d[, .(max_isoyear = max(isoyear, na.rm=T)), by=.(time_series_id)]
+  ids[max_vals, on="time_series_id", max_current_isoyear := max_isoyear]
+  ids[, max_isoyear := max_isoyear]
+
+  retval <- vector("list", length = nrow(ids))
+  for(i in seq_along(retval)){
+    if(ids$max_current_isoyear[i] >= ids$max_isoyear[i]){
+      break()
+    }
+    new_isoyears <- c((ids$max_current_isoyear[i]+1):ids$max_isoyear[i])
+    retval[[i]] <- copy(ids[rep(i,length(new_isoyears))])
+    retval[[i]][, isoyear := new_isoyears]
+  }
+
+  retval <- rbindlist(retval)
+
+  x <- rbindlist(list(d, retval), fill = T)
+  spltidy::set_splfmt_rts_data_v1(x)
+  setorder(x, time_series_id, date)
+
+  if(flag_to_remove_time_series_id) x[, time_series_id := NULL]
+  x[, max_current_isoyear := NULL]
+  x[, max_isoyear := NULL]
+
+  # allows us to print
+  data.table::shouldPrint(x)
+
+  return(x)
+}
+
+expand_time_to_max_isoyearweek <- function(x, max_isoyearweek = NULL, ...) {
+  UseMethod("expand_time_to_max_isoyearweek", x)
+}
+
+expand_time_to_max_isoyearweek.splfmt_rts_data_v1 <- function(x, max_isoyearweek = NULL, ...) {
+  d <- copy(x[granularity_time=="isoweek"])
+  if(nrow(d) == 0) return(NULL)
+
+  if(!"time_series_id" %in% names(d)){
+    on.exit(d[, time_series_id := NULL])
+    flag_to_remove_time_series_id <- TRUE
+  } else {
+    flag_to_remove_time_series_id <- FALSE
+  }
+  ids <- unique_time_series(d, set_time_series_id = TRUE)
+
+  max_vals <- d[, .(max_isoyearweek = max(isoyearweek, na.rm=T)), by=.(time_series_id)]
+  ids[max_vals, on="time_series_id", max_current_isoyearweek := max_isoyearweek]
+  ids[, max_isoyearweek := max_isoyearweek]
+
+  retval <- vector("list", length = nrow(ids))
+  for(i in seq_along(retval)){
+    if(ids$max_current_isoyearweek[i] >= ids$max_isoyearweek[i]){
+      break()
+    }
+    index_min <- which(spltime::dates_by_isoyearweek$isoyearweek == ids$max_current_isoyearweek[i])+1
+    index_max <- which(spltime::dates_by_isoyearweek$isoyearweek == ids$max_isoyearweek[i])
+    new_isoyearweeks <- spltime::dates_by_isoyearweek$isoyearweek[index_min:index_max]
+    retval[[i]] <- copy(ids[rep(i,length(new_isoyearweeks))])
+    retval[[i]][, isoyearweek := new_isoyearweeks]
+  }
+
+  retval <- rbindlist(retval)
+
+  x <- rbindlist(list(d, retval), fill = T)
+  spltidy::set_splfmt_rts_data_v1(x)
+  setorder(x, time_series_id, date)
+
+  if(flag_to_remove_time_series_id) x[, time_series_id := NULL]
+  x[, max_current_isoyearweek := NULL]
+  x[, max_isoyearweek := NULL]
+
+  # allows us to print
+  data.table::shouldPrint(x)
+
+  return(x)
+}
+
+expand_time_to_max_date <- function(x, max_date = NULL, ...) {
+  UseMethod("expand_time_to_max_date", x)
+}
+
+expand_time_to_max_date.splfmt_rts_data_v1 <- function(x, max_date = NULL, ...) {
+  d <- copy(x[granularity_time=="day"])
+  if(nrow(d) == 0) return(NULL)
+
+  if(!"time_series_id" %in% names(d)){
+    on.exit(d[, time_series_id := NULL])
+    flag_to_remove_time_series_id <- TRUE
+  } else {
+    flag_to_remove_time_series_id <- FALSE
+  }
+  ids <- unique_time_series(d, set_time_series_id = TRUE)
+
+  max_vals <- d[, .(max_date = max(date, na.rm=T)), by=.(time_series_id)]
+  ids[max_vals, on="time_series_id", max_current_date := max_date]
+  ids[, max_date := max_date]
+
+  retval <- vector("list", length = nrow(ids))
+  for(i in seq_along(retval)){
+    if(ids$max_current_date[i] >= ids$max_date[i]){
+      break()
+    }
+    new_dates <- seq.Date(as.Date(ids$max_current_date[i])+1, as.Date(ids$max_date[i]), by = 1)
+    retval[[i]] <- copy(ids[rep(i,length(new_dates))])
+    retval[[i]][, date := new_dates]
+  }
+
+  retval <- rbindlist(retval)
+
+  x <- rbindlist(list(d, retval), fill = T)
+  spltidy::set_splfmt_rts_data_v1(x)
+  setorder(x, time_series_id, date)
+
+  if(flag_to_remove_time_series_id) x[, time_series_id := NULL]
+  x[, max_current_date := NULL]
+  x[, max_date := NULL]
+
+  # allows us to print
+  data.table::shouldPrint(x)
+
+  return(x)
+}
+
+
+
 
 
 

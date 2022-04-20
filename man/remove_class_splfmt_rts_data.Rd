@@ -22,6 +22,7 @@ class(x)
 \seealso{
 Other splfmt_rts_data: 
 \code{\link{create_unified_columns}()},
+\code{\link{expand_time_to}()},
 \code{\link{heal}()},
 \code{\link{identify_data_structure}()},
 \code{\link{set_splfmt_rts_data_v1}()},
