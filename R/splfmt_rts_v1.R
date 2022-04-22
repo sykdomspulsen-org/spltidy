@@ -207,6 +207,12 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
     paste0(":", sep = "")
   row_number_spacing <- formatC("", width = max(nchar(row_numbers)))
 
+  # round numeric so it isnt too big
+  vars_to_round <- variable_names[variable_classes=="<numeric>"]
+  for(i in vars_to_round){
+    to_print[,(i) := round(get(i), 4)]
+  }
+
   # missing
   na_percent <- rep("X", ncol(to_print))
   na_percent_red <- rep(FALSE, ncol(to_print))
