@@ -1309,9 +1309,16 @@ unique_time_series.splfmt_rts_data_v1 <- function(x, set_time_series_id = FALSE,
   retval <- x[, ids, with=F] %>%
     unique() %>%
     remove_class_splfmt_rts_data()
+
+  # return the old stuff
+  if("time_series_id" %in% names(retval)){
+    return(retval)
+  }
+
   retval[, time_series_id := 1:.N]
 
   if(set_time_series_id){
+    if(names(x))
     x[retval, on = ids, time_series_id := time_series_id]
   }
 
