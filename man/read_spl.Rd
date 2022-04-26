@@ -7,7 +7,7 @@
 read_spl(filepath, private_key_path = Sys.getenv("ENCRYPTR_ID_RSA"))
 }
 \arguments{
-\item{filepath}{The filepath (must end in '.spl.enc' or '.spl')}
+\item{filepath}{The filepath (must end in '.spl.encrypted' or '.spl')}
 
 \item{private_key_path}{Path to private key}
 }

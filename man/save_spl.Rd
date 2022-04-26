@@ -7,7 +7,6 @@
 save_spl(
   x,
   filepath,
-  encrypt = TRUE,
   nthreads = 1,
   public_key_path = Sys.getenv("ENCRYPTR_ID_RSA_PUB")
 )
@@ -15,9 +14,7 @@ save_spl(
 \arguments{
 \item{x}{The object to serialize}
 
-\item{filepath}{The filepath (must end in '.spl.enc' or '.spl')}
-
-\item{encrypt}{Boolean. If TRUE, filepath must end in '.spl.enc'. If FALSE, filepath must end in '.spl'.}
+\item{filepath}{The filepath (must end in '.spl.encrypted' or '.spl')}
 
 \item{nthreads}{Number of threads to use. Default 1.}
 

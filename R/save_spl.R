@@ -58,6 +58,7 @@ save_spl.splfmt_rts_data_v1  <- function(x, filepath, nthreads = 1, public_key_p
 #' Reads an object in an encrypted file serialized to disk
 #' @param filepath The filepath (must end in '.spl.encrypted' or '.spl')
 #' @param private_key_path Path to private key
+#' @export
 read_spl <- function(filepath, private_key_path = Sys.getenv("ENCRYPTR_ID_RSA")){
   if(!(stringr::str_detect(filepath, ".spl.encrypted$") | stringr::str_detect(filepath, ".spl$"))){
     stop("filepath must end with '.spl.encrypted' or '.spl'")
