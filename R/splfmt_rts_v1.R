@@ -1316,7 +1316,6 @@ unique_time_series.splfmt_rts_data_v1 <- function(x, set_time_series_id = FALSE,
   }
 
   retval[, time_series_id := 1:.N]
-
   if(set_time_series_id){
     x[retval, on = ids, time_series_id := time_series_id]
   }

@@ -22,7 +22,9 @@ Imports: data.table,
     digest,
     stringr,
     methods,
-    tidyr
+    tidyr,
+    qs, 
+    openssl
 Suggests: testthat,
     knitr,
     rmarkdown,
