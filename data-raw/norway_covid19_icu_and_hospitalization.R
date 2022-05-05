@@ -35,5 +35,6 @@ week <- d[,.(
   spltidy::create_unified_columns()
 
 norway_covid19_icu_and_hospitalization <- rbind(d, week)
+spltidy::set_splfmt_rts_data_v1(norway_covid19_icu_and_hospitalization)
 
 usethis::use_data(norway_covid19_icu_and_hospitalization, overwrite = TRUE)
