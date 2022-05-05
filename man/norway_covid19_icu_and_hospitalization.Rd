@@ -3,23 +3,36 @@
 \docType{data}
 \name{norway_covid19_icu_and_hospitalization}
 \alias{norway_covid19_icu_and_hospitalization}
-\title{Prices of 50,000 round cut diamonds.}
+\title{Norwegian Covid-19 data for ICU and hospitalization}
 \format{
-A data frame with 53940 rows and 10 variables:
+A splfmt_rts_data_v1 with 919 rows and 18 variables:
 \describe{
-\item{price}{price, in US dollars}
-\item{carat}{weight of the diamond, in carats}
-...
+\item{granularity_time}{day/isoweek}
+\item{granularity_geo}{nation}
+\item{country_iso3}{nor}
+\item{location_code}{norge}
+\item{border}{2020}
+\item{age}{total}
+\item{isoyear}{Isoyear of event}
+\item{isoweek}{Isoweek of event}
+\item{isoyearweek}{Isoyearweek of event}
+\item{season}{Season of event}
+\item{seasonweek}{Seasonweek of event}
+\item{calyear}{Calyear of event}
+\item{calmonth}{Calmonth of event}
+\item{calyearmonth}{Calyearmonth of event}
+\item{date}{Date of event}
+\item{icu_with_positive_pcr_n}{Number of new admissions to the ICU with a positive PCR test}
+\item{hospitalization_with_covid19_as_primary_cause_n}{Number of new hospitalizations with Covid-19 as the primary cause}
 }
 }
 \source{
-\url{http://www.diamondse.info/}
+\url{https://github.com/folkehelseinstituttet/surveillance_data/blob/master/covid19/_DOCUMENTATION_data_covid19_hospital_by_time.txt}
 }
 \usage{
 norway_covid19_icu_and_hospitalization
 }
 \description{
-A dataset containing the prices and other attributes of almost 54,000
-diamonds.
+This data was extracted on 2022-05-04.
 }
 \keyword{datasets}
