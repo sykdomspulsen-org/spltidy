@@ -219,7 +219,7 @@ print.splfmt_rts_data_v1 <- function(x, ...) {
   for(i in seq_along(na_percent)){
     var = names(x)[i]
     val <- x[,.(val = mean(is.na(get(var))))]$val
-    na_percent[i] <- glue::glue("NA={splstyle::format_nor_perc_0(val*100)}")
+    na_percent[i] <- glue::glue("NA={format_nor_perc_0(val*100)}")
     if(val>0){
       na_percent_red[i] <- TRUE
     }
@@ -1030,7 +1030,7 @@ summary.splfmt_rts_data_v1 <- function(object, ...) {
       details[, max_len := max(len)]
       details[, val := stringr::str_pad(val, max_len, side = "right")]
 
-      details[, n := splstyle::format_nor(n)]
+      details[, n := format_nor(n)]
       details[, len := stringr::str_length(n)]
       details[, max_len := max(len)]
       details[, n := stringr::str_pad(n, max_len, side = "left")]
@@ -1280,10 +1280,10 @@ plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
   q <- q + geom_tile(color = "black")
   q <- q + facet_grid(sex ~ granularity_time)
   # q <- q + facet_wrap(~granularity_time, scales = "free")
-  q <- q + splstyle::scale_fill_fhi(NULL, drop = F, direction = -1)
+  # q <- q + splstyle::scale_fill_fhi(NULL, drop = F, direction = -1)
   q <- q + scale_x_discrete(NULL)
   q <- q + scale_y_discrete(NULL)
-  q <- q + splstyle::set_x_axis_vertical()
+  q <- q + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
   q <- q + theme(legend.position = "bottom", legend.direction = "horizontal")
   q
 }
