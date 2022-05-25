@@ -106,7 +106,7 @@ d <- rbind(
     granularity_time = "event_*_date1_to_date2",
     class = "character",
     fn = "as.character",
-    example = "\"event_covid19_norway_vaccination_2020_12_02_to_9999_01_01\", \"event_covid19_norway_2020_02_21_to_9999_01_01\""
+    example = "\"event_covid19_norway_vaccination_2020_12_02_to_9999_09_09\", \"event_covid19_norway_2020_02_21_to_9999_09_09\""
   )
 )
 
@@ -165,7 +165,7 @@ gt::gt(d) %>%
     )
   ) %>%
   gt::tab_footnote(
-    footnote = "If the event is ongoing, then the 'to' date should be 9999_01_01.",
+    footnote = "If the event is ongoing, then the 'to' date should be 9999_09_09.",
     locations = gt::cells_body(
       columns = granularity_time,
       rows = stringr::str_detect(granularity_time, "event")
@@ -180,11 +180,11 @@ The following are approved events:
 ```{r echo=FALSE, results='asis'}
 d <- rbind(
   data.frame(
-    granularity_time = "event_covid19_norway_2020_02_21_to_9999_01_01",
+    granularity_time = "event_covid19_norway_2020_02_21_to_9999_09_09",
     definition = "Covid-19 outbreak in Norway (on-going)."
   ),
   data.frame(
-    granularity_time = "event_covid19_norway_vaccination_2020_12_02_to_9999_01_01",
+    granularity_time = "event_covid19_norway_vaccination_2020_12_02_to_9999_09_09",
     definition = "Covid-19 vaccination campaign in Norway (on-going)."
   )
 )
@@ -322,7 +322,7 @@ d <- rbind(
     definition = "Age span of >=65 year olds"
   ),
   data.frame(
-    value = "NA_character_",
+    value = "\"missing\"",
     class = "character",
     definition = "Missing/unknown"
   ),
@@ -343,7 +343,7 @@ gt::gt(d) %>%
 
 This format will help your data be easily sorted and kept in the right order.
 
-Missing ages should be coded as `NA_character_`.
+Missing ages should be coded as "missing".
 
 ## Sex
 
@@ -362,7 +362,7 @@ d <- rbind(
     definition = "Female"
   ),
   data.frame(
-    value = "NA_character_",
+    value = "\"missing\"",
     class = "character",
     definition = "Missing/unknown"
   ),
@@ -381,7 +381,7 @@ gt::gt(d) %>%
   )
 ```
 
-Missing sexes should be coded as `NA_character_`.
+Missing sexes should be coded as "missing".
 
 ## Unified columns
 
@@ -418,12 +418,12 @@ d <- rbind(
   ),
   data.frame(
     variable = "age",
-    accepted_values = gt::html("\"000\", \"001\", \"000-004\", \"065p\", \"total\", NA_character_, ... (<a href='#age'>Age</a>)"),
+    accepted_values = gt::html("\"000\", \"001\", \"000-004\", \"065p\", \"total\", \"missing\", ... (<a href='#age'>Age</a>)"),
     definition = "Age in years"
   ),
   data.frame(
     variable = "sex",
-    accepted_values = gt::html("\"male\", \"female\", \"total\", NA_character_ (<a href='#sex'>Sex</a>)"),
+    accepted_values = gt::html("\"male\", \"female\", \"total\", \"missing\" (<a href='#sex'>Sex</a>)"),
     definition = "Sex"
   ),
   data.frame(
@@ -469,7 +469,7 @@ d <- rbind(
   data.frame(
     variable = "date",
     accepted_values = "YYYY-MM-DD",
-    definition = "Always corresponds to the last date in the time period. E.g. if granularity_time=='isoweek' then date is the Sunday of that week. If granularity_time == 'event_*_date1_to_9999_01_01' then date is 9999-01-01"
+    definition = "Always corresponds to the last date in the time period. E.g. if granularity_time=='isoweek' then date is the Sunday of that week. If granularity_time == 'event_*_date1_to_9999_09_09' then date is 9999-09-09"
   )
 ) %>%
   dplyr::mutate(
@@ -581,7 +581,7 @@ d <- rbind(
   data.frame(
     x = "",
     examples = "sum0_13",
-    definition = "The sum of values for the given date and the previous 13 days. If granularity_time=='isoweek' and the given isoweek has full data, then it is the sum of values for the Sunday in the given isoweek and the previous 13 days. If granularity_time=='isoweek' and the given isoweek does not have full data, or granularity_time=='event_*_to_9999_01_01' (ongoing event), then it is the sum of values for the last day with data and the previous 13 days."
+    definition = "The sum of values for the given date and the previous 13 days. If granularity_time=='isoweek' and the given isoweek has full data, then it is the sum of values for the Sunday in the given isoweek and the previous 13 days. If granularity_time=='isoweek' and the given isoweek does not have full data, or granularity_time=='event_*_to_9999_09_09' (ongoing event), then it is the sum of values for the last day with data and the previous 13 days."
   ),
   data.frame(
     x = "",
@@ -735,7 +735,7 @@ An example relating to number of covid-19 cases:
 
 - **covid19_cases_regdate/\_n**: Number of covid-19 cases by registration date.
 - **covid19_cases_testdate/\_n**: Number of covid-19 cases by testing date.
-- **covid19_cases_testdate/\_sum0_13/\_n**: The sum of 14 days of cases. When granularity_time=='day', date=='2022-01-20', and the current date is '2022-02-07', the value is the sum of covid19_cases_testdate_n between '2022-01-07' and '2022-01-20'. When granularity_time=='isoweek',  isoyearweek=='2022-03', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06') the value is the sum of covid19_cases_testdate_n between '2022-01-10' (Monday in isoyearweek '2022-02') and '2022-01-23' (Sunday in isoyearweek '2022-03'). When granularity_time=='isoweek',  isoyearweek=='2022-06', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06'), the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior. When granularity_time=='event_covid19_norway_2020_02_21_to_9999_01_01', the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior.
+- **covid19_cases_testdate/\_sum0_13/\_n**: The sum of 14 days of cases. When granularity_time=='day', date=='2022-01-20', and the current date is '2022-02-07', the value is the sum of covid19_cases_testdate_n between '2022-01-07' and '2022-01-20'. When granularity_time=='isoweek',  isoyearweek=='2022-03', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06') the value is the sum of covid19_cases_testdate_n between '2022-01-10' (Monday in isoyearweek '2022-02') and '2022-01-23' (Sunday in isoyearweek '2022-03'). When granularity_time=='isoweek',  isoyearweek=='2022-06', and the current date is '2022-02-07' (Monday in isoyearweek '2022-06'), the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior. When granularity_time=='event_covid19_norway_2020_02_21_to_9999_09_09', the value is the sum of covid19_cases_testdate_n between the last day with available data and 13 days prior.
 - **covid19_cases_testdate/\_sum0_999999/\_n**: The sum of all recorded days of cases.
 - **covid19_cases_testdate/\_sum0_13/\_n**: Expected number of nowcasted deaths (i.e. baseline).
 - **deaths_nowcasted_baseline/\_predinterval_q02x5/\_n**: The 2.5th quantile of an expected new observation of nowcasted deaths (frequentist).

@@ -72,17 +72,17 @@ colnames(d)
 colnames(week)
 
 # put daily and weekly together
-covid19_msis_cases_by_time_location <- rbind(d, week)
+norway_covid19_cases_by_time_location <- rbind(d, week)
 
 # set to splfmt
-spltidy::set_splfmt_rts_data_v1(covid19_msis_cases_by_time_location)
+spltidy::set_splfmt_rts_data_v1(norway_covid19_cases_by_time_location)
 
 
 # save the data into data folder in .rda format
-usethis::use_data(covid19_msis_cases_by_time_location, overwrite = TRUE)
+usethis::use_data(norway_covid19_cases_by_time_location, overwrite = TRUE)
 
 
-# ?spltidy::covid19_msis_cases_by_time_location
+# ?spltidy::norway_covid19_cases_by_time_location
 
 
 

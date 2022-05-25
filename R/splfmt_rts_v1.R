@@ -545,6 +545,28 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
     x[, granularity_time := NA_character_]
     on.exit(x[, granularity_time := NULL])
   }
+
+  # identify if there are any granularity_time=='^event'
+  # if so, set date to the last date in event, and treat as
+  # granularity_time=='day'
+  if("granularity_time" %in% names(x)){
+    x[, original_granularity_time_32423432 := granularity_time]
+    x[
+      stringr::str_detect(granularity_time, "^event"),
+      c(
+        "granularity_time", "date"
+      ) := .(
+        "day",
+        as.Date(
+          stringr::str_replace_all(
+            stringr::str_extract(granularity_time,"[0-9][0-9][0-9][0-9]_[0-9][0-9]_[0-9][0-9]$"),
+            "_",
+            "-"
+          )
+        )
+      )
+    ]
+  }
   time_vars <- c(
     "isoyear",
     "isoweek",
@@ -582,6 +604,10 @@ heal.splfmt_rts_data_v1 <- function(x, ...) {
       )
     }
     eval(parse(text = txt))
+  }
+  if("granularity_time" %in% names(x)){
+    x[, granularity_time := original_granularity_time_32423432]
+    x[, original_granularity_time_32423432 := NULL]
   }
 
   # granularity_time = mandatory
