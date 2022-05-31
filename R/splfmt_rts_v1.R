@@ -1546,7 +1546,22 @@ expand_time_to_max_date.splfmt_rts_data_v1 <- function(x, max_date = NULL, ...) 
 
 
 
+#' Epicurve
+#' @param x Dataset
+#' @param ... X
+#' @examples
+#' splstyle::plot_epicurve(spltidy::norway_covid19_cases_by_time_location[location_code == "county03"], type = "single", var_y = "covid19_cases_testdate_n")
+#' @importFrom splstyle plot_epicurve
+#' @method plot_epicurve splfmt_rts_data_v1
+#' @export
+plot_epicurve.splfmt_rts_data_v1 <- function(
+  x,
+  ...
+  ) {
 
+  print("HELLO")
+
+}
 
 
 
