@@ -1,3 +1,7 @@
+# spltidy 2022.5.31
+
+- In splfmt_rts_v1, age now uses underscores instead of hyphens so that valid variable names are generated when converting to wide-format.
+
 # spltidy 2022.5.25
 
 - Dataset covid19_msis_cases_by_time_location renamed to norway_covid19_cases_by_time_location.

@@ -295,7 +295,7 @@ gt::gt(d) %>%
 
 ## Ages
 
-Ages should be coded as characters and should always contain 3 digits. If it is an age range, the two ages are joined by a hyphen (e.g. `005-010`). 
+Ages should be coded as characters and should always contain 3 digits. If it is an age range, the two ages are joined by an underscore (e.g. `005_010`). 
 
 Use `085p` instead of `>=085` or `85+`, as this will allow for an easy conversion from long to wide formatted data.
 
@@ -312,7 +312,7 @@ d <- rbind(
     definition = "One year age group(79 year olds)"
   ),
   data.frame(
-    value = "\"000-004\"",
+    value = "\"000_004\"",
     class = "character",
     definition = "Age span of 0-4 year olds"
   ),
@@ -341,7 +341,7 @@ gt::gt(d) %>%
   )
 ```
 
-This format will help your data be easily sorted and kept in the right order.
+This format will help your data be easily sorted, kept in the right order, and generate valid variable names if converted to wide-format.
 
 Missing ages should be coded as "missing".
 
@@ -418,7 +418,7 @@ d <- rbind(
   ),
   data.frame(
     variable = "age",
-    accepted_values = gt::html("\"000\", \"001\", \"000-004\", \"065p\", \"total\", \"missing\", ... (<a href='#age'>Age</a>)"),
+    accepted_values = gt::html("\"000\", \"001\", \"000_004\", \"065p\", \"total\", \"missing\", ... (<a href='#age'>Age</a>)"),
     definition = "Age in years"
   ),
   data.frame(

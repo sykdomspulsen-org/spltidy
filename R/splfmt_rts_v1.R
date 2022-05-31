@@ -156,7 +156,7 @@ generate_test_data <- function(fmt = "splfmt_rts_data_v1") {
 
     d3 <- copy(d1)
     d3[, isoyear := 2022]
-    d3[, age := "000-005"]
+    d3[, age := "000_005"]
     d3[, sex := "total"]
 
     d <- rbind(d1, d2, d3, fill = T)
