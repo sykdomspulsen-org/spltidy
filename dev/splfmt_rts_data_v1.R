@@ -146,7 +146,7 @@ make_skeleton_isoweek.splfmt_rts_data_v1 <- function(
   isoyearweek_min = NULL,
   isoyearweek_max = NULL,
   granularity_geo = "all",
-  location_reference = spldata::norway_locations_names(),
+  location_reference = spldata::nor_locations_names(),
   ...) {
 
   if(yrwk_min==yrwk_max){

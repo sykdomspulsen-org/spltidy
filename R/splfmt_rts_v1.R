@@ -8,10 +8,11 @@ formats$splfmt_rts_data_v1$unified$granularity_time <- list(
   class = "character"
 )
 
+# spldata::nor_locations_names()
 formats$splfmt_rts_data_v1$unified$granularity_geo <- list(
   NA_allowed = FALSE,
   NA_class = NA_character_,
-  values_allowed = unique(spldata::norway_locations_names()$granularity_geo),
+  values_allowed = unique(spldata::nor_locations_names()$granularity_geo),
   class = "character"
 )
 
@@ -144,7 +145,7 @@ generate_test_data <- function(fmt = "splfmt_rts_data_v1") {
   stopifnot(fmt %in% c("splfmt_rts_data_v1"))
 
   if (fmt == "splfmt_rts_data_v1") {
-    d1 <- data.table(location_code = spldata::norway_locations_names()[granularity_geo == "county"]$location_code)
+    d1 <- data.table(location_code = spldata::nor_locations_names()[granularity_geo == "county"]$location_code)
     d1[, granularity_time := "isoweek"]
     d1[, isoyearweek := "2022-03"]
     d1[, deaths_n := stats::rpois(.N, 5)]
@@ -1077,7 +1078,7 @@ identify_data_structure_internal <- function(summarized, col) {
 
   skeleton <- CJ(
     granularity_time = c("isoyear", "isoweek", "date"),
-    granularity_geo = unique(spldata::norway_locations_names()$granularity_geo),
+    granularity_geo = unique(spldata::nor_locations_names()$granularity_geo),
     age = unique(summarized$age),
     sex = unique(summarized$sex)
   )
@@ -1100,7 +1101,7 @@ identify_data_structure_internal <- function(summarized, col) {
 
   skeleton[, num_valid := NULL]
   skeleton[, num_na := NULL]
-  skeleton[, granularity_geo := factor(granularity_geo, levels = unique(spldata::norway_locations_names()$granularity_geo))]
+  skeleton[, granularity_geo := factor(granularity_geo, levels = unique(spldata::nor_locations_names()$granularity_geo))]
 
   # check if can merge together age groups
   skeleton_wide <- dcast.data.table(
@@ -1270,7 +1271,7 @@ plot.splfmt_rts_data_structure_hash_v1 <- function(x, y, ...) {
   #   identify_data_structure("deaths_n")
 
   pd <- copy(x)
-  pd[, granularity_geo := factor(granularity_geo, levels = unique(spldata::norway_locations_names()$granularity_geo))]
+  pd[, granularity_geo := factor(granularity_geo, levels = unique(spldata::nor_locations_names()$granularity_geo))]
   pd[, category := factor(category, levels = c("structurally_missing", "only_na", "data_and_na", "only_data"))]
 
   pd[, age := paste0("age=", age)]
