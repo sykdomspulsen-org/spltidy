@@ -1,0 +1,11 @@
+pandoc: '2.13'
+pkgdown: 2.0.2
+pkgdown_sha: ~
+articles:
+  splfmt_rts_data_v1: splfmt_rts_data_v1.html
+  spltidy: spltidy.html
+last_built: 2022-06-16T13:51Z
+urls:
+  reference: https://docs.sykdomspulsen.no/spltidy/reference
+  article: https://docs.sykdomspulsen.no/spltidy/articles
+
